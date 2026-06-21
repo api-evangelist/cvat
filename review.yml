@@ -1,0 +1,97 @@
+aid: cvat
+name: CVAT
+review:
+  question: Does CVAT expose a documented public WebSocket or streaming API?
+  answer: false
+  date: '2026-06-21'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. CVAT's API is a synchronous REST API.
+    Long-running operations (data upload, annotation and dataset import/export)
+    are handled with an asynchronous request/poll pattern over plain HTTP - the
+    server returns a request id (rq_id) and the client polls GET
+    /api/requests/{rq_id} until completion. This is HTTP request/response
+    polling, not Server-Sent Events and not WebSocket, so there is no
+    event-driven streaming surface in scope for AsyncAPI modeling.
+findings:
+  summary: |
+    CVAT does not publish a documented public WebSocket or SSE streaming API.
+    The platform (both self-hosted Community under the MIT License and the
+    hosted CVAT Online service at app.cvat.ai) exposes a synchronous REST API
+    under the /api base path, documented with an OpenAPI 3.0.3 schema served at
+    /api/schema/ and interactive docs at /api/docs/. Authentication is via
+    Token (Authorization: Token <key>), HTTP Basic, or session. Heavy jobs run
+    as background processes polled through the requests endpoint. No realtime,
+    bidirectional, or push (ws:// or wss://) endpoint is documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://app.cvat.ai/api
+      documented: true
+    - protocol: REST (self-hosted)
+      scheme: http
+      baseURL: http://localhost:8080/api
+      documented: true
+    - protocol: Async Polling
+      scheme: https
+      note: Background jobs return rq_id; client polls GET /api/requests/{rq_id}. HTTP polling, not SSE or WebSocket.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in the CVAT API reference, SDK docs, or developer guide as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://app.cvat.ai/api/projects
+    - POST   https://app.cvat.ai/api/projects
+    - GET    https://app.cvat.ai/api/projects/{id}
+    - PATCH  https://app.cvat.ai/api/projects/{id}
+    - DELETE https://app.cvat.ai/api/projects/{id}
+    - GET    https://app.cvat.ai/api/tasks
+    - POST   https://app.cvat.ai/api/tasks
+    - GET    https://app.cvat.ai/api/tasks/{id}
+    - DELETE https://app.cvat.ai/api/tasks/{id}
+    - POST   https://app.cvat.ai/api/tasks/{id}/data
+    - GET    https://app.cvat.ai/api/tasks/{id}/annotations
+    - PUT    https://app.cvat.ai/api/tasks/{id}/annotations
+    - POST   https://app.cvat.ai/api/tasks/{id}/annotations
+    - DELETE https://app.cvat.ai/api/tasks/{id}/annotations
+    - POST   https://app.cvat.ai/api/tasks/{id}/dataset/export
+    - GET    https://app.cvat.ai/api/jobs
+    - GET    https://app.cvat.ai/api/jobs/{id}
+    - PATCH  https://app.cvat.ai/api/jobs/{id}
+    - GET    https://app.cvat.ai/api/jobs/{id}/annotations
+    - PUT    https://app.cvat.ai/api/jobs/{id}/annotations
+    - GET    https://app.cvat.ai/api/labels
+    - GET    https://app.cvat.ai/api/labels/{id}
+    - PATCH  https://app.cvat.ai/api/labels/{id}
+    - DELETE https://app.cvat.ai/api/labels/{id}
+    - GET    https://app.cvat.ai/api/organizations
+    - POST   https://app.cvat.ai/api/organizations
+    - GET    https://app.cvat.ai/api/memberships
+    - GET    https://app.cvat.ai/api/cloudstorages
+    - POST   https://app.cvat.ai/api/cloudstorages
+sources:
+  - url: https://docs.cvat.ai/docs/api_sdk/api/
+    type: Documentation
+    note: Server API overview; lists resource groups and the REST design pattern. No WebSocket mentioned.
+  - url: https://app.cvat.ai/api/docs/
+    type: APIReference
+    note: Interactive Swagger UI for the live OpenAPI 3.0.3 schema; all endpoints are HTTPS REST.
+  - url: https://docs.cvat.ai/docs/administration/basics/rest_api_guide/
+    type: Documentation
+    note: REST API guide; describes the rq_id request/poll pattern for background jobs (HTTP polling, not WebSocket).
+  - url: https://github.com/cvat-ai/cvat
+    type: GitHub
+    note: MIT-licensed source; schema.yml is OpenAPI 3.0.3. No streaming/WebSocket API surface.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or SSE protocol surface exists. CVAT is a synchronous REST API
+    that uses HTTP request/poll for long-running operations, so no AsyncAPI
+    document was created. The apis.yml catalogs the REST sub-APIs with OpenAPI,
+    Postman, and Open Collection references.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

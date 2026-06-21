@@ -1,0 +1,227 @@
+{
+  "info": {
+    "name": "CVAT REST API",
+    "description": {
+      "content": "Representative subset of the CVAT REST API (projects, tasks, jobs, annotations, labels, organizations, memberships, cloud storages). Base URL https://app.cvat.ai/api for CVAT Online; same surface on self-hosted CVAT under /api. Token authentication: header `Authorization: Token <key>`.",
+      "type": "text/plain"
+    },
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "Authorization" },
+      { "key": "value", "value": "Token {{cvatToken}}" },
+      { "key": "in", "value": "header" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://app.cvat.ai/api" },
+    { "key": "cvatToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List projects",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/projects", "host": ["{{baseUrl}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "Create a project",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"My Project\",\n  \"labels\": [{ \"name\": \"car\", \"type\": \"rectangle\" }]\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/projects", "host": ["{{baseUrl}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "Retrieve a project",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/projects/:id", "host": ["{{baseUrl}}"], "path": ["projects", ":id"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Delete a project",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/projects/:id", "host": ["{{baseUrl}}"], "path": ["projects", ":id"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "List tasks",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/tasks", "host": ["{{baseUrl}}"], "path": ["tasks"] }
+          }
+        },
+        {
+          "name": "Create a task",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"My Task\",\n  \"project_id\": 1\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/tasks", "host": ["{{baseUrl}}"], "path": ["tasks"] }
+          }
+        },
+        {
+          "name": "Attach data to a task",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "client_files", "type": "file", "src": [] }, { "key": "image_quality", "value": "70", "type": "text" }] },
+            "url": { "raw": "{{baseUrl}}/tasks/:id/data", "host": ["{{baseUrl}}"], "path": ["tasks", ":id", "data"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Export a task dataset",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/tasks/:id/dataset/export?format=COCO 1.0&save_images=true", "host": ["{{baseUrl}}"], "path": ["tasks", ":id", "dataset", "export"], "query": [{ "key": "format", "value": "COCO 1.0" }, { "key": "save_images", "value": "true" }], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "List jobs",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/jobs", "host": ["{{baseUrl}}"], "path": ["jobs"] }
+          }
+        },
+        {
+          "name": "Retrieve a job",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/jobs/:id", "host": ["{{baseUrl}}"], "path": ["jobs", ":id"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Update a job (stage/state/assignee)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"stage\": \"validation\",\n  \"state\": \"completed\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/jobs/:id", "host": ["{{baseUrl}}"], "path": ["jobs", ":id"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Annotations",
+      "item": [
+        {
+          "name": "Get task annotations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/tasks/:id/annotations", "host": ["{{baseUrl}}"], "path": ["tasks", ":id", "annotations"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Replace task annotations",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"version\": 0,\n  \"tags\": [],\n  \"shapes\": [],\n  \"tracks\": []\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/tasks/:id/annotations", "host": ["{{baseUrl}}"], "path": ["tasks", ":id", "annotations"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Import task annotations",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/tasks/:id/annotations?format=CVAT 1.1", "host": ["{{baseUrl}}"], "path": ["tasks", ":id", "annotations"], "query": [{ "key": "format", "value": "CVAT 1.1" }], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Get job annotations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/jobs/:id/annotations", "host": ["{{baseUrl}}"], "path": ["jobs", ":id", "annotations"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Labels",
+      "item": [
+        {
+          "name": "List labels",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/labels?project_id=1", "host": ["{{baseUrl}}"], "path": ["labels"], "query": [{ "key": "project_id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Retrieve a label",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/labels/:id", "host": ["{{baseUrl}}"], "path": ["labels", ":id"], "variable": [{ "key": "id", "value": "1" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Organizations and Memberships",
+      "item": [
+        {
+          "name": "List organizations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/organizations", "host": ["{{baseUrl}}"], "path": ["organizations"] }
+          }
+        },
+        {
+          "name": "Create an organization",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"slug\": \"my-org\",\n  \"name\": \"My Org\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/organizations", "host": ["{{baseUrl}}"], "path": ["organizations"] }
+          }
+        },
+        {
+          "name": "List memberships",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/memberships?org=my-org", "host": ["{{baseUrl}}"], "path": ["memberships"], "query": [{ "key": "org", "value": "my-org" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cloud Storages",
+      "item": [
+        {
+          "name": "List cloud storages",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cloudstorages", "host": ["{{baseUrl}}"], "path": ["cloudstorages"] }
+          }
+        },
+        {
+          "name": "Create a cloud storage connection",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"provider_type\": \"AWS_S3_BUCKET\",\n  \"resource\": \"my-bucket\",\n  \"display_name\": \"My Bucket\",\n  \"credentials_type\": \"KEY_SECRET_KEY_PAIR\",\n  \"key\": \"<access-key>\",\n  \"secret_key\": \"<secret-key>\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/cloudstorages", "host": ["{{baseUrl}}"], "path": ["cloudstorages"] }
+          }
+        }
+      ]
+    }
+  ]
+}

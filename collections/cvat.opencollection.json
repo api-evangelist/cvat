@@ -1,0 +1,164 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "apikey": {
+        "key": "Authorization",
+        "value": "Token {{cvatToken}}",
+        "in": "header"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Projects", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List projects", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/projects" },
+          "docs": "List annotation projects."
+        },
+        {
+          "info": { "name": "Create a project", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/projects", "body": { "type": "json", "data": "{\"name\":\"My Project\",\"labels\":[{\"name\":\"car\",\"type\":\"rectangle\"}]}" } },
+          "docs": "Create a new annotation project."
+        },
+        {
+          "info": { "name": "Retrieve a project", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/projects/:id" },
+          "docs": "Retrieve a single project by id."
+        },
+        {
+          "info": { "name": "Delete a project", "type": "http" },
+          "http": { "method": "DELETE", "url": "https://app.cvat.ai/api/projects/:id" },
+          "docs": "Delete a project."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Tasks", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List tasks", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/tasks" },
+          "docs": "List annotation tasks."
+        },
+        {
+          "info": { "name": "Create a task", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/tasks", "body": { "type": "json", "data": "{\"name\":\"My Task\",\"project_id\":1}" } },
+          "docs": "Create a new task."
+        },
+        {
+          "info": { "name": "Attach data to a task", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/tasks/:id/data", "body": { "type": "multipart-form", "data": [] } },
+          "docs": "Upload media data and start background processing."
+        },
+        {
+          "info": { "name": "Export a task dataset", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/tasks/:id/dataset/export?format=COCO 1.0&save_images=true" },
+          "docs": "Start a background dataset export for a task."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Jobs", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List jobs", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/jobs" },
+          "docs": "List jobs."
+        },
+        {
+          "info": { "name": "Retrieve a job", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/jobs/:id" },
+          "docs": "Retrieve a single job by id."
+        },
+        {
+          "info": { "name": "Update a job", "type": "http" },
+          "http": { "method": "PATCH", "url": "https://app.cvat.ai/api/jobs/:id", "body": { "type": "json", "data": "{\"stage\":\"validation\",\"state\":\"completed\"}" } },
+          "docs": "Update job stage, state, or assignee."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Annotations", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get task annotations", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/tasks/:id/annotations" },
+          "docs": "Retrieve the annotations of a task."
+        },
+        {
+          "info": { "name": "Replace task annotations", "type": "http" },
+          "http": { "method": "PUT", "url": "https://app.cvat.ai/api/tasks/:id/annotations", "body": { "type": "json", "data": "{\"version\":0,\"tags\":[],\"shapes\":[],\"tracks\":[]}" } },
+          "docs": "Replace the annotations of a task."
+        },
+        {
+          "info": { "name": "Import task annotations", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/tasks/:id/annotations?format=CVAT 1.1" },
+          "docs": "Start a background import of annotations into a task."
+        },
+        {
+          "info": { "name": "Get job annotations", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/jobs/:id/annotations" },
+          "docs": "Retrieve the annotations of a job."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Labels", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List labels", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/labels?project_id=1" },
+          "docs": "List labels for a task or project."
+        },
+        {
+          "info": { "name": "Retrieve a label", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/labels/:id" },
+          "docs": "Retrieve a single label by id."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Organizations and Memberships", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List organizations", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/organizations" },
+          "docs": "List organizations."
+        },
+        {
+          "info": { "name": "Create an organization", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/organizations", "body": { "type": "json", "data": "{\"slug\":\"my-org\",\"name\":\"My Org\"}" } },
+          "docs": "Create a new organization."
+        },
+        {
+          "info": { "name": "List memberships", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/memberships?org=my-org" },
+          "docs": "List memberships within an organization."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Cloud Storages", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List cloud storages", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.cvat.ai/api/cloudstorages" },
+          "docs": "List registered cloud-storage connections."
+        },
+        {
+          "info": { "name": "Create a cloud storage connection", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.cvat.ai/api/cloudstorages", "body": { "type": "json", "data": "{\"provider_type\":\"AWS_S3_BUCKET\",\"resource\":\"my-bucket\",\"display_name\":\"My Bucket\",\"credentials_type\":\"KEY_SECRET_KEY_PAIR\"}" } },
+          "docs": "Register a new external object-storage connection."
+        }
+      ]
+    }
+  ]
+}

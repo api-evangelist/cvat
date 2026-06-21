@@ -1,0 +1,218 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: CVAT
+providerId: cvat
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: true
+tags:
+- Computer Vision
+- Data Annotation
+- Labeling
+- Datasets
+- Open Source
+- Plans
+description: >-
+  CVAT ships in two forms. The self-hosted Community edition is free and
+  open-source under the MIT License, with no usage caps imposed by the vendor;
+  you run it on your own infrastructure and the full REST API is available.
+  CVAT Online (app.cvat.ai) is a hosted SaaS with tiered plans - Free, Solo,
+  Team (per-seat, minimum two seats), and Enterprise - that gate project, task,
+  storage, cloud-connection, and AI-call limits as well as collaboration,
+  RBAC, SSO, audit logs, and webhooks. Annual billing saves up to roughly 30%.
+notes: >-
+  Hosted pricing and tier limits are taken from cvat.ai/pricing and change over
+  time; verify current rates, seat minimums, and feature gating on the pricing
+  page during reconciliation. The self-hosted Community edition (MIT) carries no
+  per-use vendor charge.
+sources:
+- https://www.cvat.ai/pricing/cloud
+- https://www.cvat.ai/pricing/enterprise
+- https://docs.cvat.ai/docs/enterprise/
+- https://github.com/cvat-ai/cvat
+plans:
+- id: cvat-community-self-hosted
+  name: Community (Self-Hosted)
+  type: free
+  description: >-
+    Open-source CVAT under the MIT License, self-hosted on your own
+    infrastructure. Full REST API, image/video/3D annotation, and AI-assisted
+    tooling with no vendor-imposed usage caps.
+  entries:
+  - label: Self-Hosted Open Source
+    name: community
+    type: flat
+    metric: license
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0 (MIT License, self-hosted)
+    userMultiplied: false
+  elements:
+  - name: Projects
+  - name: Tasks
+  - name: Jobs
+  - name: Annotations
+  - name: Labels
+  - name: Cloud Storages
+  - name: REST API
+- id: cvat-online-free
+  name: Free (CVAT Online)
+  type: free
+  description: >-
+    Entry hosted tier for evaluation and small personal use. API access with
+    community support; export of annotations only (not images).
+  entries:
+  - label: Free Tier
+    name: free
+    type: flat
+    metric: subscription
+    limit: 0
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0
+    userMultiplied: false
+  limits:
+  - label: Projects
+    metric: projects
+    limit: 1
+  - label: Tasks
+    metric: tasks
+    limit: 3
+  - label: Internal Storage
+    metric: storage_gb
+    limit: 1
+  - label: Cloud Connections
+    metric: cloud_connections
+    limit: 1
+  elements:
+  - name: Image / Video / 3D Annotation
+  - name: Manual Review
+  - name: API Access
+  - name: Annotation Export
+- id: cvat-online-solo
+  name: Solo (CVAT Online)
+  type: paid
+  description: >-
+    Single-user personal workspace with automatic annotation (including SAM
+    2/3), image and annotation export, and a monthly AI-call allowance. Not for
+    team collaboration.
+  entries:
+  - label: Solo Monthly
+    name: solo_monthly
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $33 per month
+    userMultiplied: false
+  - label: Solo Annual
+    name: solo_annual
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $23 per month billed annually (~30% off)
+    userMultiplied: false
+  limits:
+  - label: Projects
+    metric: projects
+    limit: 10
+  - label: Tasks
+    metric: tasks
+    limit: 250
+  - label: Internal Storage
+    metric: storage_gb
+    limit: 25
+  - label: Cloud Connections
+    metric: cloud_connections
+    limit: 3
+  - label: AI Calls
+    metric: ai_calls
+    limit: 10000
+    timeFrame: month
+  elements:
+  - name: Automatic Annotation
+  - name: SAM 2 / SAM 3
+  - name: Image and Annotation Export
+- id: cvat-online-team
+  name: Team (CVAT Online)
+  type: paid
+  description: >-
+    Per-seat plan for collaborating organizations (minimum two seats, owner
+    included). Removes Free limitations and adds RBAC, audit logs, webhooks,
+    and SSO (annual). Project/task/storage limits scale with team size.
+  entries:
+  - label: Team Monthly (per seat)
+    name: team_monthly
+    type: usage
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $33 per user per month (min 2 seats)
+    userMultiplied: true
+  - label: Team Annual (per seat)
+    name: team_annual
+    type: usage
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $23 per user per month billed annually (~30% off, min 2 seats)
+    userMultiplied: true
+  limits:
+  - label: Small Team (2-7) Projects / Tasks / Storage
+    metric: scaled
+    limit: 30 projects / 750 tasks / 75 GB
+  - label: Regular Team (8-25) Projects / Tasks / Storage
+    metric: scaled
+    limit: 50 projects / 1,250 tasks / 125 GB
+  - label: Large Team (25-50) Projects / Tasks / Storage
+    metric: scaled
+    limit: 100 projects / 2,500 tasks / 250 GB
+  - label: AI Calls
+    metric: ai_calls
+    limit: 30000-100000
+    timeFrame: month
+  elements:
+  - name: Team Collaboration
+  - name: Role-Based Access Control (RBAC)
+  - name: SSO (annual)
+  - name: Audit Logs
+  - name: Webhooks
+- id: cvat-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Managed or self-hosted deployment for large and regulated organizations.
+    Adds SSO/LDAP, audit logs, dedicated support, custom SLAs, and on-prem or
+    private-cloud options. Contact CVAT sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: from ~$12,000 per year (contact sales)
+    userMultiplied: false
+  elements:
+  - name: SSO / LDAP
+  - name: Audit Logs
+  - name: Dedicated Support and SLAs
+  - name: On-Prem / Private Cloud Deployment
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

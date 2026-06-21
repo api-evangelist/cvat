@@ -1,0 +1,127 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: CVAT
+providerId: cvat
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: true
+tags:
+- Computer Vision
+- Data Annotation
+- Labeling
+- Datasets
+- Open Source
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of CVAT spend. CVAT cost has two distinct shapes. Self-hosted
+  Community edition (MIT) carries no vendor license fee; the spend is the
+  operator's own infrastructure (compute, storage, GPU for auto-annotation,
+  egress) and ops effort. CVAT Online (app.cvat.ai) is a subscription SaaS:
+  flat monthly/annual for Free and Solo, per-seat for Team, and negotiated for
+  Enterprise, with consumption gated by plan quotas on projects, tasks,
+  storage, cloud connections, and monthly AI (auto-annotation) calls. Annual
+  billing reduces effective per-seat cost by roughly 30%.
+notes: >-
+  Hosted prices, seat minimums, and quota ceilings change; verify against the
+  CVAT pricing pages during reconciliation. For self-hosted, the meaningful
+  meters are infrastructure resources rather than vendor charges.
+sources:
+- https://www.cvat.ai/pricing/cloud
+- https://www.cvat.ai/pricing/enterprise
+- https://github.com/cvat-ai/cvat
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: CVAT.ai
+serviceCategory: Machine Learning and Data Annotation
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: CVAT Online
+  ServiceCategory: Machine Learning and Data Annotation
+  ProviderName: CVAT.ai
+  PublisherName: CVAT.ai
+  InvoiceIssuerName: CVAT.ai
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: subscription_seats
+  description: Billable seats on the Team plan, charged per user per billing cycle (minimum two seats).
+  unit: seats
+  aggregation: max
+  dimensions:
+  - account
+  - organization
+  - plan
+- name: subscription_flat
+  description: Flat monthly or annual charge for Free and Solo hosted plans.
+  unit: subscription
+  aggregation: max
+  dimensions:
+  - account
+  - plan
+- name: ai_calls
+  description: Automatic-annotation (AI) calls consumed against the monthly plan allowance.
+  unit: invocations
+  aggregation: sum
+  dimensions:
+  - account
+  - organization
+  - plan
+- name: internal_storage_gb
+  description: Internal storage consumed against the plan storage quota.
+  unit: gigabytes
+  aggregation: max
+  dimensions:
+  - account
+  - organization
+  - plan
+- name: project_count
+  description: Projects created against the plan project quota.
+  unit: projects
+  aggregation: max
+  dimensions:
+  - account
+  - organization
+  - plan
+- name: task_count
+  description: Tasks created against the plan task quota.
+  unit: tasks
+  aggregation: max
+  dimensions:
+  - account
+  - organization
+  - plan
+- name: self_hosted_infrastructure
+  description: Operator-owned compute, storage, GPU, and egress for self-hosted Community CVAT (no vendor charge).
+  unit: resource_hours
+  aggregation: sum
+  dimensions:
+  - environment
+  - resource
+principles:
+- name: Visibility
+  description: Track seat count, AI-call burn, and storage/task/project quota usage in the CVAT Online org dashboard; for self-hosted, track underlying cloud infrastructure spend.
+- name: Allocation
+  description: Map organizations and seats to teams and cost centers; tag self-hosted infrastructure per environment.
+- name: Optimization
+  description: Choose self-hosted Community (MIT, $0 license) when ops capacity exists and data residency matters; on hosted, right-size the plan to quota usage, prefer annual billing (~30% off), and reclaim idle seats.
+- name: Accountability
+  description: Assign an owner per organization; review seat count, AI-call consumption, and quota headroom monthly against budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

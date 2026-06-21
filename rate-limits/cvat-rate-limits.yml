@@ -1,0 +1,81 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: CVAT
+providerId: cvat
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Computer Vision
+- Data Annotation
+- Labeling
+- Datasets
+- Open Source
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Self-hosted CVAT does not impose vendor rate limits; throughput is bounded by
+  the operator's own deployment, worker pool, and any reverse-proxy throttling
+  the operator configures. CVAT Online (app.cvat.ai) enforces plan-based quotas
+  rather than classic per-minute request limits - caps on projects, tasks,
+  internal storage, cloud connections, and monthly AI (auto-annotation) calls -
+  and may apply request throttling and abuse protection at the edge. Heavy
+  operations (data upload, annotation import/export, dataset export) run as
+  asynchronous background jobs that are polled via the requests endpoint rather
+  than blocking the caller.
+notes: >-
+  CVAT does not publish fixed numeric API rate limits. On CVAT Online the
+  binding constraints are the plan quotas in plans/cvat-plans-pricing.yml.
+  Verify any edge throttling and AI-call ceilings against the current pricing
+  page and account console during reconciliation.
+sources:
+- https://www.cvat.ai/pricing/cloud
+- https://docs.cvat.ai/docs/api_sdk/api/
+- https://docs.cvat.ai/docs/administration/basics/rest_api_guide/
+responseCodes:
+  throttled: 429
+limits:
+- name: Projects (CVAT Online)
+  scope: account
+  metric: projects
+  limit: see plan quota
+  notes: Capped per hosted plan; unlimited on self-hosted Community.
+- name: Tasks (CVAT Online)
+  scope: account
+  metric: tasks
+  limit: see plan quota
+  notes: Capped per hosted plan; unlimited on self-hosted Community.
+- name: Internal Storage (CVAT Online)
+  scope: account
+  metric: storage_gb
+  limit: see plan quota
+  notes: GB of internal storage allowed per hosted plan.
+- name: Cloud Connections (CVAT Online)
+  scope: account
+  metric: cloud_connections
+  limit: see plan quota
+  notes: Number of registered cloud-storage connections per hosted plan.
+- name: AI / Auto-Annotation Calls (CVAT Online)
+  scope: account
+  metric: ai_calls
+  limit: see plan quota
+  notes: Monthly automatic-annotation call allowance per hosted plan.
+- name: Edge Request Throttling (CVAT Online)
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Abuse-protection throttling may apply; not published as a fixed RPM/RPS.
+policies:
+- name: Plan-Based Quotas
+  description: On CVAT Online the operative limits are plan quotas (projects, tasks, storage, cloud connections, AI calls), not per-minute request rates.
+- name: Asynchronous Background Jobs
+  description: Data upload and annotation/dataset import/export run as background processes; poll GET /api/requests/{rq_id} for completion instead of long-blocking requests.
+- name: Self-Hosted Has No Vendor Limits
+  description: Community (MIT, self-hosted) imposes no vendor rate limits; capacity is governed by the operator's infrastructure and any proxy throttling they add.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
