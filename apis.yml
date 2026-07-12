@@ -186,6 +186,10 @@ apis:
     Azure Blob, Google Cloud Storage) used as data sources for tasks, including listing
     bucket content and previews.
 common:
+- type: DomainSecurity
+  url: security/cvat-domain-security.yml
+- type: Authentication
+  url: authentication/cvat-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/cvat-ai
 - type: LinkedIn
@@ -200,6 +204,8 @@ common:
   url: rate-limits/cvat-rate-limits.yml
 - type: FinOps
   url: finops/cvat-finops.yml
+- url: https://www.cvat.ai/resources/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

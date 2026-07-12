@@ -1,0 +1,24 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/cvat-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: tokenAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: 'Token authentication. Send the header `Authorization: Token <key>` where the
+    key is obtained from POST /auth/login.'
+  sources:
+  - openapi/cvat-openapi.yml
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic authentication with CVAT username and password.
+  sources:
+  - openapi/cvat-openapi.yml
