@@ -186,6 +186,8 @@ apis:
     Azure Blob, Google Cloud Storage) used as data sources for tasks, including listing
     bucket content and previews.
 common:
+- type: AgenticAccess
+  url: agentic-access/cvat-agentic-access.yml
 - type: DomainSecurity
   url: security/cvat-domain-security.yml
 - type: Authentication
