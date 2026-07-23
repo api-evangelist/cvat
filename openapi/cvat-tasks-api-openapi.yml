@@ -1,0 +1,351 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST annotations tasks API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: tasks
+  description: Annotation tasks holding media data and annotations.
+paths:
+  /tasks:
+    get:
+      operationId: tasks_list
+      tags:
+      - tasks
+      summary: List tasks
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: project_id
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A paginated list of tasks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTaskList'
+    post:
+      operationId: tasks_create
+      tags:
+      - tasks
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWriteRequest'
+      responses:
+        '201':
+          description: The created task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+  /tasks/{id}:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: tasks_retrieve
+      tags:
+      - tasks
+      summary: Retrieve a task
+      responses:
+        '200':
+          description: The requested task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    patch:
+      operationId: tasks_partial_update
+      tags:
+      - tasks
+      summary: Update a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWriteRequest'
+      responses:
+        '200':
+          description: The updated task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    delete:
+      operationId: tasks_destroy
+      tags:
+      - tasks
+      summary: Delete a task
+      responses:
+        '204':
+          description: The task has been deleted.
+  /tasks/{id}/data:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    post:
+      operationId: tasks_create_data
+      tags:
+      - tasks
+      summary: Attach data to a task
+      description: Upload images, video, or references to cloud-storage objects and start the background process that prepares the task data.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DataRequest'
+      responses:
+        '202':
+          description: Data upload accepted and queued for processing.
+  /tasks/{id}/dataset/export:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    post:
+      operationId: tasks_create_dataset_export
+      tags:
+      - tasks
+      summary: Export a task dataset
+      parameters:
+      - name: format
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: save_images
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Export accepted; poll the returned request for the result link.
+components:
+  schemas:
+    Attribute:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        mutable:
+          type: boolean
+        input_type:
+          type: string
+          enum:
+          - checkbox
+          - radio
+          - number
+          - text
+          - select
+        default_value:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+    BasicUser:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        project_id:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          description: annotation or interpolation
+        status:
+          type: string
+          enum:
+          - annotation
+          - validation
+          - completed
+        size:
+          type: integer
+          readOnly: true
+          description: Number of frames in the task.
+        segment_size:
+          type: integer
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        organization:
+          type: integer
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedTaskList:
+      $ref: '#/components/schemas/PaginatedBase'
+    TaskWriteRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        project_id:
+          type: integer
+          nullable: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        segment_size:
+          type: integer
+        overlap:
+          type: integer
+        owner_id:
+          type: integer
+          nullable: true
+        assignee_id:
+          type: integer
+          nullable: true
+    DataRequest:
+      type: object
+      properties:
+        client_files:
+          type: array
+          items:
+            type: string
+            format: binary
+        server_files:
+          type: array
+          items:
+            type: string
+        remote_files:
+          type: array
+          items:
+            type: string
+        image_quality:
+          type: integer
+        use_cache:
+          type: boolean
+        cloud_storage_id:
+          type: integer
+    Label:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        color:
+          type: string
+          description: Hex color used to render the label.
+        type:
+          type: string
+          enum:
+          - any
+          - rectangle
+          - polygon
+          - polyline
+          - points
+          - ellipse
+          - cuboid
+          - mask
+          - tag
+          - skeleton
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        parent_id:
+          type: integer
+          nullable: true
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.

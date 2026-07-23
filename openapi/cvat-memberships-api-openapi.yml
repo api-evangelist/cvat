@@ -1,0 +1,150 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST annotations memberships API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: memberships
+  description: Membership of users within organizations.
+paths:
+  /memberships:
+    get:
+      operationId: memberships_list
+      tags:
+      - memberships
+      summary: List memberships
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: org
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A paginated list of memberships.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipList'
+  /memberships/{id}:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: memberships_retrieve
+      tags:
+      - memberships
+      summary: Retrieve a membership
+      responses:
+        '200':
+          description: The requested membership.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+    delete:
+      operationId: memberships_destroy
+      tags:
+      - memberships
+      summary: Delete a membership
+      responses:
+        '204':
+          description: The membership has been deleted.
+components:
+  schemas:
+    PaginatedMembershipList:
+      $ref: '#/components/schemas/PaginatedBase'
+    BasicUser:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items:
+            type: object
+    Membership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+        role:
+          type: string
+          enum:
+          - worker
+          - supervisor
+          - maintainer
+          - owner
+        is_active:
+          type: boolean
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.

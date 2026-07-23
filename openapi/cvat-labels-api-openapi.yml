@@ -1,0 +1,195 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST annotations labels API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: labels
+  description: Label taxonomy shared across projects, tasks, and jobs.
+paths:
+  /labels:
+    get:
+      operationId: labels_list
+      tags:
+      - labels
+      summary: List labels
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: task_id
+        in: query
+        schema:
+          type: integer
+      - name: project_id
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A paginated list of labels.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLabelList'
+  /labels/{id}:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: labels_retrieve
+      tags:
+      - labels
+      summary: Retrieve a label
+      responses:
+        '200':
+          description: The requested label.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+    patch:
+      operationId: labels_partial_update
+      tags:
+      - labels
+      summary: Update a label
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Label'
+      responses:
+        '200':
+          description: The updated label.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+    delete:
+      operationId: labels_destroy
+      tags:
+      - labels
+      summary: Delete a label
+      responses:
+        '204':
+          description: The label has been deleted.
+components:
+  schemas:
+    Attribute:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        mutable:
+          type: boolean
+        input_type:
+          type: string
+          enum:
+          - checkbox
+          - radio
+          - number
+          - text
+          - select
+        default_value:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
+    Label:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        color:
+          type: string
+          description: Hex color used to render the label.
+        type:
+          type: string
+          enum:
+          - any
+          - rectangle
+          - polygon
+          - polyline
+          - points
+          - ellipse
+          - cuboid
+          - mask
+          - tag
+          - skeleton
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        parent_id:
+          type: integer
+          nullable: true
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.

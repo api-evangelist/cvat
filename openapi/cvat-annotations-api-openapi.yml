@@ -1,0 +1,202 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST annotations API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: annotations
+  description: Shapes, tracks, and tags attached to tasks and jobs.
+paths:
+  /tasks/{id}/annotations:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: tasks_retrieve_annotations
+      tags:
+      - annotations
+      summary: Get task annotations
+      responses:
+        '200':
+          description: The task annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    put:
+      operationId: tasks_update_annotations
+      tags:
+      - annotations
+      summary: Replace task annotations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabeledData'
+      responses:
+        '200':
+          description: The updated annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    post:
+      operationId: tasks_create_annotations
+      tags:
+      - annotations
+      summary: Import task annotations
+      description: Initiates a background process to import annotations into a task. Poll GET /requests/{rq_id} to check status; rq_id is returned in the response.
+      parameters:
+      - name: format
+        in: query
+        description: Dataset format name to import (e.g. COCO 1.0, CVAT 1.1).
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Import accepted and queued.
+    delete:
+      operationId: tasks_destroy_annotations
+      tags:
+      - annotations
+      summary: Delete task annotations
+      responses:
+        '204':
+          description: The annotations have been deleted.
+  /jobs/{id}/annotations:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: jobs_retrieve_annotations
+      tags:
+      - annotations
+      summary: Get job annotations
+      responses:
+        '200':
+          description: The job annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    put:
+      operationId: jobs_update_annotations
+      tags:
+      - annotations
+      summary: Replace job annotations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabeledData'
+      responses:
+        '200':
+          description: The updated annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+components:
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+  schemas:
+    LabeledImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        frame:
+          type: integer
+        label_id:
+          type: integer
+        source:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: object
+    LabeledData:
+      type: object
+      description: Container of annotations for a task or job.
+      properties:
+        version:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+        tracks:
+          type: array
+          items:
+            type: object
+    LabeledShape:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum:
+          - rectangle
+          - polygon
+          - polyline
+          - points
+          - ellipse
+          - cuboid
+          - mask
+          - skeleton
+        frame:
+          type: integer
+        label_id:
+          type: integer
+        occluded:
+          type: boolean
+        outside:
+          type: boolean
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        rotation:
+          type: number
+          format: double
+        z_order:
+          type: integer
+        source:
+          type: string
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.

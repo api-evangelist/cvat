@@ -1,0 +1,208 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST annotations cloudstorages API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: cloudstorages
+  description: External object-storage connections used as data sources.
+paths:
+  /cloudstorages:
+    get:
+      operationId: cloudstorages_list
+      tags:
+      - cloudstorages
+      summary: List cloud storages
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of cloud storages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCloudStorageList'
+    post:
+      operationId: cloudstorages_create
+      tags:
+      - cloudstorages
+      summary: Create a cloud storage connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudStorageWriteRequest'
+      responses:
+        '201':
+          description: The created cloud storage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudStorage'
+  /cloudstorages/{id}:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: cloudstorages_retrieve
+      tags:
+      - cloudstorages
+      summary: Retrieve a cloud storage
+      responses:
+        '200':
+          description: The requested cloud storage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudStorage'
+    delete:
+      operationId: cloudstorages_destroy
+      tags:
+      - cloudstorages
+      summary: Delete a cloud storage
+      responses:
+        '204':
+          description: The cloud storage has been deleted.
+components:
+  schemas:
+    BasicUser:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    CloudStorage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider_type:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+        resource:
+          type: string
+          description: Bucket or container name.
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedCloudStorageList:
+      $ref: '#/components/schemas/PaginatedBase'
+    CloudStorageWriteRequest:
+      type: object
+      required:
+      - provider_type
+      - resource
+      - credentials_type
+      properties:
+        provider_type:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+        resource:
+          type: string
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+        key:
+          type: string
+        secret_key:
+          type: string
+        specific_attributes:
+          type: string
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.
