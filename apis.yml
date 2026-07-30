@@ -7,7 +7,20 @@ description: CVAT (Computer Vision Annotation Tool) is an open-source platform f
   exposes projects, tasks, jobs, annotations, labels, organizations, memberships,
   and cloud storage integrations, available both self-hosted (MIT-licensed) and as
   the hosted CVAT Online service at app.cvat.ai.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cvat.png
 tags:
 - Computer Vision
 - Data Annotation
@@ -18,173 +31,198 @@ created: '2026-06-21'
 modified: '2026-06-21'
 specificationVersion: '0.19'
 apis:
-- aid: cvat:cvat-projects-api
-  name: CVAT Projects API
-  tags:
-  - Projects
-  - Datasets
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://app.cvat.ai/api/docs/
-  baseURL: https://app.cvat.ai/api
-  properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Create, list, retrieve, update, and delete annotation projects, the
-    top-level container that groups tasks and shares a label set, plus dataset import
-    and export operations.
-- aid: cvat:cvat-tasks-api
-  name: CVAT Tasks API
-  tags:
-  - Tasks
-  - Data
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://app.cvat.ai/api/docs/
-  baseURL: https://app.cvat.ai/api
-  properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Manage annotation tasks - create tasks, upload media data, retrieve
-    metadata, import and export annotations and datasets, and run background data
-    processing within a project.
-- aid: cvat:cvat-jobs-api
-  name: CVAT Jobs API
-  tags:
-  - Jobs
-  - Annotation Units
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://app.cvat.ai/api/docs/
-  baseURL: https://app.cvat.ai/api
-  properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Work with jobs, the assignable annotation units that subdivide a task
-    - list, retrieve, update stage and state, manage assignees, and import or export
-    job-level annotations.
 - aid: cvat:cvat-annotations-api
-  name: CVAT Annotations API
-  tags:
-  - Annotations
-  - Labeling
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  name: CVAT annotations API
+  description: Shapes, tracks, and tags attached to tasks and jobs.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
+  tags:
+  - annotations
   properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Read, replace, and remove annotation data (shapes, tracks, and tags)
-    on tasks and jobs, and trigger background import and export of annotations in
-    supported dataset formats.
+  - type: OpenAPI
+    url: openapi/cvat-annotations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-cloudstorages-api
+  name: CVAT cloudstorages API
+  description: External object-storage connections used as data sources.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - cloudstorages
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-cloudstorages-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-jobs-api
+  name: CVAT jobs API
+  description: Assignable annotation units that subdivide a task.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-labels-api
-  name: CVAT Labels API
-  tags:
-  - Labels
-  - Taxonomy
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  name: CVAT labels API
+  description: Label taxonomy shared across projects, tasks, and jobs.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
+  tags:
+  - labels
   properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: List, retrieve, update, and delete labels and their attributes and
-    sublabels, defining the annotation taxonomy shared by projects, tasks, and jobs.
+  - type: OpenAPI
+    url: openapi/cvat-labels-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-memberships-api
+  name: CVAT memberships API
+  description: Membership of users within organizations.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - memberships
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-memberships-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-organizations-api
-  name: CVAT Organizations and Memberships API
-  tags:
-  - Organizations
-  - Memberships
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  name: CVAT organizations API
+  description: Organizations scoping resources for teams.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
-  properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Manage organizations and their memberships - create and configure organizations,
-    invite and manage members, assign roles, and scope projects, tasks, and storage
-    to an organization context.
-- aid: cvat:cvat-cloud-storages-api
-  name: CVAT Cloud Storages API
   tags:
-  - Cloud Storage
-  - Integrations
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  - organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-projects-api
+  name: CVAT projects API
+  description: Annotation projects that group tasks and share a label set.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
+  tags:
+  - projects
   properties:
-  - url: https://docs.cvat.ai/docs/api_sdk/api/
-    type: Documentation
-  - url: https://app.cvat.ai/api/docs/
-    type: APIReference
-  - url: openapi/cvat-openapi.yml
-    type: OpenAPI
-  - url: collections/cvat.postman_collection.json
-    type: PostmanCollection
-  - url: collections/cvat.opencollection.json
-    type: OpenCollection
-  - url: https://github.com/cvat-ai/cvat
-    type: GitHub
-  description: Register and manage connections to external object storage (AWS S3,
-    Azure Blob, Google Cloud Storage) used as data sources for tasks, including listing
-    bucket content and previews.
+  - type: OpenAPI
+    url: openapi/cvat-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-tasks-api
+  name: CVAT tasks API
+  description: Annotation tasks holding media data and annotations.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 common:
 - type: AgenticAccess
   url: agentic-access/cvat-agentic-access.yml
