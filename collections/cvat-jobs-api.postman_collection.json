@@ -1,0 +1,365 @@
+{
+  "item": [
+    {
+      "id": "28baabb2-a77c-4f77-8a5c-01e6dee66a88",
+      "name": "jobs",
+      "description": {
+        "content": "Assignable annotation units that subdivide a task.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "782acf8f-2e4e-4c68-941d-ba9c0311361d",
+          "name": "List jobs",
+          "request": {
+            "name": "List jobs",
+            "description": {},
+            "url": {
+              "path": [
+                "jobs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "A page number within the paginated result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "<integer>",
+                  "description": "Number of results to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<integer>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9978f3a6-8bbe-436d-8de4-108604397666",
+              "name": "A paginated list of jobs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 2928,\n  \"next\": \"https://uZNgWtRtrFmxU.hapMSqlH,yl+gi8iIDh5jeoQXBU5Jgt4Yik+mwRm\",\n  \"previous\": \"http://TshGLzWOhAbYeDDnMRpcgOqSerjjYNF.lfHCmd51ZcTvUb1xICb1V4ObthDmD\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "99e5624a-ce92-496c-bb01-9cee5529f3ce",
+          "name": "Retrieve a job",
+          "request": {
+            "name": "Retrieve a job",
+            "description": {},
+            "url": {
+              "path": [
+                "jobs",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "91b3073c-231a-410d-ad49-11a3b1cc237b",
+              "name": "The requested job.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8046,\n  \"task_id\": 826,\n  \"project_id\": 3497,\n  \"assignee\": {\n    \"id\": 2602,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"stage\": \"acceptance\",\n  \"state\": \"new\",\n  \"start_frame\": 7685,\n  \"stop_frame\": 9728,\n  \"type\": \"ground_truth\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "630a082f-2776-4063-9968-25acb1e174c5",
+          "name": "Update a job",
+          "request": {
+            "name": "Update a job",
+            "description": {
+              "content": "Update job stage, state, or assignee.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "jobs",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignee\": \"<integer>\",\n  \"stage\": \"<string>\",\n  \"state\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "47609d29-0e2c-42fe-b0e5-ba1ee59894c9",
+              "name": "The updated job.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"assignee\": \"<integer>\",\n  \"stage\": \"<string>\",\n  \"state\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8046,\n  \"task_id\": 826,\n  \"project_id\": 3497,\n  \"assignee\": {\n    \"id\": 2602,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"stage\": \"acceptance\",\n  \"state\": \"new\",\n  \"start_frame\": 7685,\n  \"stop_frame\": 9728,\n  \"type\": \"ground_truth\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "aa2f1977-95cd-45b4-bcbc-5a55943c9243",
+    "name": "CVAT REST annotations jobs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

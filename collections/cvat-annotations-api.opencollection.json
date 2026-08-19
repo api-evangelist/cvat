@@ -1,0 +1,154 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST annotations API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "annotations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get task annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/tasks/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Get task annotations"
+        },
+        {
+          "info": {
+            "name": "Import task annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.cvat.ai/api/tasks/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Dataset format name to import (e.g. COCO 1.0, CVAT 1.1)."
+              }
+            ]
+          },
+          "docs": "Initiates a background process to import annotations into a task. Poll GET /requests/{rq_id} to check status; rq_id is returned in the response."
+        },
+        {
+          "info": {
+            "name": "Replace task annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.cvat.ai/api/tasks/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace task annotations"
+        },
+        {
+          "info": {
+            "name": "Delete task annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.cvat.ai/api/tasks/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Delete task annotations"
+        },
+        {
+          "info": {
+            "name": "Get job annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/jobs/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Get job annotations"
+        },
+        {
+          "info": {
+            "name": "Replace job annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.cvat.ai/api/jobs/:id/annotations",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace job annotations"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

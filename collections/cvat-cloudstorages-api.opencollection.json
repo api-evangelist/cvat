@@ -1,0 +1,104 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST annotations cloudstorages API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "cloudstorages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List cloud storages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/cloudstorages",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "A page number within the paginated result set."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per page."
+              }
+            ]
+          },
+          "docs": "List cloud storages"
+        },
+        {
+          "info": {
+            "name": "Create a cloud storage connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.cvat.ai/api/cloudstorages",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a cloud storage connection"
+        },
+        {
+          "info": {
+            "name": "Retrieve a cloud storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/cloudstorages/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Retrieve a cloud storage"
+        },
+        {
+          "info": {
+            "name": "Delete a cloud storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.cvat.ai/api/cloudstorages/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Delete a cloud storage"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

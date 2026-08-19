@@ -1,0 +1,418 @@
+{
+  "item": [
+    {
+      "id": "9674c922-027c-4ebf-9872-2d74c05ae1c7",
+      "name": "cloudstorages",
+      "description": {
+        "content": "External object-storage connections used as data sources.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7c4edbf7-08a7-4922-a2a4-3cb6314a9714",
+          "name": "List cloud storages",
+          "request": {
+            "name": "List cloud storages",
+            "description": {},
+            "url": {
+              "path": [
+                "cloudstorages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "A page number within the paginated result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "<integer>",
+                  "description": "Number of results to return per page."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4dca6417-dd16-4a8a-ae15-d20046efc4c3",
+              "name": "A paginated list of cloud storages.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cloudstorages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 3832,\n  \"next\": \"http://ykExRaAzbHUCyucypEPhPRTGCrBYWA.hjqpjOr7PIMtuHj.JtNayd2RUf5Pd4CSfYtH+Ci\",\n  \"previous\": \"https://AXYjaqN.tbeiwVQUQ9sdKueWt4T7N.ieBbFzC,GtuuK-KXv\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "39cd9224-9722-4ed7-bf09-98bfe1b4a362",
+          "name": "Create a cloud storage connection",
+          "request": {
+            "name": "Create a cloud storage connection",
+            "description": {},
+            "url": {
+              "path": [
+                "cloudstorages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider_type\": \"<string>\",\n  \"resource\": \"<string>\",\n  \"credentials_type\": \"<string>\",\n  \"display_name\": \"<string>\",\n  \"key\": \"<string>\",\n  \"secret_key\": \"<string>\",\n  \"specific_attributes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ee344697-58ab-4ac3-bfc7-8f1e7c2bd0eb",
+              "name": "The created cloud storage.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cloudstorages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"provider_type\": \"<string>\",\n  \"resource\": \"<string>\",\n  \"credentials_type\": \"<string>\",\n  \"display_name\": \"<string>\",\n  \"key\": \"<string>\",\n  \"secret_key\": \"<string>\",\n  \"specific_attributes\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 9057,\n  \"provider_type\": \"GOOGLE_CLOUD_STORAGE\",\n  \"resource\": \"string\",\n  \"display_name\": \"string\",\n  \"credentials_type\": \"KEY_SECRET_KEY_PAIR\",\n  \"owner\": {\n    \"id\": 3307,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"organization\": 9428,\n  \"created_date\": \"1969-08-31T08:49:19.612Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2db9e5fa-eb15-4231-94d4-a94b7dedceb0",
+          "name": "Retrieve a cloud storage",
+          "request": {
+            "name": "Retrieve a cloud storage",
+            "description": {},
+            "url": {
+              "path": [
+                "cloudstorages",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4d3202a7-2838-470d-9161-5246a9874c6a",
+              "name": "The requested cloud storage.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cloudstorages",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 9057,\n  \"provider_type\": \"GOOGLE_CLOUD_STORAGE\",\n  \"resource\": \"string\",\n  \"display_name\": \"string\",\n  \"credentials_type\": \"KEY_SECRET_KEY_PAIR\",\n  \"owner\": {\n    \"id\": 3307,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"organization\": 9428,\n  \"created_date\": \"1969-08-31T08:49:19.612Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f3d145e8-50a5-4524-a847-f39d895d3c46",
+          "name": "Delete a cloud storage",
+          "request": {
+            "name": "Delete a cloud storage",
+            "description": {},
+            "url": {
+              "path": [
+                "cloudstorages",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bd5855e8-8f2b-4630-9095-9afbbfe7327c",
+              "name": "The cloud storage has been deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cloudstorages",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5d2504b9-01d3-4dfe-a364-3bf6c827f6c0",
+    "name": "CVAT REST annotations cloudstorages API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

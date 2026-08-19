@@ -1,0 +1,542 @@
+{
+  "item": [
+    {
+      "id": "cb880b2e-a9dd-42df-8ef2-42e3815b33b9",
+      "name": "projects",
+      "description": {
+        "content": "Annotation projects that group tasks and share a label set.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a57bf950-3692-4253-8fa0-703a3db2102f",
+          "name": "List projects",
+          "request": {
+            "name": "List projects",
+            "description": {},
+            "url": {
+              "path": [
+                "projects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "A page number within the paginated result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "<integer>",
+                  "description": "Number of results to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "org",
+                  "value": "<string>",
+                  "description": "Organization slug used to filter the request."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "979756eb-9aed-4469-98a0-438015a4087b",
+              "name": "A paginated list of projects.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "org",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 1664,\n  \"next\": \"https://UVQPbgvLDImCDZQ.mxLekXtpJgkFK3XtTowmCSodwWUNg.hTvQByA.odrNfbJ9KTuEgcKDdvBPB\",\n  \"previous\": \"https://hPFdPVNgEywUFUvtyZwhVfNQOTrVi.ysqvbtQKaFb1MHplwmU6+V.kHnQvsVX\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "10f57498-8fce-49a5-9706-a4430feb1556",
+          "name": "Create a project",
+          "request": {
+            "name": "Create a project",
+            "description": {},
+            "url": {
+              "path": [
+                "projects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "09b01550-d7d6-4488-95dd-9067725ecc8f",
+              "name": "The created project.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7144,\n  \"name\": \"string\",\n  \"labels\": [\n    {\n      \"id\": 1034,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 7153,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 1042,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 8266,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 613,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 7750,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner\": {\n    \"id\": 3632,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 4649,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"status\": \"validation\",\n  \"tasks_count\": 8011,\n  \"organization\": 2831,\n  \"created_date\": \"1993-10-03T23:58:23.889Z\",\n  \"updated_date\": \"1973-06-22T16:28:00.553Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2680fbc7-1208-45f5-8959-4f66d5447a73",
+          "name": "Retrieve a project",
+          "request": {
+            "name": "Retrieve a project",
+            "description": {},
+            "url": {
+              "path": [
+                "projects",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "98d47feb-4437-4452-b1c3-dae68dc66530",
+              "name": "The requested project.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1496,\n  \"name\": \"string\",\n  \"labels\": [\n    {\n      \"id\": 836,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 138,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 6407,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 2450,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 9914,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 9338,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner\": {\n    \"id\": 3390,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 1207,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"status\": \"validation\",\n  \"tasks_count\": 3013,\n  \"organization\": 5598,\n  \"created_date\": \"1974-04-05T08:27:35.941Z\",\n  \"updated_date\": \"1970-05-08T12:03:42.130Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "77ce4baa-c2a1-42fb-98c8-fc631ad957ba",
+          "name": "Update a project",
+          "request": {
+            "name": "Update a project",
+            "description": {},
+            "url": {
+              "path": [
+                "projects",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5ced5cfd-950a-4843-9575-285be502ce62",
+              "name": "The updated project.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1496,\n  \"name\": \"string\",\n  \"labels\": [\n    {\n      \"id\": 836,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 138,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 6407,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 2450,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 9914,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 9338,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"owner\": {\n    \"id\": 3390,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 1207,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"status\": \"validation\",\n  \"tasks_count\": 3013,\n  \"organization\": 5598,\n  \"created_date\": \"1974-04-05T08:27:35.941Z\",\n  \"updated_date\": \"1970-05-08T12:03:42.130Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b6b430d3-5c2a-44c5-9480-d8cce3d8bbe4",
+          "name": "Delete a project",
+          "request": {
+            "name": "Delete a project",
+            "description": {},
+            "url": {
+              "path": [
+                "projects",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "beee6d7c-29a0-49c4-aeb5-3412f90e4b84",
+              "name": "The project has been deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c24ff51f-1a7b-4903-9249-714a2389d180",
+    "name": "CVAT REST annotations projects API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

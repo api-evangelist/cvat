@@ -1,0 +1,842 @@
+{
+  "item": [
+    {
+      "id": "948e0b9f-865d-4b08-8c41-ead15f12f607",
+      "name": "tasks",
+      "description": {
+        "content": "Annotation tasks holding media data and annotations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "70f81c0e-febd-432f-bd46-dc784737daf1",
+          "name": "List tasks",
+          "request": {
+            "name": "List tasks",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "A page number within the paginated result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "<integer>",
+                  "description": "Number of results to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "project_id",
+                  "value": "<integer>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ac0fd5dc-ea0e-41b9-a948-910b06918fc9",
+              "name": "A paginated list of tasks.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "project_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 125,\n  \"next\": \"https://LHkjNTwFsHmDBSXrlclKvVQOhYc.wxeyGJhQ+7g0ZSNjr+h38Mn\",\n  \"previous\": \"https://XYEPvzTPmVnUCeHcm.usfX7gRLe3fjeLnE8UqwDKUefB3zgyVcFT-IfqmM0IMsEUGk\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "69838c10-2df9-44fd-b93c-6db2c11349bb",
+          "name": "Create a task",
+          "request": {
+            "name": "Create a task",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"project_id\": \"<integer>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"segment_size\": \"<integer>\",\n  \"overlap\": \"<integer>\",\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fcfedbd4-600e-4a4d-b5cb-a9bbbc71bdbb",
+              "name": "The created task.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project_id\": \"<integer>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"segment_size\": \"<integer>\",\n  \"overlap\": \"<integer>\",\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7689,\n  \"name\": \"string\",\n  \"project_id\": 9387,\n  \"mode\": \"string\",\n  \"status\": \"validation\",\n  \"size\": 1356,\n  \"segment_size\": 48,\n  \"owner\": {\n    \"id\": 1489,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 4035,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"labels\": [\n    {\n      \"id\": 3865,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 7535,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 5732,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 5295,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 9564,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 9705,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"organization\": 4671,\n  \"created_date\": \"2022-12-18T14:06:24.315Z\",\n  \"updated_date\": \"2024-04-01T10:36:28.254Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "45ac6334-c043-4052-81df-3496964e6902",
+          "name": "Retrieve a task",
+          "request": {
+            "name": "Retrieve a task",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8dbbec98-cd1c-4330-82ce-05bf56bdedf9",
+              "name": "The requested task.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8732,\n  \"name\": \"string\",\n  \"project_id\": 9119,\n  \"mode\": \"string\",\n  \"status\": \"annotation\",\n  \"size\": 872,\n  \"segment_size\": 7424,\n  \"owner\": {\n    \"id\": 3379,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 8414,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"labels\": [\n    {\n      \"id\": 7026,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 2417,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 8178,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 4208,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 9423,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 9835,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"organization\": 4708,\n  \"created_date\": \"1968-07-02T21:15:31.143Z\",\n  \"updated_date\": \"2014-05-18T13:36:45.514Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7998ae3b-774c-42a8-b771-1f3c90b3c905",
+          "name": "Update a task",
+          "request": {
+            "name": "Update a task",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"project_id\": \"<integer>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"segment_size\": \"<integer>\",\n  \"overlap\": \"<integer>\",\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f18bb9ab-fa99-4767-9b2c-df72116a6f13",
+              "name": "The updated task.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project_id\": \"<integer>\",\n  \"labels\": [\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"segment_size\": \"<integer>\",\n  \"overlap\": \"<integer>\",\n  \"owner_id\": \"<integer>\",\n  \"assignee_id\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8732,\n  \"name\": \"string\",\n  \"project_id\": 9119,\n  \"mode\": \"string\",\n  \"status\": \"annotation\",\n  \"size\": 872,\n  \"segment_size\": 7424,\n  \"owner\": {\n    \"id\": 3379,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"assignee\": {\n    \"id\": 8414,\n    \"username\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"labels\": [\n    {\n      \"id\": 7026,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 2417,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 8178,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    },\n    {\n      \"id\": 4208,\n      \"name\": \"<string>\",\n      \"color\": \"<string>\",\n      \"type\": \"<string>\",\n      \"attributes\": [\n        {\n          \"id\": 9423,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"id\": 9835,\n          \"name\": \"<string>\",\n          \"mutable\": \"<boolean>\",\n          \"input_type\": \"<string>\",\n          \"default_value\": \"<string>\",\n          \"values\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ],\n      \"parent_id\": \"<integer>\"\n    }\n  ],\n  \"organization\": 4708,\n  \"created_date\": \"1968-07-02T21:15:31.143Z\",\n  \"updated_date\": \"2014-05-18T13:36:45.514Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1cf01ae3-03ee-4e6d-b4dc-b261f2d6668d",
+          "name": "Delete a task",
+          "request": {
+            "name": "Delete a task",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "aeb06704-a542-4edb-ad2f-3a32bbdb348d",
+              "name": "The task has been deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d98ce8e0-83c7-4a34-af94-b1d0ea3c95b9",
+          "name": "Attach data to a task",
+          "request": {
+            "name": "Attach data to a task",
+            "description": {
+              "content": "Upload images, video, or references to cloud-storage objects and start the background process that prepares the task data.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "client_files",
+                  "value": "[\"<binary>\",\"<binary>\"]",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "server_files",
+                  "value": "[\"<string>\",\"<string>\"]",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "remote_files",
+                  "value": "[\"<string>\",\"<string>\"]",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "image_quality",
+                  "value": "<integer>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "use_cache",
+                  "value": "<boolean>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "cloud_storage_id",
+                  "value": "<integer>",
+                  "type": "text",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ff9cd08a-cad2-4766-9a34-a9a4d9d1e000",
+              "name": "Data upload accepted and queued for processing.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "client_files",
+                      "value": "[\"<binary>\",\"<binary>\"]",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "server_files",
+                      "value": "[\"<string>\",\"<string>\"]",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "remote_files",
+                      "value": "[\"<string>\",\"<string>\"]",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "image_quality",
+                      "value": "<integer>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "use_cache",
+                      "value": "<boolean>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "cloud_storage_id",
+                      "value": "<integer>",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "423c7a22-fb61-491a-a85b-062ddd124259",
+          "name": "Export a task dataset",
+          "request": {
+            "name": "Export a task dataset",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "dataset",
+                "export"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "save_images",
+                  "value": "<boolean>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bf865760-8d41-41ce-8b77-60a73925cbb8",
+              "name": "Export accepted; poll the returned request for the result link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "dataset",
+                    "export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "save_images",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9851a39e-7c39-42e1-b7fc-21f9072ec791",
+    "name": "CVAT REST annotations tasks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

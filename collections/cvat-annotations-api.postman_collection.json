@@ -1,0 +1,656 @@
+{
+  "item": [
+    {
+      "id": "3e9ab19c-c4ce-4a8d-8e38-f5777621d521",
+      "name": "annotations",
+      "description": {
+        "content": "Shapes, tracks, and tags attached to tasks and jobs.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "68c3f5ec-6d99-419d-80a6-2c850624cf47",
+          "name": "Get task annotations",
+          "request": {
+            "name": "Get task annotations",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "397902db-9da2-44bc-b7fa-13517de08210",
+              "name": "The task annotations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": 416,\n  \"tags\": [\n    {\n      \"id\": 3620,\n      \"frame\": 4298,\n      \"label_id\": 8918,\n      \"source\": \"string\"\n    },\n    {\n      \"id\": 4163,\n      \"frame\": 6680,\n      \"label_id\": 9533,\n      \"source\": \"string\"\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": 4365,\n      \"type\": \"points\",\n      \"frame\": 6749,\n      \"label_id\": 6241,\n      \"occluded\": true,\n      \"outside\": true,\n      \"points\": [\n        3514.7998313666208,\n        883.6951634171276\n      ],\n      \"rotation\": 8450.217946432733,\n      \"z_order\": 431,\n      \"source\": \"string\"\n    },\n    {\n      \"id\": 5195,\n      \"type\": \"points\",\n      \"frame\": 9440,\n      \"label_id\": 5138,\n      \"occluded\": true,\n      \"outside\": true,\n      \"points\": [\n        2464.6069129139505,\n        5359.658063985965\n      ],\n      \"rotation\": 9204.520688601293,\n      \"z_order\": 9539,\n      \"source\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "590c9b53-9b56-4b6c-ba63-4e094b85cf9b",
+          "name": "Replace task annotations",
+          "request": {
+            "name": "Replace task annotations",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5e690d24-ac90-48c9-929a-7bfadec61a09",
+              "name": "The updated annotations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a82fce2a-bd54-4bbe-b8d3-09d1b677a960",
+          "name": "Import task annotations",
+          "request": {
+            "name": "Import task annotations",
+            "description": {
+              "content": "Initiates a background process to import annotations into a task. Poll GET /requests/{rq_id} to check status; rq_id is returned in the response.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "Dataset format name to import (e.g. COCO 1.0, CVAT 1.1)."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ebe33b5a-f6d9-4558-ba88-a33c5db6eea2",
+              "name": "Import accepted and queued.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eef61b48-39ea-48bb-ac6b-30108a35aa70",
+          "name": "Delete task annotations",
+          "request": {
+            "name": "Delete task annotations",
+            "description": {},
+            "url": {
+              "path": [
+                "tasks",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "113f5ab9-4e01-4cd0-9aa6-d9014e0c6f9b",
+              "name": "The annotations have been deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a6a3fba2-37d7-4b18-a24d-de40c79b0fe3",
+          "name": "Get job annotations",
+          "request": {
+            "name": "Get job annotations",
+            "description": {},
+            "url": {
+              "path": [
+                "jobs",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "14f9af34-4a80-4006-a052-566871104f8a",
+              "name": "The job annotations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "46194b9e-610a-4111-8575-4061b969f252",
+          "name": "Replace job annotations",
+          "request": {
+            "name": "Replace job annotations",
+            "description": {},
+            "url": {
+              "path": [
+                "jobs",
+                ":id",
+                "annotations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "55427cd6-badc-49fb-9887-2322996a5c43",
+              "name": "The updated annotations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":id",
+                    "annotations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": \"<integer>\",\n  \"tags\": [\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"id\": \"<integer>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"source\": \"<string>\",\n      \"attributes\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"shapes\": [\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"type\": \"<string>\",\n      \"frame\": \"<integer>\",\n      \"label_id\": \"<integer>\",\n      \"occluded\": \"<boolean>\",\n      \"outside\": \"<boolean>\",\n      \"points\": [\n        \"<double>\",\n        \"<double>\"\n      ],\n      \"rotation\": \"<double>\",\n      \"z_order\": \"<integer>\",\n      \"source\": \"<string>\"\n    }\n  ],\n  \"tracks\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3980c3d8-a2bc-4a46-80f6-54e80cc8c3a5",
+    "name": "CVAT REST annotations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

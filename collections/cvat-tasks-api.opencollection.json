@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST annotations tasks API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/tasks",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "A page number within the paginated result set."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per page."
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List tasks"
+        },
+        {
+          "info": {
+            "name": "Create a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.cvat.ai/api/tasks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a task"
+        },
+        {
+          "info": {
+            "name": "Retrieve a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/tasks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Retrieve a task"
+        },
+        {
+          "info": {
+            "name": "Update a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.cvat.ai/api/tasks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a task"
+        },
+        {
+          "info": {
+            "name": "Delete a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.cvat.ai/api/tasks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Delete a task"
+        },
+        {
+          "info": {
+            "name": "Attach data to a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.cvat.ai/api/tasks/:id/data",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Upload images, video, or references to cloud-storage objects and start the background process that prepares the task data."
+        },
+        {
+          "info": {
+            "name": "Export a task dataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.cvat.ai/api/tasks/:id/dataset/export",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "save_images",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Export a task dataset"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

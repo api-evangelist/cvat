@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST annotations memberships API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "memberships",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List memberships",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/memberships",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "A page number within the paginated result set."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per page."
+              },
+              {
+                "name": "org",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List memberships"
+        },
+        {
+          "info": {
+            "name": "Retrieve a membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/memberships/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Retrieve a membership"
+        },
+        {
+          "info": {
+            "name": "Delete a membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.cvat.ai/api/memberships/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Delete a membership"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

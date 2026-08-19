@@ -1,0 +1,454 @@
+{
+  "item": [
+    {
+      "id": "5b788ab1-ae93-49c5-9fad-3208898c6ecf",
+      "name": "labels",
+      "description": {
+        "content": "Label taxonomy shared across projects, tasks, and jobs.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1c610472-e120-4989-b318-38caa88d1ce3",
+          "name": "List labels",
+          "request": {
+            "name": "List labels",
+            "description": {},
+            "url": {
+              "path": [
+                "labels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "A page number within the paginated result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "<integer>",
+                  "description": "Number of results to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "project_id",
+                  "value": "<integer>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "42fd0364-a698-4a2e-aff7-7923f70b285e",
+              "name": "A paginated list of labels.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "project_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 5572,\n  \"next\": \"https://lyTYatqoaPZfBLwIspPTcZIyAuxFnd.xnpMkTdw702SMZs6heEWg3jqnbNuIKJcRWqADBrHHwabrgXPeE,HbN\",\n  \"previous\": \"http://iWVWcvmpcLuId.wqGaMXy1wXDA+t18q-dAAFr7GEfUSlQXN\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "41023974-4d14-4703-ad31-10dad1e5443c",
+          "name": "Retrieve a label",
+          "request": {
+            "name": "Retrieve a label",
+            "description": {},
+            "url": {
+              "path": [
+                "labels",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "63488abd-40ee-4465-bc19-87b403083d36",
+              "name": "The requested label.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "labels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1271,\n  \"name\": \"string\",\n  \"color\": \"string\",\n  \"type\": \"ellipse\",\n  \"attributes\": [\n    {\n      \"id\": 9871,\n      \"name\": \"string\",\n      \"mutable\": false,\n      \"input_type\": \"number\",\n      \"default_value\": \"string\",\n      \"values\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": 8812,\n      \"name\": \"string\",\n      \"mutable\": false,\n      \"input_type\": \"number\",\n      \"default_value\": \"string\",\n      \"values\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"parent_id\": 415\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "276fa82c-6ddc-42d6-904e-470be1270db9",
+          "name": "Update a label",
+          "request": {
+            "name": "Update a label",
+            "description": {},
+            "url": {
+              "path": [
+                "labels",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"color\": \"<string>\",\n  \"type\": \"<string>\",\n  \"attributes\": [\n    {\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"parent_id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "02862e32-bcdb-4357-b02b-7d9d05545a8b",
+              "name": "The updated label.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "labels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"color\": \"<string>\",\n  \"type\": \"<string>\",\n  \"attributes\": [\n    {\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"parent_id\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2537,\n  \"name\": \"<string>\",\n  \"color\": \"<string>\",\n  \"type\": \"<string>\",\n  \"attributes\": [\n    {\n      \"id\": 4120,\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": 4357,\n      \"name\": \"<string>\",\n      \"mutable\": \"<boolean>\",\n      \"input_type\": \"<string>\",\n      \"default_value\": \"<string>\",\n      \"values\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"parent_id\": \"<integer>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2e000b80-2540-4acc-b08b-1b3f0ac999d9",
+          "name": "Delete a label",
+          "request": {
+            "name": "Delete a label",
+            "description": {},
+            "url": {
+              "path": [
+                "labels",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) A unique integer value identifying this resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1d5684f1-5337-41dc-8808-5d573c5a7db2",
+              "name": "The label has been deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "labels",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) A unique integer value identifying this resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.cvat.ai/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "aa46b006-e530-4a34-89f3-c611e1061fa3",
+    "name": "CVAT REST annotations labels API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.\n\nContact Support:\n Name: CVAT Support",
+      "type": "text/plain"
+    }
+  }
+}

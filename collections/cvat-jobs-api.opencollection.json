@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CVAT REST annotations jobs API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "jobs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List jobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/jobs",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "A page number within the paginated result set."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per page."
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List jobs"
+        },
+        {
+          "info": {
+            "name": "Retrieve a job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.cvat.ai/api/jobs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ]
+          },
+          "docs": "Retrieve a job"
+        },
+        {
+          "info": {
+            "name": "Update a job",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.cvat.ai/api/jobs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique integer value identifying this resource."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update job stage, state, or assignee."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
