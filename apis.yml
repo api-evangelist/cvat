@@ -22,6 +22,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cvat.png
 tags:
+- Computer-Vision
+- Data Annotation
+- Labeling
+- Datasets
+- Open-Source
+tags_raw:
 - Computer Vision
 - Data Annotation
 - Labeling
@@ -37,6 +43,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Annotations
+  tags_raw:
   - annotations
   properties:
   - type: OpenAPI
@@ -85,6 +93,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Job
+  tags_raw:
   - jobs
   properties:
   - type: OpenAPI
@@ -109,6 +119,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Labels
+  tags_raw:
   - labels
   properties:
   - type: OpenAPI
@@ -133,6 +145,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Memberships
+  tags_raw:
   - memberships
   properties:
   - type: OpenAPI
@@ -157,6 +171,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Organization
+  tags_raw:
   - organizations
   properties:
   - type: OpenAPI
@@ -181,6 +197,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Project
+  tags_raw:
   - projects
   properties:
   - type: OpenAPI
@@ -205,6 +223,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Task
+  tags_raw:
   - tasks
   properties:
   - type: OpenAPI
