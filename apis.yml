@@ -7,6 +7,18 @@ description: CVAT (Computer Vision Annotation Tool) is an open-source platform f
   exposes projects, tasks, jobs, annotations, labels, organizations, memberships,
   and cloud storage integrations, available both self-hosted (MIT-licensed) and as
   the hosted CVAT Online service at app.cvat.ai.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
