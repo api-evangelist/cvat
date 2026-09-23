@@ -1,14 +1,7 @@
 {
   "provider": "cvat",
   "sources": [
-    "cvat-annotations-api-openapi.yml",
-    "cvat-cloudstorages-api-openapi.yml",
-    "cvat-jobs-api-openapi.yml",
-    "cvat-labels-api-openapi.yml",
-    "cvat-memberships-api-openapi.yml",
-    "cvat-organizations-api-openapi.yml",
-    "cvat-projects-api-openapi.yml",
-    "cvat-tasks-api-openapi.yml"
+    "_original/cvat-openapi.yml"
   ],
   "outputs": [
     "cvat-annotations-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "cvat-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "cvat-annotations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-cloudstorages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-jobs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-labels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-memberships-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cvat-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

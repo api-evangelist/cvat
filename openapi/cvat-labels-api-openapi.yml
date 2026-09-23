@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations labels API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Labels API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,14 +19,14 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: labels
+- name: Labels
   description: Label taxonomy shared across projects, tasks, and jobs.
 paths:
   /labels:
     get:
       operationId: labels_list
       tags:
-      - labels
+      - Labels
       summary: List labels
       parameters:
       - $ref: '#/components/parameters/Page'
@@ -52,7 +52,7 @@ paths:
     get:
       operationId: labels_retrieve
       tags:
-      - labels
+      - Labels
       summary: Retrieve a label
       responses:
         '200':
@@ -64,7 +64,7 @@ paths:
     patch:
       operationId: labels_partial_update
       tags:
-      - labels
+      - Labels
       summary: Update a label
       requestBody:
         required: true
@@ -82,13 +82,35 @@ paths:
     delete:
       operationId: labels_destroy
       tags:
-      - labels
+      - Labels
       summary: Delete a label
       responses:
         '204':
           description: The label has been deleted.
 components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   schemas:
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
     Attribute:
       type: object
       properties:
@@ -113,25 +135,6 @@ components:
           type: array
           items:
             type: string
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          format: uri
-          nullable: true
-        previous:
-          type: string
-          format: uri
-          nullable: true
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedLabelList:
-      $ref: '#/components/schemas/PaginatedBase'
     Label:
       type: object
       properties:
@@ -161,28 +164,28 @@ components:
           items:
             $ref: '#/components/schemas/Attribute'
         parent_id:
+          type:
+          - integer
+          - 'null'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
           type: integer
-          nullable: true
-  parameters:
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
   securitySchemes:
     tokenAuth:
       type: apiKey

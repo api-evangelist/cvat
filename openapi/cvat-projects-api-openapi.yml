@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations projects API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Projects API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,14 +19,14 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: projects
+- name: Projects
   description: Annotation projects that group tasks and share a label set.
 paths:
   /projects:
     get:
       operationId: projects_list
       tags:
-      - projects
+      - Projects
       summary: List projects
       parameters:
       - $ref: '#/components/parameters/Page'
@@ -46,7 +46,7 @@ paths:
     post:
       operationId: projects_create
       tags:
-      - projects
+      - Projects
       summary: Create a project
       requestBody:
         required: true
@@ -67,7 +67,7 @@ paths:
     get:
       operationId: projects_retrieve
       tags:
-      - projects
+      - Projects
       summary: Retrieve a project
       responses:
         '200':
@@ -79,7 +79,7 @@ paths:
     patch:
       operationId: projects_partial_update
       tags:
-      - projects
+      - Projects
       summary: Update a project
       requestBody:
         required: true
@@ -97,13 +97,69 @@ paths:
     delete:
       operationId: projects_destroy
       tags:
-      - projects
+      - Projects
       summary: Delete a project
       responses:
         '204':
           description: The project has been deleted.
 components:
   schemas:
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        status:
+          type: string
+          enum:
+          - annotation
+          - validation
+          - completed
+        tasks_count:
+          type: integer
+          readOnly: true
+        organization:
+          type:
+          - integer
+          - 'null'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
     Attribute:
       type: object
       properties:
@@ -128,9 +184,12 @@ components:
           type: array
           items:
             type: string
+    PaginatedProjectList:
+      $ref: '#/components/schemas/PaginatedBase'
     BasicUser:
-      type: object
-      nullable: true
+      type:
+      - object
+      - 'null'
       properties:
         id:
           type: integer
@@ -141,42 +200,6 @@ components:
           type: string
         last_name:
           type: string
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          format: uri
-          nullable: true
-        previous:
-          type: string
-          format: uri
-          nullable: true
-        results:
-          type: array
-          items:
-            type: object
-    ProjectWriteRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        labels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Label'
-        owner_id:
-          type: integer
-          nullable: true
-        assignee_id:
-          type: integer
-          nullable: true
-    PaginatedProjectList:
-      $ref: '#/components/schemas/PaginatedBase'
     Label:
       type: object
       properties:
@@ -206,45 +229,35 @@ components:
           items:
             $ref: '#/components/schemas/Attribute'
         parent_id:
-          type: integer
-          nullable: true
-    Project:
+          type:
+          - integer
+          - 'null'
+    ProjectWriteRequest:
       type: object
+      required:
+      - name
       properties:
-        id:
-          type: integer
-          readOnly: true
         name:
           type: string
         labels:
           type: array
           items:
             $ref: '#/components/schemas/Label'
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        assignee:
-          $ref: '#/components/schemas/BasicUser'
-        status:
-          type: string
-          enum:
-          - annotation
-          - validation
-          - completed
-        tasks_count:
-          type: integer
-          readOnly: true
-        organization:
-          type: integer
-          nullable: true
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_date:
-          type: string
-          format: date-time
-          readOnly: true
+        owner_id:
+          type:
+          - integer
+          - 'null'
+        assignee_id:
+          type:
+          - integer
+          - 'null'
   parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     Page:
       name: page
       in: query
@@ -258,12 +271,6 @@ components:
       schema:
         type: integer
       description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
   securitySchemes:
     tokenAuth:
       type: apiKey

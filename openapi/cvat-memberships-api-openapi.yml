@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations memberships API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Memberships API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,14 +19,14 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: memberships
+- name: Memberships
   description: Membership of users within organizations.
 paths:
   /memberships:
     get:
       operationId: memberships_list
       tags:
-      - memberships
+      - Memberships
       summary: List memberships
       parameters:
       - $ref: '#/components/parameters/Page'
@@ -48,7 +48,7 @@ paths:
     get:
       operationId: memberships_retrieve
       tags:
-      - memberships
+      - Memberships
       summary: Retrieve a membership
       responses:
         '200':
@@ -60,18 +60,39 @@ paths:
     delete:
       operationId: memberships_destroy
       tags:
-      - memberships
+      - Memberships
       summary: Delete a membership
       responses:
         '204':
           description: The membership has been deleted.
 components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   schemas:
     PaginatedMembershipList:
       $ref: '#/components/schemas/PaginatedBase'
     BasicUser:
-      type: object
-      nullable: true
+      type:
+      - object
+      - 'null'
       properties:
         id:
           type: integer
@@ -82,23 +103,6 @@ components:
           type: string
         last_name:
           type: string
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          format: uri
-          nullable: true
-        previous:
-          type: string
-          format: uri
-          nullable: true
-        results:
-          type: array
-          items:
-            type: object
     Membership:
       type: object
       properties:
@@ -118,26 +122,25 @@ components:
           - owner
         is_active:
           type: boolean
-  parameters:
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
   securitySchemes:
     tokenAuth:
       type: apiKey

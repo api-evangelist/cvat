@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations jobs API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Jobs API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,14 +19,14 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: jobs
+- name: Jobs
   description: Assignable annotation units that subdivide a task.
 paths:
   /jobs:
     get:
       operationId: jobs_list
       tags:
-      - jobs
+      - Jobs
       summary: List jobs
       parameters:
       - $ref: '#/components/parameters/Page'
@@ -48,7 +48,7 @@ paths:
     get:
       operationId: jobs_retrieve
       tags:
-      - jobs
+      - Jobs
       summary: Retrieve a job
       responses:
         '200':
@@ -60,7 +60,7 @@ paths:
     patch:
       operationId: jobs_partial_update
       tags:
-      - jobs
+      - Jobs
       summary: Update a job
       description: Update job stage, state, or assignee.
       requestBody:
@@ -78,19 +78,6 @@ paths:
                 $ref: '#/components/schemas/Job'
 components:
   schemas:
-    BasicUser:
-      type: object
-      nullable: true
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
     Job:
       type: object
       properties:
@@ -101,8 +88,9 @@ components:
           type: integer
           readOnly: true
         project_id:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           readOnly: true
         assignee:
           $ref: '#/components/schemas/BasicUser'
@@ -130,31 +118,13 @@ components:
           enum:
           - annotation
           - ground_truth
-    PaginatedJobList:
-      $ref: '#/components/schemas/PaginatedBase'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          format: uri
-          nullable: true
-        previous:
-          type: string
-          format: uri
-          nullable: true
-        results:
-          type: array
-          items:
-            type: object
     JobWriteRequest:
       type: object
       properties:
         assignee:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
         stage:
           type: string
           enum:
@@ -168,7 +138,48 @@ components:
           - in progress
           - completed
           - rejected
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    PaginatedJobList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
   parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     Page:
       name: page
       in: query
@@ -182,12 +193,6 @@ components:
       schema:
         type: integer
       description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
   securitySchemes:
     tokenAuth:
       type: apiKey

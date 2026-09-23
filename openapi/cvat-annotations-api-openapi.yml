@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Annotations API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,7 +19,7 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: annotations
+- name: Annotations
   description: Shapes, tracks, and tags attached to tasks and jobs.
 paths:
   /tasks/{id}/annotations:
@@ -28,7 +28,7 @@ paths:
     get:
       operationId: tasks_retrieve_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Get task annotations
       responses:
         '200':
@@ -40,7 +40,7 @@ paths:
     put:
       operationId: tasks_update_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Replace task annotations
       requestBody:
         required: true
@@ -58,7 +58,7 @@ paths:
     post:
       operationId: tasks_create_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Import task annotations
       description: Initiates a background process to import annotations into a task. Poll GET /requests/{rq_id} to check status; rq_id is returned in the response.
       parameters:
@@ -73,7 +73,7 @@ paths:
     delete:
       operationId: tasks_destroy_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Delete task annotations
       responses:
         '204':
@@ -84,7 +84,7 @@ paths:
     get:
       operationId: jobs_retrieve_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Get job annotations
       responses:
         '200':
@@ -96,7 +96,7 @@ paths:
     put:
       operationId: jobs_update_annotations
       tags:
-      - annotations
+      - Annotations
       summary: Replace job annotations
       requestBody:
         required: true
@@ -112,48 +112,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LabeledData'
 components:
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   schemas:
-    LabeledImage:
-      type: object
-      properties:
-        id:
-          type: integer
-        frame:
-          type: integer
-        label_id:
-          type: integer
-        source:
-          type: string
-        attributes:
-          type: array
-          items:
-            type: object
-    LabeledData:
-      type: object
-      description: Container of annotations for a task or job.
-      properties:
-        version:
-          type: integer
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledImage'
-        shapes:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledShape'
-        tracks:
-          type: array
-          items:
-            type: object
     LabeledShape:
       type: object
       properties:
@@ -190,6 +149,47 @@ components:
           type: integer
         source:
           type: string
+    LabeledData:
+      type: object
+      description: Container of annotations for a task or job.
+      properties:
+        version:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+        tracks:
+          type: array
+          items:
+            type: object
+    LabeledImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        frame:
+          type: integer
+        label_id:
+          type: integer
+        source:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: object
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

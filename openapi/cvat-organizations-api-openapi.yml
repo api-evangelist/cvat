@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: CVAT REST annotations organizations API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds. The same API is served by self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage. The full machine-readable schema is published by each server at /api/schema/ and the interactive docs at /api/docs/. This document captures a representative subset of the documented surface.
+  title: CVAT REST Organizations API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
   termsOfService: https://www.cvat.ai/terms-of-use
   contact:
     name: CVAT Support
@@ -19,14 +19,14 @@ security:
 - tokenAuth: []
 - basicAuth: []
 tags:
-- name: organizations
+- name: Organizations
   description: Organizations scoping resources for teams.
 paths:
   /organizations:
     get:
       operationId: organizations_list
       tags:
-      - organizations
+      - Organizations
       summary: List organizations
       parameters:
       - $ref: '#/components/parameters/Page'
@@ -41,7 +41,7 @@ paths:
     post:
       operationId: organizations_create
       tags:
-      - organizations
+      - Organizations
       summary: Create an organization
       requestBody:
         required: true
@@ -62,7 +62,7 @@ paths:
     get:
       operationId: organizations_retrieve
       tags:
-      - organizations
+      - Organizations
       summary: Retrieve an organization
       responses:
         '200':
@@ -74,56 +74,15 @@ paths:
     delete:
       operationId: organizations_destroy
       tags:
-      - organizations
+      - Organizations
       summary: Delete an organization
       responses:
         '204':
           description: The organization has been deleted.
 components:
   schemas:
-    BasicUser:
-      type: object
-      nullable: true
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
     PaginatedOrganizationList:
       $ref: '#/components/schemas/PaginatedBase'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          format: uri
-          nullable: true
-        previous:
-          type: string
-          format: uri
-          nullable: true
-        results:
-          type: array
-          items:
-            type: object
-    OrganizationWriteRequest:
-      type: object
-      required:
-      - slug
-      properties:
-        slug:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
     Organization:
       type: object
       properties:
@@ -142,7 +101,57 @@ components:
           type: string
           format: date-time
           readOnly: true
+    OrganizationWriteRequest:
+      type: object
+      required:
+      - slug
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
   parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     Page:
       name: page
       in: query
@@ -156,12 +165,6 @@ components:
       schema:
         type: integer
       description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
   securitySchemes:
     tokenAuth:
       type: apiKey
