@@ -80,52 +80,27 @@ paths:
         '204':
           description: The organization has been deleted.
 components:
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
   schemas:
-    PaginatedOrganizationList:
-      $ref: '#/components/schemas/PaginatedBase'
-    Organization:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        slug:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-    OrganizationWriteRequest:
-      type: object
-      required:
-      - slug
-      properties:
-        slug:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
     PaginatedBase:
       type: object
       properties:
@@ -145,26 +120,51 @@ components:
           type: array
           items:
             type: object
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
+    OrganizationWriteRequest:
+      type: object
+      required:
+      - slug
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+    PaginatedOrganizationList:
+      $ref: '#/components/schemas/PaginatedBase'
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
   securitySchemes:
     tokenAuth:
       type: apiKey

@@ -66,43 +66,7 @@ paths:
         '204':
           description: The membership has been deleted.
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   schemas:
-    PaginatedMembershipList:
-      $ref: '#/components/schemas/PaginatedBase'
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
     Membership:
       type: object
       properties:
@@ -141,6 +105,42 @@ components:
           type: array
           items:
             type: object
+    PaginatedMembershipList:
+      $ref: '#/components/schemas/PaginatedBase'
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

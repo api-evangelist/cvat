@@ -101,52 +101,25 @@ components:
         type: integer
       description: A unique integer value identifying this resource.
   schemas:
-    CloudStorageWriteRequest:
+    PaginatedBase:
       type: object
-      required:
-      - provider_type
-      - resource
-      - credentials_type
       properties:
-        provider_type:
-          type: string
-          enum:
-          - AWS_S3_BUCKET
-          - AZURE_CONTAINER
-          - GOOGLE_CLOUD_STORAGE
-        resource:
-          type: string
-        display_name:
-          type: string
-        credentials_type:
-          type: string
-          enum:
-          - KEY_SECRET_KEY_PAIR
-          - ACCOUNT_NAME_TOKEN_PAIR
-          - KEY_FILE_PATH
-          - ANONYMOUS_ACCESS
-        key:
-          type: string
-        secret_key:
-          type: string
-        specific_attributes:
-          type: string
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-    PaginatedCloudStorageList:
-      $ref: '#/components/schemas/PaginatedBase'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
     CloudStorage:
       type: object
       properties:
@@ -181,25 +154,52 @@ components:
           type: string
           format: date-time
           readOnly: true
-    PaginatedBase:
+    CloudStorageWriteRequest:
       type: object
+      required:
+      - provider_type
+      - resource
+      - credentials_type
       properties:
-        count:
+        provider_type:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+        resource:
+          type: string
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+        key:
+          type: string
+        secret_key:
+          type: string
+        specific_attributes:
+          type: string
+    PaginatedCloudStorageList:
+      $ref: '#/components/schemas/PaginatedBase'
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
           type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
   securitySchemes:
     tokenAuth:
       type: apiKey

@@ -112,7 +112,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/LabeledData'
 components:
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   schemas:
+    LabeledData:
+      type: object
+      description: Container of annotations for a task or job.
+      properties:
+        version:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+        tracks:
+          type: array
+          items:
+            type: object
     LabeledShape:
       type: object
       properties:
@@ -149,24 +175,6 @@ components:
           type: integer
         source:
           type: string
-    LabeledData:
-      type: object
-      description: Container of annotations for a task or job.
-      properties:
-        version:
-          type: integer
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledImage'
-        shapes:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledShape'
-        tracks:
-          type: array
-          items:
-            type: object
     LabeledImage:
       type: object
       properties:
@@ -182,14 +190,6 @@ components:
           type: array
           items:
             type: object
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

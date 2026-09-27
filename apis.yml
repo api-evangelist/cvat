@@ -8,16 +8,22 @@ description: CVAT (Computer Vision Annotation Tool) is an open-source platform f
   and cloud storage integrations, available both self-hosted (MIT-licensed) and as
   the hosted CVAT Online service at app.cvat.ai.
 deliveryModel:
-  model: saas
-  open_source: false
+  model: open-core
+  license: MIT
+  license_evidence:
+    repo: cvat-ai/cvat
+    spdx: MIT
+    stars: 16793
+  open_source: true
   commercial: true
   callable_host: true
-  label: Hosted service · you call their endpoint
-  confidence: high
+  label: Open core · an OSS project plus a commercial hosted product
+  confidence: medium
   source:
   - openapi
   - pricing
-  generated: '2026-08-28'
+  - repository-license
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -35,23 +41,25 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cvat.png
 tags:
-- Computer-Vision
+- Computer Vision
 - Data Annotation
 - Labeling
 - Datasets
-- Open-Source
+- Open Source
 tags_raw:
 - Computer Vision
 - Data Annotation
 - Labeling
 - Datasets
 - Open Source
+- Computer-Vision
+- Open-Source
 created: '2026-06-21'
 modified: '2026-06-21'
 specificationVersion: '0.23'
 apis:
 - aid: cvat:cvat-annotations-api
-  name: CVAT annotations API
+  name: CVAT Annotations API
   description: Shapes, tracks, and tags attached to tasks and jobs.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -77,7 +85,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-cloudstorages-api
-  name: CVAT cloudstorages API
+  name: CVAT Cloudstorages API
   description: External object-storage connections used as data sources.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -101,7 +109,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-jobs-api
-  name: CVAT jobs API
+  name: CVAT Jobs API
   description: Assignable annotation units that subdivide a task.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -127,7 +135,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-labels-api
-  name: CVAT labels API
+  name: CVAT Labels API
   description: Label taxonomy shared across projects, tasks, and jobs.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -153,7 +161,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-memberships-api
-  name: CVAT memberships API
+  name: CVAT Memberships API
   description: Membership of users within organizations.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -179,7 +187,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-organizations-api
-  name: CVAT organizations API
+  name: CVAT Organizations API
   description: Organizations scoping resources for teams.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -205,7 +213,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-projects-api
-  name: CVAT projects API
+  name: CVAT Projects API
   description: Annotation projects that group tasks and share a label set.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
@@ -231,7 +239,7 @@ apis:
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-tasks-api
-  name: CVAT tasks API
+  name: CVAT Tasks API
   description: Annotation tasks holding media data and annotations.
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api

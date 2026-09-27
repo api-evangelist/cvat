@@ -88,29 +88,7 @@ paths:
         '204':
           description: The label has been deleted.
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   schemas:
-    PaginatedLabelList:
-      $ref: '#/components/schemas/PaginatedBase'
     Attribute:
       type: object
       properties:
@@ -186,6 +164,28 @@ components:
           type: array
           items:
             type: object
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey
