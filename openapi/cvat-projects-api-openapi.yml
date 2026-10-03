@@ -104,8 +104,6 @@ paths:
           description: The project has been deleted.
 components:
   schemas:
-    PaginatedProjectList:
-      $ref: '#/components/schemas/PaginatedBase'
     Attribute:
       type: object
       properties:
@@ -130,57 +128,20 @@ components:
           type: array
           items:
             type: string
-    Label:
-      type: object
+    BasicUser:
+      type:
+      - object
+      - 'null'
       properties:
         id:
           type: integer
           readOnly: true
-        name:
+        username:
           type: string
-        color:
+        first_name:
           type: string
-          description: Hex color used to render the label.
-        type:
+        last_name:
           type: string
-          enum:
-          - any
-          - rectangle
-          - polygon
-          - polyline
-          - points
-          - ellipse
-          - cuboid
-          - mask
-          - tag
-          - skeleton
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Attribute'
-        parent_id:
-          type:
-          - integer
-          - 'null'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
     Project:
       type: object
       properties:
@@ -237,33 +198,72 @@ components:
           type:
           - integer
           - 'null'
-    BasicUser:
-      type:
-      - object
-      - 'null'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedProjectList:
+      $ref: '#/components/schemas/PaginatedBase'
+    Label:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        username:
+        name:
           type: string
-        first_name:
+        color:
           type: string
-        last_name:
+          description: Hex color used to render the label.
+        type:
           type: string
+          enum:
+          - any
+          - rectangle
+          - polygon
+          - polyline
+          - points
+          - ellipse
+          - cuboid
+          - mask
+          - tag
+          - skeleton
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        parent_id:
+          type:
+          - integer
+          - 'null'
   parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
     Page:
       name: page
       in: query
       schema:
         type: integer
       description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     PathId:
       name: id
       in: path

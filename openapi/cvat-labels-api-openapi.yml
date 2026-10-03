@@ -113,6 +113,27 @@ components:
           type: array
           items:
             type: string
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
     Label:
       type: object
       properties:
@@ -145,40 +166,19 @@ components:
           type:
           - integer
           - 'null'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedLabelList:
-      $ref: '#/components/schemas/PaginatedBase'
   parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
     Page:
       name: page
       in: query
       schema:
         type: integer
       description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     PathId:
       name: id
       in: path

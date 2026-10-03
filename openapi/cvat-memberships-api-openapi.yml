@@ -67,25 +67,20 @@ paths:
           description: The membership has been deleted.
 components:
   schemas:
-    Membership:
-      type: object
+    BasicUser:
+      type:
+      - object
+      - 'null'
       properties:
         id:
           type: integer
           readOnly: true
-        user:
-          $ref: '#/components/schemas/BasicUser'
-        organization:
-          type: integer
-        role:
+        username:
           type: string
-          enum:
-          - worker
-          - supervisor
-          - maintainer
-          - owner
-        is_active:
-          type: boolean
+        first_name:
+          type: string
+        last_name:
+          type: string
     PaginatedBase:
       type: object
       properties:
@@ -107,33 +102,38 @@ components:
             type: object
     PaginatedMembershipList:
       $ref: '#/components/schemas/PaginatedBase'
-    BasicUser:
-      type:
-      - object
-      - 'null'
+    Membership:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        username:
+        user:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+        role:
           type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
+          enum:
+          - worker
+          - supervisor
+          - maintainer
+          - owner
+        is_active:
+          type: boolean
   parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
     Page:
       name: page
       in: query
       schema:
         type: integer
       description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
     PathId:
       name: id
       in: path

@@ -80,27 +80,21 @@ paths:
         '204':
           description: The organization has been deleted.
 components:
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
   schemas:
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
     PaginatedBase:
       type: object
       properties:
@@ -120,6 +114,8 @@ components:
           type: array
           items:
             type: object
+    PaginatedOrganizationList:
+      $ref: '#/components/schemas/PaginatedBase'
     OrganizationWriteRequest:
       type: object
       required:
@@ -149,22 +145,26 @@ components:
           type: string
           format: date-time
           readOnly: true
-    PaginatedOrganizationList:
-      $ref: '#/components/schemas/PaginatedBase'
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

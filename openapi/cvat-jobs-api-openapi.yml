@@ -77,27 +77,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/Job'
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   schemas:
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
     PaginatedBase:
       type: object
       properties:
@@ -119,26 +113,6 @@ components:
             type: object
     PaginatedJobList:
       $ref: '#/components/schemas/PaginatedBase'
-    JobWriteRequest:
-      type: object
-      properties:
-        assignee:
-          type:
-          - integer
-          - 'null'
-        stage:
-          type: string
-          enum:
-          - annotation
-          - validation
-          - acceptance
-        state:
-          type: string
-          enum:
-          - new
-          - in progress
-          - completed
-          - rejected
     Job:
       type: object
       properties:
@@ -179,20 +153,46 @@ components:
           enum:
           - annotation
           - ground_truth
-    BasicUser:
-      type:
-      - object
-      - 'null'
+    JobWriteRequest:
+      type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
+        assignee:
+          type:
+          - integer
+          - 'null'
+        stage:
           type: string
-        first_name:
+          enum:
+          - annotation
+          - validation
+          - acceptance
+        state:
           type: string
-        last_name:
-          type: string
+          enum:
+          - new
+          - in progress
+          - completed
+          - rejected
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey
