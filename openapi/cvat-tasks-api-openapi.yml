@@ -165,68 +165,28 @@ components:
           type: array
           items:
             type: string
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-    PaginatedTaskList:
-      $ref: '#/components/schemas/PaginatedBase'
-    PaginatedBase:
+    DataRequest:
       type: object
       properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
+        client_files:
           type: array
           items:
-            type: object
-    TaskWriteRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        project_id:
-          type:
-          - integer
-          - 'null'
-        labels:
+            type: string
+            format: binary
+        server_files:
           type: array
           items:
-            $ref: '#/components/schemas/Label'
-        segment_size:
+            type: string
+        remote_files:
+          type: array
+          items:
+            type: string
+        image_quality:
           type: integer
-        overlap:
+        use_cache:
+          type: boolean
+        cloud_storage_id:
           type: integer
-        owner_id:
-          type:
-          - integer
-          - 'null'
-        assignee_id:
-          type:
-          - integer
-          - 'null'
     Task:
       type: object
       properties:
@@ -274,28 +234,8 @@ components:
           type: string
           format: date-time
           readOnly: true
-    DataRequest:
-      type: object
-      properties:
-        client_files:
-          type: array
-          items:
-            type: string
-            format: binary
-        server_files:
-          type: array
-          items:
-            type: string
-        remote_files:
-          type: array
-          items:
-            type: string
-        image_quality:
-          type: integer
-        use_cache:
-          type: boolean
-        cloud_storage_id:
-          type: integer
+    PaginatedTaskList:
+      $ref: '#/components/schemas/PaginatedBase'
     Label:
       type: object
       properties:
@@ -328,7 +268,74 @@ components:
           type:
           - integer
           - 'null'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    TaskWriteRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        project_id:
+          type:
+          - integer
+          - 'null'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        segment_size:
+          type: integer
+        overlap:
+          type: integer
+        owner_id:
+          type:
+          - integer
+          - 'null'
+        assignee_id:
+          type:
+          - integer
+          - 'null'
   parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
     Page:
       name: page
       in: query
@@ -341,13 +348,6 @@ components:
       schema:
         type: integer
       description: Number of results to return per page.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

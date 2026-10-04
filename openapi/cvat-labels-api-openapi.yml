@@ -113,27 +113,6 @@ components:
           type: array
           items:
             type: string
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedLabelList:
-      $ref: '#/components/schemas/PaginatedBase'
     Label:
       type: object
       properties:
@@ -166,7 +145,35 @@ components:
           type:
           - integer
           - 'null'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
   parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
     Page:
       name: page
       in: query
@@ -179,13 +186,6 @@ components:
       schema:
         type: integer
       description: Number of results to return per page.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

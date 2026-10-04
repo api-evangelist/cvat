@@ -78,41 +78,26 @@ paths:
                 $ref: '#/components/schemas/Job'
 components:
   schemas:
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-    PaginatedBase:
+    JobWriteRequest:
       type: object
       properties:
-        count:
-          type: integer
-        next:
+        assignee:
           type:
-          - string
+          - integer
           - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedJobList:
-      $ref: '#/components/schemas/PaginatedBase'
+        stage:
+          type: string
+          enum:
+          - annotation
+          - validation
+          - acceptance
+        state:
+          type: string
+          enum:
+          - new
+          - in progress
+          - completed
+          - rejected
     Job:
       type: object
       properties:
@@ -153,27 +138,49 @@ components:
           enum:
           - annotation
           - ground_truth
-    JobWriteRequest:
+    PaginatedJobList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedBase:
       type: object
       properties:
-        assignee:
+        count:
+          type: integer
+        next:
           type:
-          - integer
+          - string
           - 'null'
-        stage:
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
           type: string
-          enum:
-          - annotation
-          - validation
-          - acceptance
-        state:
+        first_name:
           type: string
-          enum:
-          - new
-          - in progress
-          - completed
-          - rejected
+        last_name:
+          type: string
   parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
     Page:
       name: page
       in: query
@@ -186,13 +193,6 @@ components:
       schema:
         type: integer
       description: Number of results to return per page.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

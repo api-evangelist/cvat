@@ -81,6 +81,61 @@ paths:
           description: The cloud storage has been deleted.
 components:
   schemas:
+    CloudStorage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider_type:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+        resource:
+          type: string
+          description: Bucket or container name.
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type:
+          - integer
+          - 'null'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+    PaginatedCloudStorageList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
     BasicUser:
       type:
       - object
@@ -125,62 +180,14 @@ components:
           type: string
         specific_attributes:
           type: string
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedCloudStorageList:
-      $ref: '#/components/schemas/PaginatedBase'
-    CloudStorage:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        provider_type:
-          type: string
-          enum:
-          - AWS_S3_BUCKET
-          - AZURE_CONTAINER
-          - GOOGLE_CLOUD_STORAGE
-        resource:
-          type: string
-          description: Bucket or container name.
-        display_name:
-          type: string
-        credentials_type:
-          type: string
-          enum:
-          - KEY_SECRET_KEY_PAIR
-          - ACCOUNT_NAME_TOKEN_PAIR
-          - KEY_FILE_PATH
-          - ANONYMOUS_ACCESS
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        organization:
-          type:
-          - integer
-          - 'null'
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
   parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
     Page:
       name: page
       in: query
@@ -193,13 +200,6 @@ components:
       schema:
         type: integer
       description: Number of results to return per page.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
   securitySchemes:
     tokenAuth:
       type: apiKey

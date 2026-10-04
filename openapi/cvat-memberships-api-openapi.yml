@@ -66,21 +66,46 @@ paths:
         '204':
           description: The membership has been deleted.
 components:
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
   schemas:
-    BasicUser:
-      type:
-      - object
-      - 'null'
+    Membership:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        username:
+        user:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+        role:
           type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
+          enum:
+          - worker
+          - supervisor
+          - maintainer
+          - owner
+        is_active:
+          type: boolean
     PaginatedBase:
       type: object
       properties:
@@ -102,45 +127,20 @@ components:
             type: object
     PaginatedMembershipList:
       $ref: '#/components/schemas/PaginatedBase'
-    Membership:
-      type: object
+    BasicUser:
+      type:
+      - object
+      - 'null'
       properties:
         id:
           type: integer
           readOnly: true
-        user:
-          $ref: '#/components/schemas/BasicUser'
-        organization:
-          type: integer
-        role:
+        username:
           type: string
-          enum:
-          - worker
-          - supervisor
-          - maintainer
-          - owner
-        is_active:
-          type: boolean
-  parameters:
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
+        first_name:
+          type: string
+        last_name:
+          type: string
   securitySchemes:
     tokenAuth:
       type: apiKey

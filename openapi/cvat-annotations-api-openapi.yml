@@ -128,24 +128,6 @@ components:
           type: array
           items:
             type: object
-    LabeledData:
-      type: object
-      description: Container of annotations for a task or job.
-      properties:
-        version:
-          type: integer
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledImage'
-        shapes:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabeledShape'
-        tracks:
-          type: array
-          items:
-            type: object
     LabeledShape:
       type: object
       properties:
@@ -182,6 +164,24 @@ components:
           type: integer
         source:
           type: string
+    LabeledData:
+      type: object
+      description: Container of annotations for a task or job.
+      properties:
+        version:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+        tracks:
+          type: array
+          items:
+            type: object
   parameters:
     PathId:
       name: id
