@@ -141,7 +141,26 @@ paths:
           description: Export accepted; poll the returned request for the result link.
 components:
   schemas:
-    Attribute:
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    Label:
       type: object
       properties:
         id:
@@ -149,44 +168,44 @@ components:
           readOnly: true
         name:
           type: string
-        mutable:
-          type: boolean
-        input_type:
+        color:
+          type: string
+          description: Hex color used to render the label.
+        type:
           type: string
           enum:
-          - checkbox
-          - radio
-          - number
-          - text
-          - select
-        default_value:
-          type: string
-        values:
+          - any
+          - rectangle
+          - polygon
+          - polyline
+          - points
+          - ellipse
+          - cuboid
+          - mask
+          - tag
+          - skeleton
+        attributes:
           type: array
           items:
-            type: string
-    DataRequest:
-      type: object
+            $ref: '#/components/schemas/Attribute'
+        parent_id:
+          type:
+          - integer
+          - 'null'
+    BasicUser:
+      type:
+      - object
+      - 'null'
       properties:
-        client_files:
-          type: array
-          items:
-            type: string
-            format: binary
-        server_files:
-          type: array
-          items:
-            type: string
-        remote_files:
-          type: array
-          items:
-            type: string
-        image_quality:
+        id:
           type: integer
-        use_cache:
-          type: boolean
-        cloud_storage_id:
-          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
     Task:
       type: object
       properties:
@@ -234,9 +253,7 @@ components:
           type: string
           format: date-time
           readOnly: true
-    PaginatedTaskList:
-      $ref: '#/components/schemas/PaginatedBase'
-    Label:
+    Attribute:
       type: object
       properties:
         id:
@@ -244,63 +261,44 @@ components:
           readOnly: true
         name:
           type: string
-        color:
-          type: string
-          description: Hex color used to render the label.
-        type:
+        mutable:
+          type: boolean
+        input_type:
           type: string
           enum:
-          - any
-          - rectangle
-          - polygon
-          - polyline
-          - points
-          - ellipse
-          - cuboid
-          - mask
-          - tag
-          - skeleton
-        attributes:
+          - checkbox
+          - radio
+          - number
+          - text
+          - select
+        default_value:
+          type: string
+        values:
           type: array
           items:
-            $ref: '#/components/schemas/Attribute'
-        parent_id:
-          type:
-          - integer
-          - 'null'
-    PaginatedBase:
+            type: string
+    DataRequest:
       type: object
       properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
+        client_files:
           type: array
           items:
-            type: object
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
+            type: string
+            format: binary
+        server_files:
+          type: array
+          items:
+            type: string
+        remote_files:
+          type: array
+          items:
+            type: string
+        image_quality:
           type: integer
-          readOnly: true
-        username:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
+        use_cache:
+          type: boolean
+        cloud_storage_id:
+          type: integer
     TaskWriteRequest:
       type: object
       required:
@@ -328,6 +326,8 @@ components:
           type:
           - integer
           - 'null'
+    PaginatedTaskList:
+      $ref: '#/components/schemas/PaginatedBase'
   parameters:
     PathId:
       name: id
@@ -336,18 +336,18 @@ components:
       schema:
         type: integer
       description: A unique integer value identifying this resource.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
     PageSize:
       name: page_size
       in: query
       schema:
         type: integer
       description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
   securitySchemes:
     tokenAuth:
       type: apiKey

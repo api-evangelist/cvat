@@ -81,6 +81,57 @@ paths:
           description: The cloud storage has been deleted.
 components:
   schemas:
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    CloudStorageWriteRequest:
+      type: object
+      required:
+      - provider_type
+      - resource
+      - credentials_type
+      properties:
+        provider_type:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+        resource:
+          type: string
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+        key:
+          type: string
+        secret_key:
+          type: string
+        specific_attributes:
+          type: string
+    PaginatedCloudStorageList:
+      $ref: '#/components/schemas/PaginatedBase'
     CloudStorage:
       type: object
       properties:
@@ -115,27 +166,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-    PaginatedCloudStorageList:
-      $ref: '#/components/schemas/PaginatedBase'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
     BasicUser:
       type:
       - object
@@ -150,36 +180,6 @@ components:
           type: string
         last_name:
           type: string
-    CloudStorageWriteRequest:
-      type: object
-      required:
-      - provider_type
-      - resource
-      - credentials_type
-      properties:
-        provider_type:
-          type: string
-          enum:
-          - AWS_S3_BUCKET
-          - AZURE_CONTAINER
-          - GOOGLE_CLOUD_STORAGE
-        resource:
-          type: string
-        display_name:
-          type: string
-        credentials_type:
-          type: string
-          enum:
-          - KEY_SECRET_KEY_PAIR
-          - ACCOUNT_NAME_TOKEN_PAIR
-          - KEY_FILE_PATH
-          - ANONYMOUS_ACCESS
-        key:
-          type: string
-        secret_key:
-          type: string
-        specific_attributes:
-          type: string
   parameters:
     PathId:
       name: id
@@ -188,18 +188,18 @@ components:
       schema:
         type: integer
       description: A unique integer value identifying this resource.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
     PageSize:
       name: page_size
       in: query
       schema:
         type: integer
       description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
   securitySchemes:
     tokenAuth:
       type: apiKey

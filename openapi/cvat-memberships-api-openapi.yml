@@ -66,46 +66,7 @@ paths:
         '204':
           description: The membership has been deleted.
 components:
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
   schemas:
-    Membership:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          $ref: '#/components/schemas/BasicUser'
-        organization:
-          type: integer
-        role:
-          type: string
-          enum:
-          - worker
-          - supervisor
-          - maintainer
-          - owner
-        is_active:
-          type: boolean
     PaginatedBase:
       type: object
       properties:
@@ -141,6 +102,45 @@ components:
           type: string
         last_name:
           type: string
+    Membership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+        role:
+          type: string
+          enum:
+          - worker
+          - supervisor
+          - maintainer
+          - owner
+        is_active:
+          type: boolean
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
   securitySchemes:
     tokenAuth:
       type: apiKey
