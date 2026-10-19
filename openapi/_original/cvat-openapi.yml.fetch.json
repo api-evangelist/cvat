@@ -1,0 +1,12 @@
+{
+ "url": "https://app.cvat.ai/api/schema/",
+ "final": "https://app.cvat.ai/api/schema/",
+ "status": 200,
+ "content_type": "application/yaml; charset=utf-8",
+ "bytes": 488289,
+ "sha256": "174587c6e1e4cd232cc480a74847fe3f0b29edf746b95081d3def6086d6caa99",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

@@ -1,108 +1,277 @@
 openapi: 3.2.0
 info:
   title: CVAT REST Memberships API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
-  termsOfService: https://www.cvat.ai/terms-of-use
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
   contact:
-    name: CVAT Support
-    url: https://www.cvat.ai
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
   license:
     name: MIT License
     url: https://en.wikipedia.org/wiki/MIT_License
-  version: '2.0'
-servers:
-- url: https://app.cvat.ai/api
-  description: CVAT Online (hosted)
-- url: http://localhost:8080/api
-  description: Self-hosted CVAT (default)
-security:
-- tokenAuth: []
-- basicAuth: []
 tags:
 - name: Memberships
-  description: Membership of users within organizations.
 paths:
-  /memberships:
+  /api/memberships:
     get:
       operationId: memberships_list
-      tags:
-      - Memberships
       summary: List memberships
       parameters:
-      - $ref: '#/components/parameters/Page'
-      - $ref: '#/components/parameters/PageSize'
-      - name: org
-        in: query
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
         schema:
           type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['id', 'role', 'user']."
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: role
+        in: query
+        description: A simple equality filter for the role field
+        schema:
+          type: string
+          enum:
+          - worker
+          - supervisor
+          - maintainer
+          - owner
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''user'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'', ''role'', ''user'']'
+        schema:
+          type: string
+      - name: user
+        in: query
+        description: A simple equality filter for the user field
+        schema:
+          type: string
+      tags:
+      - Memberships
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '200':
-          description: A paginated list of memberships.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/PaginatedMembershipList'
-  /memberships/{id}:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
+                $ref: '#/components/schemas/PaginatedMembershipReadList'
+          description: ''
+  /api/memberships/{id}:
     get:
       operationId: memberships_retrieve
+      summary: Get membership details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this membership.
+        required: true
       tags:
       - Memberships
-      summary: Retrieve a membership
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '200':
-          description: The requested membership.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/Membership'
-    delete:
-      operationId: memberships_destroy
+                $ref: '#/components/schemas/MembershipRead'
+          description: ''
+    patch:
+      operationId: memberships_partial_update
+      summary: Update a membership
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this membership.
+        required: true
       tags:
       - Memberships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMembershipWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/MembershipRead'
+          description: ''
+    delete:
+      operationId: memberships_destroy
       summary: Delete a membership
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this membership.
+        required: true
+      tags:
+      - Memberships
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '204':
-          description: The membership has been deleted.
+          description: The membership has been deleted
 components:
   schemas:
-    PaginatedBase:
+    PaginatedMembershipReadList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
+          example: 123
         next:
           type:
           - string
           - 'null'
           format: uri
+          example: http://api.example.org/accounts/?page=4
         previous:
           type:
           - string
           - 'null'
           format: uri
+          example: http://api.example.org/accounts/?page=2
         results:
           type: array
           items:
-            type: object
-    PaginatedMembershipList:
-      $ref: '#/components/schemas/PaginatedBase'
+            $ref: '#/components/schemas/MembershipRead'
     BasicUser:
-      type:
-      - object
-      - 'null'
+      type: object
       properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
           readOnly: true
         username:
           type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
         first_name:
           type: string
+          maxLength: 150
         last_name:
           type: string
-    Membership:
+          maxLength: 150
+      required:
+      - username
+    PatchedMembershipWriteRequest:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+    RoleEnum:
+      enum:
+      - worker
+      - supervisor
+      - maintainer
+      - owner
+      type: string
+      description: '* `worker` - Worker
+
+        * `supervisor` - Supervisor
+
+        * `maintainer` - Maintainer
+
+        * `owner` - Owner'
+    MembershipRead:
       type: object
       properties:
         id:
@@ -112,42 +281,83 @@ components:
           $ref: '#/components/schemas/BasicUser'
         organization:
           type: integer
-        role:
-          type: string
-          enum:
-          - worker
-          - supervisor
-          - maintainer
-          - owner
+          readOnly: true
         is_active:
           type: boolean
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
+          readOnly: true
+        joined_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        invitation:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+      required:
+      - user
   securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
     tokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication with CVAT username and password.
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

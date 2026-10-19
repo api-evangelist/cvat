@@ -1,159 +1,669 @@
 openapi: 3.2.0
 info:
   title: CVAT REST Projects API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
-  termsOfService: https://www.cvat.ai/terms-of-use
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
   contact:
-    name: CVAT Support
-    url: https://www.cvat.ai
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
   license:
     name: MIT License
     url: https://en.wikipedia.org/wiki/MIT_License
-  version: '2.0'
-servers:
-- url: https://app.cvat.ai/api
-  description: CVAT Online (hosted)
-- url: http://localhost:8080/api
-  description: Self-hosted CVAT (default)
-security:
-- tokenAuth: []
-- basicAuth: []
 tags:
 - name: Projects
-  description: Annotation projects that group tasks and share a label set.
 paths:
-  /projects:
+  /api/projects:
     get:
       operationId: projects_list
-      tags:
-      - Projects
       summary: List projects
       parameters:
-      - $ref: '#/components/parameters/Page'
-      - $ref: '#/components/parameters/PageSize'
-      - name: org
-        in: query
-        description: Organization slug used to filter the request.
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
         schema:
           type: string
-      responses:
-        '200':
-          description: A paginated list of projects.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedProjectList'
-    post:
-      operationId: projects_create
-      tags:
-      - Projects
-      summary: Create a project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectWriteRequest'
-      responses:
-        '201':
-          description: The created project.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-  /projects/{id}:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
-    get:
-      operationId: projects_retrieve
-      tags:
-      - Projects
-      summary: Retrieve a project
-      responses:
-        '200':
-          description: The requested project.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-    patch:
-      operationId: projects_partial_update
-      tags:
-      - Projects
-      summary: Update a project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectWriteRequest'
-      responses:
-        '200':
-          description: The updated project.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-    delete:
-      operationId: projects_destroy
-      tags:
-      - Projects
-      summary: Delete a project
-      responses:
-        '204':
-          description: The project has been deleted.
-components:
-  schemas:
-    PaginatedProjectList:
-      $ref: '#/components/schemas/PaginatedBase'
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    Project:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
+        allowEmptyValue: true
+      - name: assignee
+        in: query
+        description: A simple equality filter for the assignee field
+        schema:
           type: string
-        labels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Label'
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        assignee:
-          $ref: '#/components/schemas/BasicUser'
-        status:
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['assignee', 'id', 'name', 'owner', 'status', 'updated_date']."
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: A simple equality filter for the name field
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: owner
+        in: query
+        description: A simple equality filter for the owner field
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''assignee'', ''name'', ''owner'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''assignee'', ''id'', ''name'', ''owner'', ''status'', ''updated_date'']'
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: A simple equality filter for the status field
+        schema:
           type: string
           enum:
           - annotation
           - validation
           - completed
-        tasks_count:
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectReadList'
+          description: ''
+    post:
+      operationId: projects_create
+      summary: Create a project
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
           type: integer
-          readOnly: true
-        organization:
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/ProjectRead'
+          description: ''
+  /api/projects/{id}:
+    get:
+      operationId: projects_retrieve
+      summary: Get project details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/ProjectRead'
+          description: ''
+    patch:
+      operationId: projects_partial_update
+      summary: Update a project
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/ProjectRead'
+          description: ''
+    delete:
+      operationId: projects_destroy
+      summary: Delete a project
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The project has been deleted
+  /api/projects/{id}/backup/export:
+    post:
+      operationId: projects_create_backup_export
+      description: 'The request `POST /api//id/backup/export` will initialize
+
+        a background process to backup a resource. To check status of the process
+
+        please, use `GET /api/requests/` where **rq_id** is request ID returned in the response for this endpoint.'
+      summary: Initiate process to backup resource
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Backup file name
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      - in: query
+        name: lightweight
+        schema:
+          type: boolean
+          default: true
+        description: Makes a lightweight backup (without media files) for tasks whose media is located in cloud storage
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where need to save downloaded backup
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Creating a backup file has been started
+        '400':
+          description: Wrong query parameters were passed
+        '409':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: The backup process has already been initiated and is not yet finished
+  /api/projects/{id}/dataset/:
+    post:
+      operationId: projects_create_dataset
+      description: 'The request POST /api/projects/id/dataset initiates a background process to import dataset into a project.
+
+        Please, use the GET /api/requests/ endpoint for checking status of the process.
+
+        The `rq_id` parameter can be found in the response on initiating request.'
+      summary: Import a dataset into a project
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Dataset file name
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Desired dataset format name
+
+          You can get the list of supported formats at:
+
+          /server/annotation/formats'
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where to import the dataset from
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetFileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DatasetFileRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Importing has been started
+        '400':
+          description: Failed to import dataset
+        '405':
+          description: Format is not available
+  /api/projects/{id}/dataset/export:
+    post:
+      operationId: projects_create_dataset_export
+      description: 'The request `POST /api//id/dataset/export` will initialize
+
+        a background process to export a dataset. To check status of the process
+
+        please, use `GET /api/requests/` where **rq_id** is request ID returned in the response for this endpoint.'
+      summary: Initialize process to export resource as a dataset in a specific format
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Desired output file name
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Desired output format name
+
+          You can get the list of supported formats at:
+
+          /server/annotation/formats'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where need to save downloaded dataset
+      - in: query
+        name: save_images
+        schema:
+          type: boolean
+          default: false
+        description: Include images or not
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Exporting has been started
+        '405':
+          description: Format is not available
+        '409':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Exporting is already in progress
+  /api/projects/{id}/preview:
+    get:
+      operationId: projects_retrieve_preview
+      summary: Get a preview image for a project
+      parameters:
+      - in: header
+        name: Prefer
+        schema:
+          type: string
+        description: RFC 7240 preference token. Send `handling=empty` to receive a 204 No Content response when no media-derived preview exists. Without the preference, the server returns a default placeholder image with status 200.
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Project image preview
+        '204':
+          description: 'No media-derived preview is available. The client should render a placeholder image. Only returned when the request opts in via `Prefer: handling=empty`.'
+        '404':
+          description: Project image preview not found
+  /api/projects/backup/:
+    post:
+      operationId: projects_create_backup
+      description: 'The backup import process is as follows:
+
+
+        The first request POST /api/projects/backup schedules a background job on the server
+
+        in which the process of creating a project from the uploaded backup is carried out.
+
+
+        To check the status of the import process, use GET /api/requests/rq_id,
+
+        where rq_id is the request ID obtained from the response to the previous request.
+
+
+        Once the import completes successfully, the response will contain the ID
+
+        of the newly created project in the result_id field.'
+      summary: Recreate a project from a backup
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Backup file name
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+          default: local
+        description: Where to import the backup file from
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectFileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectFileRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Import of the backup file has started
+components:
+  schemas:
+    StorageRequest:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/LocationEnum'
+        cloud_storage_id:
           type:
           - integer
           - 'null'
+    ProjectRead:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+        guide_id:
+          type:
+          - integer
+          - 'null'
+        bug_tracker:
+          type: string
+          readOnly: true
+        task_subsets:
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_date:
           type: string
           format: date-time
@@ -162,122 +672,484 @@ components:
           type: string
           format: date-time
           readOnly: true
-    ProjectWriteRequest:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/JobStatus'
+          readOnly: true
+        dimension:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        organization:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          deprecated: true
+        organization_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        target_storage:
+          allOf:
+          - $ref: '#/components/schemas/Storage'
+          readOnly: true
+        source_storage:
+          allOf:
+          - $ref: '#/components/schemas/Storage'
+          readOnly: true
+        tasks:
+          $ref: '#/components/schemas/TasksSummary'
+        labels:
+          $ref: '#/components/schemas/LabelsSummary'
+        assignee_updated_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - labels
+      - tasks
+    LocationEnum:
+      enum:
+      - cloud_storage
+      - local
+      type: string
+      description: '* `cloud_storage` - CLOUD_STORAGE
+
+        * `local` - LOCAL'
+    RqId:
       type: object
+      properties:
+        rq_id:
+          type: string
+          description: Request id
+      required:
+      - rq_id
+    AttributeRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        mutable:
+          type: boolean
+        input_type:
+          $ref: '#/components/schemas/InputTypeEnum'
+        default_value:
+          type: string
+          maxLength: 128
+        values:
+          type: array
+          items:
+            type: string
+            maxLength: 200
+        deleted:
+          type: boolean
+          writeOnly: true
+          description: Delete the attribute and all related annotation values.
+      required:
+      - input_type
+      - mutable
+      - name
+      - values
+    ProjectFileRequest:
+      type: object
+      properties:
+        project_file:
+          type: string
+          format: binary
+      required:
+      - project_file
+    SublabelRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        color:
+          type: string
+          description: The hex value for the RGB color. Will be generated automatically, unless specified explicitly.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeRequest'
+          default: []
+          description: The list of attributes. To remove an attribute, pass the full attribute body with deleted=true. Related annotation attribute values will be deleted.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          description: 'Associated annotation type for this label
+
+
+            * `any` - ANY
+
+            * `cuboid` - CUBOID
+
+            * `ellipse` - ELLIPSE
+
+            * `mask` - MASK
+
+            * `points` - POINTS
+
+            * `polygon` - POLYGON
+
+            * `polyline` - POLYLINE
+
+            * `rectangle` - RECTANGLE
+
+            * `skeleton` - SKELETON
+
+            * `interval` - INTERVAL
+
+            * `tag` - TAG'
+        has_parent:
+          type: boolean
       required:
       - name
+    LabelsSummary:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+    JobStatus:
+      enum:
+      - annotation
+      - validation
+      - completed
+      type: string
+      description: '* `annotation` - ANNOTATION
+
+        * `validation` - VALIDATION
+
+        * `completed` - COMPLETED'
+    TasksSummary:
+      type: object
+      properties:
+        count:
+          type: integer
+          default: 0
+        url:
+          type: string
+          format: uri
+          readOnly: true
+    PatchedLabelRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        color:
+          type: string
+          description: The hex value for the RGB color. Will be generated automatically, unless specified explicitly.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeRequest'
+          default: []
+          description: The list of attributes. To remove an attribute, pass the full attribute body with deleted=true. Related annotation attribute values will be deleted.
+        deleted:
+          type: boolean
+          writeOnly: true
+          description: Delete the label. Only applicable in the PATCH methods of a project or a task.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          description: 'Associated annotation type for this label
+
+
+            * `any` - ANY
+
+            * `cuboid` - CUBOID
+
+            * `ellipse` - ELLIPSE
+
+            * `mask` - MASK
+
+            * `points` - POINTS
+
+            * `polygon` - POLYGON
+
+            * `polyline` - POLYLINE
+
+            * `rectangle` - RECTANGLE
+
+            * `skeleton` - SKELETON
+
+            * `interval` - INTERVAL
+
+            * `tag` - TAG'
+        svg:
+          type: string
+        sublabels:
+          type: array
+          items:
+            $ref: '#/components/schemas/SublabelRequest'
+    PatchedProjectWriteRequest:
+      type: object
       properties:
         name:
           type: string
+          minLength: 1
+          maxLength: 256
         labels:
           type: array
           items:
-            $ref: '#/components/schemas/Label'
+            $ref: '#/components/schemas/PatchedLabelRequest'
+          writeOnly: true
+          default: []
         owner_id:
           type:
           - integer
           - 'null'
+          writeOnly: true
         assignee_id:
           type:
           - integer
           - 'null'
-    Label:
+          writeOnly: true
+        bug_tracker:
+          type: string
+          maxLength: 2000
+        target_storage:
+          allOf:
+          - $ref: '#/components/schemas/StorageRequest'
+          writeOnly: true
+        source_storage:
+          allOf:
+          - $ref: '#/components/schemas/StorageRequest'
+          writeOnly: true
+        organization_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+    ProjectWriteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatchedLabelRequest'
+          writeOnly: true
+          default: []
+        owner_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        assignee_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        bug_tracker:
+          type: string
+          maxLength: 2000
+        target_storage:
+          allOf:
+          - $ref: '#/components/schemas/StorageRequest'
+          writeOnly: true
+        source_storage:
+          allOf:
+          - $ref: '#/components/schemas/StorageRequest'
+          writeOnly: true
+      required:
+      - name
+    InputTypeEnum:
+      enum:
+      - checkbox
+      - radio
+      - number
+      - text
+      - select
+      type: string
+      description: '* `checkbox` - CHECKBOX
+
+        * `radio` - RADIO
+
+        * `number` - NUMBER
+
+        * `text` - TEXT
+
+        * `select` - SELECT'
+    Storage:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
-          type: string
-        color:
-          type: string
-          description: Hex color used to render the label.
-        type:
-          type: string
-          enum:
-          - any
-          - rectangle
-          - polygon
-          - polyline
-          - points
-          - ellipse
-          - cuboid
-          - mask
-          - tag
-          - skeleton
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Attribute'
-        parent_id:
+        location:
+          $ref: '#/components/schemas/LocationEnum'
+        cloud_storage_id:
           type:
           - integer
           - 'null'
     BasicUser:
-      type:
-      - object
-      - 'null'
+      type: object
       properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
           readOnly: true
         username:
           type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
         first_name:
           type: string
+          maxLength: 150
         last_name:
           type: string
-    Attribute:
+          maxLength: 150
+      required:
+      - username
+    LabelType:
+      enum:
+      - any
+      - cuboid
+      - ellipse
+      - mask
+      - points
+      - polygon
+      - polyline
+      - rectangle
+      - skeleton
+      - interval
+      - tag
+      type: string
+      description: '* `any` - ANY
+
+        * `cuboid` - CUBOID
+
+        * `ellipse` - ELLIPSE
+
+        * `mask` - MASK
+
+        * `points` - POINTS
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `rectangle` - RECTANGLE
+
+        * `skeleton` - SKELETON
+
+        * `interval` - INTERVAL
+
+        * `tag` - TAG'
+    PaginatedProjectReadList:
       type: object
+      required:
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        name:
-          type: string
-        mutable:
-          type: boolean
-        input_type:
-          type: string
-          enum:
-          - checkbox
-          - radio
-          - number
-          - text
-          - select
-        default_value:
-          type: string
-        values:
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
           type: array
           items:
-            type: string
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
+            $ref: '#/components/schemas/ProjectRead'
+    DatasetFileRequest:
+      type: object
+      properties:
+        dataset_file:
+          type: string
+          format: binary
+      required:
+      - dataset_file
   securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
     tokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication with CVAT username and password.
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

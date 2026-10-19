@@ -58,32 +58,6 @@ created: '2026-06-21'
 modified: '2026-06-21'
 specificationVersion: '0.23'
 apis:
-- aid: cvat:cvat-annotations-api
-  name: CVAT Annotations API
-  description: Shapes, tracks, and tags attached to tasks and jobs.
-  humanURL: https://app.cvat.ai/api/docs/
-  baseURL: https://app.cvat.ai/api
-  tags:
-  - Annotation
-  tags_raw:
-  - annotations
-  properties:
-  - type: OpenAPI
-    url: openapi/cvat-annotations-api-openapi.yml
-  - type: Documentation
-    url: https://docs.cvat.ai/docs/api_sdk/api/
-  - type: APIReference
-    url: https://app.cvat.ai/api/docs/
-  - type: PostmanCollection
-    url: collections/cvat.postman_collection.json
-  - type: OpenCollection
-    url: collections/cvat.opencollection.json
-  - type: GitHub
-    url: https://github.com/cvat-ai/cvat
-  - type: Documentation
-    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
-  - type: Documentation
-    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
 - aid: cvat:cvat-cloudstorages-api
   name: CVAT Cloudstorages API
   description: External object-storage connections used as data sources.
@@ -250,6 +224,510 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cvat-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-analytics-api
+  name: CVAT Analytics API
+  description: The analytics API from CVAT — 1 operation(s) for analytics.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-assets-api
+  name: CVAT Assets API
+  description: The assets API from CVAT — 2 operation(s) for assets.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - assets
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-assets-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-auth-api
+  name: CVAT Auth API
+  description: The auth API from CVAT — 19 operation(s) for auth.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-auth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-comments-api
+  name: CVAT Comments API
+  description: The comments API from CVAT — 2 operation(s) for comments.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - comments
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-comments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-consensus-api
+  name: CVAT Consensus API
+  description: The consensus API from CVAT — 3 operation(s) for consensus.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - consensus
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-consensus-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-events-api
+  name: CVAT Events API
+  description: The events API from CVAT — 2 operation(s) for events.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - events
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-functions-api
+  name: CVAT Functions API
+  description: The functions API from CVAT — 12 operation(s) for functions.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - functions
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-functions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-growth-api
+  name: CVAT Growth API
+  description: The growth API from CVAT — 2 operation(s) for growth.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - growth
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-growth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-guides-api
+  name: CVAT Guides API
+  description: The guides API from CVAT — 2 operation(s) for guides.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - guides
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-guides-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-invitations-api
+  name: CVAT Invitations API
+  description: The invitations API from CVAT — 5 operation(s) for invitations.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - invitations
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-invitations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-issues-api
+  name: CVAT Issues API
+  description: The issues API from CVAT — 2 operation(s) for issues.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - issues
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-issues-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-lambda-api
+  name: CVAT Lambda API
+  description: The lambda API from CVAT — 4 operation(s) for lambda.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - lambda
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-lambda-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-limits-api
+  name: CVAT Limits API
+  description: The limits API from CVAT — 4 operation(s) for limits.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - limits
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-limits-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-quality-api
+  name: CVAT Quality API
+  description: The quality API from CVAT — 13 operation(s) for quality.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - quality
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-quality-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-requests-api
+  name: CVAT Requests API
+  description: The requests API from CVAT — 3 operation(s) for requests.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - requests
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-requests-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-schema-api
+  name: CVAT Schema API
+  description: The schema API from CVAT — 1 operation(s) for schema.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - schema
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-schema-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-server-api
+  name: CVAT Server API
+  description: The server API from CVAT — 4 operation(s) for server.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - server
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-server-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-subscriptions-api
+  name: CVAT Subscriptions API
+  description: The subscriptions API from CVAT — 1 operation(s) for subscriptions.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-usage-api
+  name: CVAT Usage API
+  description: The usage API from CVAT — 1 operation(s) for usage.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - usage
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-users-api
+  name: CVAT Users API
+  description: The users API from CVAT — 3 operation(s) for users.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/api/
+  - type: APIReference
+    url: https://app.cvat.ai/api/docs/
+  - type: PostmanCollection
+    url: collections/cvat.postman_collection.json
+  - type: OpenCollection
+    url: collections/cvat.opencollection.json
+  - type: GitHub
+    url: https://github.com/cvat-ai/cvat
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/
+  - type: Documentation
+    url: https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/
+- aid: cvat:cvat-webhooks-api
+  name: CVAT Webhooks API
+  description: The webhooks API from CVAT — 7 operation(s) for webhooks.
+  humanURL: https://app.cvat.ai/api/docs/
+  baseURL: https://app.cvat.ai/api
+  tags:
+  - webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/cvat-webhooks-api-openapi.yml
   - type: Documentation
     url: https://docs.cvat.ai/docs/api_sdk/api/
   - type: APIReference

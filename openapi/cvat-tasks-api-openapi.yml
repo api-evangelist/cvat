@@ -1,250 +1,1843 @@
 openapi: 3.2.0
 info:
   title: CVAT REST Tasks API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
-  termsOfService: https://www.cvat.ai/terms-of-use
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
   contact:
-    name: CVAT Support
-    url: https://www.cvat.ai
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
   license:
     name: MIT License
     url: https://en.wikipedia.org/wiki/MIT_License
-  version: '2.0'
-servers:
-- url: https://app.cvat.ai/api
-  description: CVAT Online (hosted)
-- url: http://localhost:8080/api
-  description: Self-hosted CVAT (default)
-security:
-- tokenAuth: []
-- basicAuth: []
 tags:
 - name: Tasks
-  description: Annotation tasks holding media data and annotations.
 paths:
-  /tasks:
+  /api/tasks:
     get:
       operationId: tasks_list
-      tags:
-      - Tasks
       summary: List tasks
       parameters:
-      - $ref: '#/components/parameters/Page'
-      - $ref: '#/components/parameters/PageSize'
-      - name: project_id
-        in: query
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: A paginated list of tasks.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedTaskList'
-    post:
-      operationId: tasks_create
-      tags:
-      - Tasks
-      summary: Create a task
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskWriteRequest'
-      responses:
-        '201':
-          description: The created task.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-  /tasks/{id}:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
-    get:
-      operationId: tasks_retrieve
-      tags:
-      - Tasks
-      summary: Retrieve a task
-      responses:
-        '200':
-          description: The requested task.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-    patch:
-      operationId: tasks_partial_update
-      tags:
-      - Tasks
-      summary: Update a task
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskWriteRequest'
-      responses:
-        '200':
-          description: The updated task.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-    delete:
-      operationId: tasks_destroy
-      tags:
-      - Tasks
-      summary: Delete a task
-      responses:
-        '204':
-          description: The task has been deleted.
-  /tasks/{id}/data:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
-    post:
-      operationId: tasks_create_data
-      tags:
-      - Tasks
-      summary: Attach data to a task
-      description: Upload images, video, or references to cloud-storage objects and start the background process that prepares the task data.
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DataRequest'
-      responses:
-        '202':
-          description: Data upload accepted and queued for processing.
-  /tasks/{id}/dataset/export:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
-    post:
-      operationId: tasks_create_dataset_export
-      tags:
-      - Tasks
-      summary: Export a task dataset
-      parameters:
-      - name: format
-        in: query
-        required: true
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
         schema:
           type: string
-      - name: save_images
+        allowEmptyValue: true
+      - name: assignee
         in: query
+        description: A simple equality filter for the assignee field
         schema:
-          type: boolean
-      responses:
-        '202':
-          description: Export accepted; poll the returned request for the result link.
-components:
-  schemas:
-    PaginatedBase:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    Label:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
           type: string
-        color:
-          type: string
-          description: Hex color used to render the label.
-        type:
+      - name: dimension
+        in: query
+        description: A simple equality filter for the dimension field
+        schema:
           type: string
           enum:
-          - any
-          - rectangle
-          - polygon
-          - polyline
-          - points
-          - ellipse
-          - cuboid
-          - mask
-          - tag
-          - skeleton
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Attribute'
-        parent_id:
-          type:
-          - integer
-          - 'null'
-    BasicUser:
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
+          - 1d
+          - 2d
+          - 3d
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['assignee', 'created_date', 'dimension', 'id', 'media_type', 'mode', 'name', 'owner', 'project_id', 'project_name', 'status', 'subset', 'tracker_link', 'updated_date', 'validation_mode'].\n\nThere are few examples for complex filtering tasks:\n\n    - Get all tasks from 1,2,3 projects - { \"and\" : [{ \"in\" : [{ \"var\" : \"project_id\" }, [1, 2, 3]]}]}\n\n    - Get all completed tasks from 1 project - { \"and\": [{ \"==\": [{ \"var\" : \"status\" }, \"completed\"]}, { \"==\" : [{ \"var\" : \"project_id\"}, 1]}]}\n\n"
+        schema:
+          type: string
+      - name: media_type
+        in: query
+        description: A simple equality filter for the media_type field
+        schema:
+          type: string
+          enum:
+          - image
+          - point_cloud
+          - audio
+      - name: mode
+        in: query
+        description: A simple equality filter for the mode field
+        schema:
+          type: string
+          enum:
+          - annotation
+          - interpolation
+      - name: name
+        in: query
+        description: A simple equality filter for the name field
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
           type: integer
-          readOnly: true
-        username:
+        allowEmptyValue: true
+      - name: owner
+        in: query
+        description: A simple equality filter for the owner field
+        schema:
           type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-    Task:
-      type: object
-      properties:
-        id:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
           type: integer
-          readOnly: true
-        name:
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: project_id
+        in: query
+        description: A simple equality filter for the project_id field
+        schema:
+          type: integer
+      - name: project_name
+        in: query
+        description: A simple equality filter for the project_name field
+        schema:
           type: string
-        project_id:
-          type:
-          - integer
-          - 'null'
-        mode:
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''assignee'', ''name'', ''owner'', ''project_name'', ''subset'', ''tracker_link'']'
+        schema:
           type: string
-          description: annotation or interpolation
-        status:
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''assignee'', ''created_date'', ''dimension'', ''id'', ''media_type'', ''mode'', ''name'', ''owner'', ''project_id'', ''project_name'', ''status'', ''subset'', ''tracker_link'', ''updated_date'', ''validation_mode'']'
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: A simple equality filter for the status field
+        schema:
           type: string
           enum:
           - annotation
           - validation
           - completed
-        size:
+      - name: subset
+        in: query
+        description: A simple equality filter for the subset field
+        schema:
+          type: string
+      - name: tracker_link
+        in: query
+        description: A simple equality filter for the tracker_link field
+        schema:
+          type: string
+      - name: validation_mode
+        in: query
+        description: A simple equality filter for the validation_mode field
+        schema:
+          type: string
+          enum:
+          - gt
+          - gt_pool
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTaskReadList'
+          description: ''
+    post:
+      operationId: tasks_create
+      description: 'The new task will not have any attached images or videos.
+
+        To attach them, use the /api/tasks//data endpoint.'
+      summary: Create a task
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
           type: integer
-          readOnly: true
-          description: Number of frames in the task.
-        segment_size:
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+          description: ''
+  /api/tasks/{id}:
+    get:
+      operationId: tasks_retrieve
+      summary: Get task details
+      parameters:
+      - in: path
+        name: id
+        schema:
           type: integer
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        assignee:
-          $ref: '#/components/schemas/BasicUser'
-        labels:
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+          description: ''
+    patch:
+      operationId: tasks_partial_update
+      summary: Update a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTaskWriteRequest'
+            examples:
+              UpdateTaskProperties:
+                value:
+                  name: string
+                  owner_id: 0
+                  assignee_id: 0
+                  bug_tracker: string
+                  subset: string
+                  target_storage:
+                    location: cloud_storage
+                    cloud_storage_id: 0
+                  source_storage:
+                    location: cloud_storage
+                    cloud_storage_id: 0
+                summary: Update task properties
+              UpdateTaskLabels:
+                value:
+                  labels:
+                  - name: string
+                    color: string
+                    attributes: []
+                    deleted: false
+                    type: any
+                    svg: string
+                    sublabels:
+                    - name: string
+                      color: string
+                      attributes: []
+                      type: any
+                      has_parent: true
+                summary: Update task labels
+              MoveTaskToAProject:
+                value:
+                  project_id: 0
+                summary: Move task to a project
+              TransferTaskToPersonalSandbox:
+                value:
+                  organization_id: null
+                summary: Transfer task to personal sandbox
+              TransferTaskToOrganization:
+                value:
+                  organization_id: 1
+                summary: Transfer task to organization
+              TransferAStorageLinkedTaskToAnOrganizationAndDetachStorages:
+                value:
+                  organization_id: 1
+                  source_storage:
+                    location: local
+                    cloud_storage_id: null
+                  target_storage:
+                    location: local
+                    cloud_storage_id: null
+                summary: Transfer a storage linked task to an organization and detach storages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+          description: ''
+    delete:
+      operationId: tasks_destroy
+      description: All attached jobs, annotations and data will be deleted as well.
+      summary: Delete a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The task has been deleted
+  /api/tasks/{id}/annotations/:
+    get:
+      operationId: tasks_retrieve_annotations
+      summary: Get task annotations
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+          description: ''
+        '400':
+          description: Exporting without data is not allowed
+        '410':
+          description: API endpoint no longer handles exporting process
+    post:
+      operationId: tasks_create_annotations
+      description: 'The request POST /api/tasks/id/annotations initiates a background process to import annotations into a task.
+
+        Please, use the GET /api/requests/ endpoint for checking status of the process.
+
+        The `rq_id` parameter can be found in the response on initiating request.'
+      summary: Import annotations into a task
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Annotation file name
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Input format name
+
+          You can get the list of supported formats at:
+
+          /server/annotation/formats'
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      - in: query
+        name: import_mode
+        schema:
+          type: string
+          enum:
+          - append
+          - replace
+          default: replace
+        description: How to import annotations
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: where to import the annotation from
+      - in: query
+        name: use_default_location
+        schema:
+          type: boolean
+          default: true
+        description: Use the location that was configured in task to import annotations
+        deprecated: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotationFileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnnotationFileRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          description: Uploading has finished
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Uploading has been started
+        '405':
+          description: Format is not available
+    put:
+      operationId: tasks_update_annotations
+      summary: Replace task annotations
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabeledDataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LabeledDataRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Annotations have been replaced
+    patch:
+      operationId: tasks_partial_update_annotations
+      summary: Update task annotations
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+          enum:
+          - create
+          - delete
+          - update
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLabeledDataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLabeledDataRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+          description: ''
+    delete:
+      operationId: tasks_destroy_annotations
+      summary: Delete task annotations
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The annotation has been deleted
+  /api/tasks/{id}/backup/export:
+    post:
+      operationId: tasks_create_backup_export
+      description: 'The request `POST /api//id/backup/export` will initialize
+
+        a background process to backup a resource. To check status of the process
+
+        please, use `GET /api/requests/` where **rq_id** is request ID returned in the response for this endpoint.'
+      summary: Initiate process to backup resource
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Backup file name
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      - in: query
+        name: lightweight
+        schema:
+          type: boolean
+          default: true
+        description: Makes a lightweight backup (without media files) for tasks whose media is located in cloud storage
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where need to save downloaded backup
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Creating a backup file has been started
+        '400':
+          description: Wrong query parameters were passed
+        '409':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: The backup process has already been initiated and is not yet finished
+  /api/tasks/{id}/data/:
+    get:
+      operationId: tasks_retrieve_data
+      summary: Get data of a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      - in: query
+        name: number
+        schema:
+          type: integer
+        description: A unique number value identifying chunk or frame
+      - in: query
+        name: quality
+        schema:
+          type: string
+          enum:
+          - compressed
+          - original
+        description: Specifies the quality level of the requested data
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum:
+          - chunk
+          - context_image
+          - frame
+        description: Specifies the type of the requested data
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          headers:
+            X-Checksum:
+              schema:
+                type: string
+              description: Data checksum, applicable for chunks only
+            X-Chunk-Size:
+              schema:
+                type: integer
+              description: Decoded chunk size in bytes, applicable for chunks only
+            X-Updated-Date:
+              schema:
+                type: string
+                format: date-time
+              description: Data update date, applicable for chunks only
+          description: Data of a specific type
+        '206':
+          headers:
+            X-Checksum:
+              schema:
+                type: string
+              description: Data checksum, applicable for chunks only
+            X-Chunk-Size:
+              schema:
+                type: integer
+              description: Decoded chunk size in bytes, applicable for chunks only
+            X-Updated-Date:
+              schema:
+                type: string
+                format: date-time
+              description: Data update date, applicable for chunks only
+          description: Partial chunk data
+        '416':
+          headers:
+            X-Chunk-Size:
+              schema:
+                type: integer
+              description: Decoded chunk size in bytes, applicable for chunks only
+          description: Requested range is not satisfiable
+    post:
+      operationId: tasks_create_data
+      description: 'Allows to upload data (images, video, etc.) to a task.
+
+        Supports the TUS open file uploading protocol (https://tus.io/).
+
+
+        Supports the following protocols:
+
+
+        1. A single Data request
+
+
+        and
+
+
+        2.1. An Upload-Start request
+
+        2.2.a. Regular TUS protocol requests (Upload-Length + Chunks)
+
+        2.2.b. Upload-Multiple requests
+
+        2.3. An Upload-Finish request
+
+
+        Requests:
+
+        - Data - POST, no extra headers or ''Upload-Start'' + ''Upload-Finish'' headers.
+
+        Contains data in the body.
+
+        - Upload-Start - POST, has an ''Upload-Start'' header. No body is expected.
+
+        - Upload-Length - POST, has an ''Upload-Length'' header (see the TUS specification)
+
+        - Chunk - HEAD/PATCH (see the TUS specification). Sent to /data/ endpoints.
+
+        - Upload-Finish - POST, has an ''Upload-Finish'' header. Can contain data in the body.
+
+        - Upload-Multiple - POST, has an ''Upload-Multiple'' header. Contains data in the body.
+
+
+        The ''Upload-Finish'' request allows to specify the uploaded files should be ordered.
+
+        This may be needed if the files can be sent unordered. To state that the input files
+
+        are sent ordered, pass an empty list of files in the ''upload_file_order'' field.
+
+        If the files are sent unordered, the ordered file list is expected
+
+        in the ''upload_file_order'' field. It must be a list of string file paths,
+
+        relative to the dataset root.
+
+
+        Example:
+
+        files = [
+
+        "cats/cat_1.jpg",
+
+        "dogs/dog2.jpg",
+
+        "image_3.png",
+
+        ...
+
+        ]
+
+
+        Independently of the file declaration field used
+
+        (''client_files'', ''server_files'', etc.), when the ''predefined''
+
+        sorting method is selected, the uploaded files will be ordered according
+
+        to the ''.jsonl'' manifest file, if it is found in the list of files.
+
+        For archives (e.g. ''.zip''), a manifest file (''*.jsonl'') is required when using
+
+        the ''predefined'' file ordering. Such file must be provided next to the archive
+
+        in the list of files. Read more about manifest files here:
+
+        https://docs.cvat.ai/docs/manual/advanced/dataset_manifest/
+
+
+        After all data is sent, the operation status can be retrieved via
+
+        the `GET /api/requests/`, where **rq_id** is request ID returned for this request.
+
+
+        Once data is attached to a task, it cannot be detached or replaced.'
+      summary: Attach data to a task
+      parameters:
+      - in: header
+        name: Upload-Finish
+        schema:
+          type: boolean
+        description: Finishes data upload. Can be combined with Upload-Start header to create task data with one request
+      - in: header
+        name: Upload-Multiple
+        schema:
+          type: boolean
+        description: Indicates that data with this request are single or multiple files that should be attached to a task
+      - in: header
+        name: Upload-Start
+        schema:
+          type: boolean
+        description: Initializes data upload. Optionally, can include upload metadata in the request body.
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DataRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+          description: Request to attach a data to a task has been accepted
+  /api/tasks/{id}/data/meta:
+    get:
+      operationId: tasks_retrieve_data_meta
+      summary: Get metainformation for media files in a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/DataMetaRead'
+          description: ''
+    patch:
+      operationId: tasks_partial_update_data_meta
+      summary: Update metainformation for media files in a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDataMetaWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/DataMetaRead'
+          description: ''
+  /api/tasks/{id}/dataset/export:
+    post:
+      operationId: tasks_create_dataset_export
+      description: 'The request `POST /api//id/dataset/export` will initialize
+
+        a background process to export a dataset. To check status of the process
+
+        please, use `GET /api/requests/` where **rq_id** is request ID returned in the response for this endpoint.'
+      summary: Initialize process to export resource as a dataset in a specific format
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Desired output file name
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Desired output format name
+
+          You can get the list of supported formats at:
+
+          /server/annotation/formats'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where need to save downloaded dataset
+      - in: query
+        name: save_images
+        schema:
+          type: boolean
+          default: false
+        description: Include images or not
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Exporting has been started
+        '405':
+          description: Format is not available
+        '409':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Exporting is already in progress
+  /api/tasks/{id}/preview:
+    get:
+      operationId: tasks_retrieve_preview
+      summary: Get a preview image for a task
+      parameters:
+      - in: header
+        name: Prefer
+        schema:
+          type: string
+        description: RFC 7240 preference token. Send `handling=empty` to receive a 204 No Content response when no media-derived preview exists. Without the preference, the server returns a default placeholder image with status 200.
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Task image preview
+        '204':
+          description: 'No media-derived preview is available. The client should render a placeholder image. Only returned when the request opts in via `Prefer: handling=empty`.'
+        '404':
+          description: Task image preview not found
+  /api/tasks/{id}/status:
+    get:
+      operationId: tasks_retrieve_status
+      description: 'This method is deprecated and will be removed in one of the next releases. To check status of task creation, use new common API for managing background operations: GET /api/requests/?action=create&task_id='
+      summary: Get the creation status of a task
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      deprecated: true
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqStatus'
+          description: ''
+  /api/tasks/{id}/validation_layout:
+    get:
+      operationId: tasks_retrieve_validation_layout
+      summary: Allows getting current validation configuration
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/TaskValidationLayoutRead'
+          description: ''
+    patch:
+      operationId: tasks_partial_update_validation_layout
+      description: 'WARNING: this operation is not protected from race conditions.
+
+        It''s up to the user to ensure no parallel calls to this operation happen.
+
+        It affects image access, including exports with images, backups, chunk downloading etc.'
+      summary: Allows updating current validation configuration
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTaskValidationLayoutWriteRequest'
+            examples:
+              SetHoneypotsToRandomValidationFrames:
+                value:
+                  frame_selection_method: random_uniform
+                summary: set honeypots to random validation frames
+              SetHoneypotsManually:
+                value:
+                  frame_selection_method: manual
+                  honeypot_real_frames:
+                  - 10
+                  - 20
+                  - 22
+                summary: set honeypots manually
+              DisableValidationFrames:
+                value:
+                  disabled_frames:
+                  - 4
+                  - 5
+                  - 8
+                summary: disable validation frames
+              RestoreAllValidationFrames:
+                value:
+                  disabled_frames: []
+                summary: restore all validation frames
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/TaskValidationLayoutRead'
+          description: ''
+  /api/tasks/backup/:
+    post:
+      operationId: tasks_create_backup
+      description: 'The backup import process is as follows:
+
+
+        The first request POST /api/tasks/backup creates a background job on the server
+
+        in which the process of a task creating from an uploaded backup is carried out.
+
+
+        To check the status of the import process, use GET /api/requests/rq_id,
+
+        where rq_id is the request ID obtained from the response to the previous request.
+
+
+        Once the import completes successfully, the response will contain the ID
+
+        of the newly created task in the result_id field.'
+      summary: Recreate a task from a backup
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Backup file name
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+          default: local
+        description: Where to import the backup file from
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskFileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskFileRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: Import of the backup file has started
+components:
+  schemas:
+    PatchedDataMetaWriteRequest:
+      type: object
+      properties:
+        deleted_frames:
           type: array
           items:
-            $ref: '#/components/schemas/Label'
-        organization:
+            type: integer
+            minimum: 0
+        cloud_storage_id:
           type:
           - integer
           - 'null'
+    StorageRequest:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/LocationEnum'
+        cloud_storage_id:
+          type:
+          - integer
+          - 'null'
+    StorageType:
+      enum:
+      - cloud_storage
+      - local
+      - share
+      type: string
+      description: '* `cloud_storage` - CLOUD_STORAGE
+
+        * `local` - LOCAL
+
+        * `share` - SHARE'
+    DataResponse:
+      oneOf:
+      - $ref: '#/components/schemas/RqId'
+      - type: string
+        format: binary
+    SubLabeledTrackRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShapeRequest'
+      required:
+      - frame
+      - label_id
+      - shapes
+    LocationEnum:
+      enum:
+      - cloud_storage
+      - local
+      type: string
+      description: '* `cloud_storage` - CLOUD_STORAGE
+
+        * `local` - LOCAL'
+    ValidationParamsRequest:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/ValidationMode'
+        frame_selection_method:
+          $ref: '#/components/schemas/FrameSelectionMethod'
+        random_seed:
+          type: integer
+          minimum: 0
+          description: 'The seed value for the random number generator.
+
+            The same value will produce the same frame sets.
+
+            Applicable only to random frame selection methods.
+
+            By default, a random value is used.
+
+            '
+        frames:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          writeOnly: true
+          description: 'The list of file names to be included in the validation set.
+
+            Applicable only to the "manual" frame selection method.
+
+            Can only be used for images.
+
+            '
+        frame_count:
+          type: integer
+          minimum: 1
+          description: 'The number of frames to be included in the validation set.
+
+            Applicable only to the "random_uniform" frame selection method
+
+            '
+        frame_share:
+          type: number
+          format: double
+          description: 'The share of frames to be included in the validation set.
+
+            Applicable only to the "random_uniform" frame selection method
+
+            '
+        frames_per_job_count:
+          type: integer
+          minimum: 1
+          description: 'The number of frames to be included in the validation set from each annotation job.
+
+            Applicable only to the "random_per_job" frame selection method
+
+            '
+        frames_per_job_share:
+          type: number
+          format: double
+          description: 'The share of frames to be included in the validation set from each annotation job.
+
+            Applicable only to the "random_per_job" frame selection method
+
+            '
+      required:
+      - mode
+    FrameSelectionMethod:
+      enum:
+      - random_uniform
+      - random_per_job
+      - manual
+      type: string
+      description: '* `random_uniform` - RANDOM_UNIFORM
+
+        * `random_per_job` - RANDOM_PER_JOB
+
+        * `manual` - MANUAL'
+    ChapterMetadata:
+      type: object
+      properties:
+        title:
+          type: string
+    ValidationMode:
+      enum:
+      - gt
+      - gt_pool
+      type: string
+      description: '* `gt` - GT
+
+        * `gt_pool` - GT_POOL'
+    StorageMethod:
+      enum:
+      - cache
+      - file_system
+      type: string
+      description: '* `cache` - CACHE
+
+        * `file_system` - FILE_SYSTEM'
+    JobsSummary:
+      type: object
+      properties:
+        count:
+          type: integer
+          default: 0
+        completed:
+          type:
+          - integer
+          - 'null'
+        validation:
+          type:
+          - integer
+          - 'null'
+        url:
+          type: string
+          format: uri
+          readOnly: true
+      required:
+      - completed
+      - validation
+    PatchedLabeledDataRequest:
+      type: object
+      properties:
+        version:
+          type: integer
+          default: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImageRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShapeRequest'
+          default: []
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledTrackRequest'
+          default: []
+        intervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledIntervalRequest'
+          default: []
+    LabeledTrackRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShapeRequest'
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledTrackRequest'
+      required:
+      - frame
+      - label_id
+      - shapes
+    LabeledImageRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+      required:
+      - frame
+      - label_id
+    LabeledData:
+      type: object
+      properties:
+        version:
+          type: integer
+          default: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+          default: []
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledTrack'
+          default: []
+        intervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledInterval'
+          default: []
+    SubLabeledTrack:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShape'
+      required:
+      - frame
+      - label_id
+      - shapes
+    PaginatedTaskReadList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskRead'
+    TaskWriteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+        project_id:
+          type:
+          - integer
+          - 'null'
+        owner_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        assignee_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        bug_tracker:
+          type: string
+          maxLength: 2000
+        overlap:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 0
+        segment_size:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatchedLabelRequest'
+        subset:
+          type: string
+          maxLength: 64
+        target_storage:
+          $ref: '#/components/schemas/StorageRequest'
+        source_storage:
+          $ref: '#/components/schemas/StorageRequest'
+        consensus_replicas:
+          type: integer
+          minimum: 0
+          default: 0
+          description: 'The number of consensus replica jobs for each annotation job.
+
+            Configured at task creation
+
+            '
+      required:
+      - name
+    SortingMethod:
+      enum:
+      - lexicographical
+      - natural
+      - predefined
+      - random
+      type: string
+      description: '* `lexicographical` - LEXICOGRAPHICAL
+
+        * `natural` - NATURAL
+
+        * `predefined` - PREDEFINED
+
+        * `random` - RANDOM'
+    RqId:
+      type: object
+      properties:
+        rq_id:
+          type: string
+          description: Request id
+      required:
+      - rq_id
+    LabeledInterval:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        start:
+          type: integer
+          minimum: 0
+          description: Must be within the task frame bounds.
+        stop:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: Exclusive interval end. May be one greater than the task stop frame.
+      required:
+      - label_id
+      - start
+      - stop
+    AttributeRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        mutable:
+          type: boolean
+        input_type:
+          $ref: '#/components/schemas/InputTypeEnum'
+        default_value:
+          type: string
+          maxLength: 128
+        values:
+          type: array
+          items:
+            type: string
+            maxLength: 200
+        deleted:
+          type: boolean
+          writeOnly: true
+          description: Delete the attribute and all related annotation values.
+      required:
+      - input_type
+      - mutable
+      - name
+      - values
+    TaskRead:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+        project_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+        bug_tracker:
+          type: string
+          readOnly: true
         created_date:
           type: string
           format: date-time
@@ -253,108 +1846,1365 @@ components:
           type: string
           format: date-time
           readOnly: true
-    Attribute:
-      type: object
-      properties:
-        id:
+        overlap:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        segment_size:
           type: integer
           readOnly: true
-        name:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/JobStatus'
+          readOnly: true
+        data_chunk_size:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 0
+          readOnly: true
+        data_original_chunk_type:
+          allOf:
+          - $ref: '#/components/schemas/ChunkType'
+          readOnly: true
+        data_compressed_chunk_type:
+          allOf:
+          - $ref: '#/components/schemas/ChunkType'
+          readOnly: true
+        data_cloud_storage_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        guide_id:
+          type:
+          - integer
+          - 'null'
+        size:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          readOnly: true
+        image_quality:
+          type: integer
+          maximum: 32767
+          minimum: 0
+          readOnly: true
+        data:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        dimension:
           type: string
-        mutable:
+          readOnly: true
+        mode:
+          type: string
+          readOnly: true
+        media_type:
+          type: string
+          readOnly: true
+        subset:
+          type: string
+          readOnly: true
+        organization_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        organization:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          deprecated: true
+        target_storage:
+          allOf:
+          - $ref: '#/components/schemas/Storage'
+        source_storage:
+          allOf:
+          - $ref: '#/components/schemas/Storage'
+        jobs:
+          $ref: '#/components/schemas/JobsSummary'
+        labels:
+          $ref: '#/components/schemas/LabelsSummary'
+        assignee_updated_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        validation_mode:
+          type:
+          - string
+          - 'null'
+          description: Describes how the task validation is performed. Configured at task creation
+        consensus_enabled:
           type: boolean
-        input_type:
-          type: string
-          enum:
-          - checkbox
-          - radio
-          - number
-          - text
-          - select
-        default_value:
-          type: string
-        values:
-          type: array
-          items:
-            type: string
-    DataRequest:
+          readOnly: true
+      required:
+      - jobs
+      - labels
+    LabeledShape:
       type: object
       properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledShape'
+      required:
+      - frame
+      - label_id
+      - type
+    DataRequest:
+      type: object
+      description: 'Read more about parameters here:
+
+        https://docs.cvat.ai/docs/manual/basics/create-annotation-task/#advanced-configuration'
+      properties:
+        chunk_size:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 0
+          description: Maximum number of frames per chunk
+        image_quality:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Image quality to use during annotation, required for image and video-based tasks
+        start_frame:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: First frame index
+        stop_frame:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: Last frame index
+        frame_filter:
+          type: string
+          description: 'Frame filter. The only supported syntax is: ''step=N'''
+          maxLength: 256
         client_files:
           type: array
           items:
             type: string
             format: binary
+          default: []
+          description: '
+
+            Uploaded files.
+
+            Must contain all files from job_file_mapping if job_file_mapping is not empty.
+
+            '
         server_files:
           type: array
           items:
             type: string
+            minLength: 1
+            maxLength: 1024
+          default: []
+          description: '
+
+            Paths to files from a file share mounted on the server, or from a cloud storage.
+
+            Must contain all files from job_file_mapping if job_file_mapping is not empty.
+
+            '
         remote_files:
           type: array
           items:
             type: string
-        image_quality:
-          type: integer
+            minLength: 1
+            maxLength: 1024
+          default: []
+          description: '
+
+            Direct download URLs for files.
+
+            Must contain all files from job_file_mapping if job_file_mapping is not empty.
+
+            '
+        use_zip_chunks:
+          type: boolean
+          default: false
+          description: 'When true, video chunks will be represented as zip archives with decoded video frames.
+
+            When false, video chunks are represented as video segments
+
+            '
+        server_files_exclude:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          default: []
+          description: 'Paths to files and directories from a file share mounted on the server, or from a cloud storage
+
+            that should be excluded from the directories specified in server_files.
+
+            This option cannot be used together with filename_pattern.
+
+            The server_files_exclude parameter cannot be used to exclude a part of dataset from an archive.
+
+
+            Examples:
+
+
+            Exclude all files from subfolder ''sub/sub_1/sub_2''and single file ''sub/image.jpg'' from specified folder:
+
+            server_files = [''sub/''], server_files_exclude = [''sub/sub_1/sub_2/'', ''sub/image.jpg'']
+
+
+            Exclude all cloud storage files with prefix ''sub'' from the content of manifest file:
+
+            server_files = [''manifest.jsonl''], server_files_exclude = [''sub/'']
+
+            '
+        cloud_storage_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+          description: 'If not null, the files referenced by server_files will be retrieved
+
+            from the cloud storage with the specified ID.
+
+            The cloud storages applicable depend on the context.
+
+            In the user sandbox, only the user sandbox cloud storages can be used.
+
+            In an organization, only the organization cloud storages can be used.
+
+            '
         use_cache:
           type: boolean
-        cloud_storage_id:
-          type: integer
-    TaskWriteRequest:
+          default: false
+          description: 'Enable or disable task data chunk caching for the task.
+
+            Read more: https://docs.cvat.ai/docs/manual/advanced/data_on_fly/
+
+            '
+        copy_data:
+          type: boolean
+          default: false
+          description: 'Copy data from the server file share to CVAT during the task creation.
+
+            This will create a copy of the data, making the server independent from
+
+            the file share availability
+
+            '
+        storage_method:
+          $ref: '#/components/schemas/StorageMethod'
+        sorting_method:
+          $ref: '#/components/schemas/SortingMethod'
+        filename_pattern:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          description: 'A filename filter for cloud storage files
+
+            listed in the manifest. Supports fnmatch wildcards.
+
+            Read more: https://docs.python.org/3/library/fnmatch.html
+
+            '
+        job_file_mapping:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 1024
+          writeOnly: true
+          description: "\nRepresents a file-to-job mapping.\nUseful to specify a custom job configuration during task creation.\nThis option is not compatible with most other job split-related options.\nFiles in the jobs must not overlap or repeat.\nJob file mapping files must be a subset of the input files.\nIf directories are specified in server_files, all files obtained by recursive search\nin the specified directories will be used as input files.\nIn case of missing items in the input files, an error will be raised.\n\nExample:\n[\n\n    [\"file1.jpg\", \"file2.jpg\"], # job #1 files\n    [\"file3.png\"], # job #2 files\n    [\"file4.jpg\", \"file5.png\", \"file6.bmp\"], # job #3 files\n]\n"
+        upload_file_order:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          writeOnly: true
+          description: 'Allows to specify file order for client_file uploads.
+
+            Only valid with the "predefined" sorting method selected.
+
+
+            To state that the input files are sent in the correct order,
+
+            pass an empty list.
+
+
+            If you want to send files in an arbitrary order
+
+            and reorder them afterwards on the server,
+
+            pass the list of file names in the required order.
+
+            '
+        validation_params:
+          allOf:
+          - $ref: '#/components/schemas/ValidationParamsRequest'
+    AttributeValRequest:
       type: object
+      properties:
+        spec_id:
+          type: integer
+        value:
+          type: string
+          maxLength: 4096
+      required:
+      - spec_id
+      - value
+    SublabelRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        color:
+          type: string
+          description: The hex value for the RGB color. Will be generated automatically, unless specified explicitly.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeRequest'
+          default: []
+          description: The list of attributes. To remove an attribute, pass the full attribute body with deleted=true. Related annotation attribute values will be deleted.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          description: 'Associated annotation type for this label
+
+
+            * `any` - ANY
+
+            * `cuboid` - CUBOID
+
+            * `ellipse` - ELLIPSE
+
+            * `mask` - MASK
+
+            * `points` - POINTS
+
+            * `polygon` - POLYGON
+
+            * `polyline` - POLYLINE
+
+            * `rectangle` - RECTANGLE
+
+            * `skeleton` - SKELETON
+
+            * `interval` - INTERVAL
+
+            * `tag` - TAG'
+        has_parent:
+          type: boolean
       required:
       - name
+    AnnotationFileRequest:
+      type: object
+      properties:
+        annotation_file:
+          type: string
+          format: binary
+      required:
+      - annotation_file
+    LabelType:
+      enum:
+      - any
+      - cuboid
+      - ellipse
+      - mask
+      - points
+      - polygon
+      - polyline
+      - rectangle
+      - skeleton
+      - interval
+      - tag
+      type: string
+      description: '* `any` - ANY
+
+        * `cuboid` - CUBOID
+
+        * `ellipse` - ELLIPSE
+
+        * `mask` - MASK
+
+        * `points` - POINTS
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `rectangle` - RECTANGLE
+
+        * `skeleton` - SKELETON
+
+        * `interval` - INTERVAL
+
+        * `tag` - TAG'
+    LabeledIntervalRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        start:
+          type: integer
+          minimum: 0
+          description: Must be within the task frame bounds.
+        stop:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: Exclusive interval end. May be one greater than the task stop frame.
+      required:
+      - label_id
+      - start
+      - stop
+    FrameMeta:
+      type: object
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+        name:
+          type: string
+          maxLength: 1024
+        related_files:
+          type: integer
+        has_related_context:
+          type: boolean
+          readOnly: true
+      required:
+      - name
+      - related_files
+    LabeledDataRequest:
+      type: object
+      properties:
+        version:
+          type: integer
+          default: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImageRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShapeRequest'
+          default: []
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledTrackRequest'
+          default: []
+        intervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledIntervalRequest'
+          default: []
+    TaskValidationLayoutRead:
+      type: object
+      properties:
+        mode:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ValidationMode'
+          - $ref: '#/components/schemas/NullEnum'
+        frames_per_job_count:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        validation_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of frame ids to be used for validation
+
+            '
+        disabled_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of frame ids excluded from validation
+
+            '
+        honeypot_count:
+          type: integer
+          minimum: 0
+        honeypot_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of frame ids for all honeypots in the task
+
+            '
+        honeypot_real_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of real (validation) frame ids for all honeypots in the task
+
+            '
+    LabelsSummary:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+    ChunkType:
+      enum:
+      - video
+      - imageset
+      - audio_mp3
+      type: string
+      description: '* `video` - VIDEO
+
+        * `imageset` - IMAGESET
+
+        * `audio_mp3` - AUDIO_MP3'
+    JobStatus:
+      enum:
+      - annotation
+      - validation
+      - completed
+      type: string
+      description: '* `annotation` - ANNOTATION
+
+        * `validation` - VALIDATION
+
+        * `completed` - COMPLETED'
+    LabeledTrack:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShape'
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledTrack'
+      required:
+      - frame
+      - label_id
+      - shapes
+    TrackedShape:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        id:
+          type:
+          - integer
+          - 'null'
+        frame:
+          type: integer
+          minimum: 0
+      required:
+      - frame
+      - type
+    DataMetaRead:
+      type: object
+      properties:
+        chapters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Chapter'
+        chunks_updated_date:
+          type: string
+          format: date-time
+        chunk_size:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        size:
+          type: integer
+          readOnly: true
+          description: 'The number of frames included. Deleted frames do not affect this value.
+
+            '
+        image_quality:
+          type: integer
+          maximum: 100
+          minimum: 0
+        start_frame:
+          type: integer
+          readOnly: true
+        stop_frame:
+          type: integer
+          readOnly: true
+        frame_filter:
+          type: string
+          readOnly: true
+        frames:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FrameMeta'
+        deleted_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+        included_frames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            minimum: 0
+          description: 'A list of valid frame ids. The None value means all frames are included.
+
+            '
+        storage:
+          allOf:
+          - $ref: '#/components/schemas/StorageType'
+          readOnly: true
+        cloud_storage_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+      required:
+      - chunks_updated_date
+      - deleted_frames
+      - frames
+    SubLabeledShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+      required:
+      - frame
+      - label_id
+      - type
+    PatchedLabelRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        color:
+          type: string
+          description: The hex value for the RGB color. Will be generated automatically, unless specified explicitly.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeRequest'
+          default: []
+          description: The list of attributes. To remove an attribute, pass the full attribute body with deleted=true. Related annotation attribute values will be deleted.
+        deleted:
+          type: boolean
+          writeOnly: true
+          description: Delete the label. Only applicable in the PATCH methods of a project or a task.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          description: 'Associated annotation type for this label
+
+
+            * `any` - ANY
+
+            * `cuboid` - CUBOID
+
+            * `ellipse` - ELLIPSE
+
+            * `mask` - MASK
+
+            * `points` - POINTS
+
+            * `polygon` - POLYGON
+
+            * `polyline` - POLYLINE
+
+            * `rectangle` - RECTANGLE
+
+            * `skeleton` - SKELETON
+
+            * `interval` - INTERVAL
+
+            * `tag` - TAG'
+        svg:
+          type: string
+        sublabels:
+          type: array
+          items:
+            $ref: '#/components/schemas/SublabelRequest'
+    AttributeVal:
+      type: object
+      properties:
+        spec_id:
+          type: integer
+        value:
+          type: string
+          maxLength: 4096
+      required:
+      - spec_id
+      - value
+    SubLabeledShape:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+      required:
+      - frame
+      - label_id
+      - type
+    TrackedShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        id:
+          type:
+          - integer
+          - 'null'
+        frame:
+          type: integer
+          minimum: 0
+      required:
+      - frame
+      - type
+    RqStatus:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/RqStatusStateEnum'
+        message:
+          type: string
+          default: ''
+        progress:
+          type: number
+          format: double
+          maximum: 100
+          default: 0.0
+      required:
+      - state
+    PatchedTaskWriteRequest:
+      type: object
       properties:
         name:
           type: string
+          minLength: 1
+          maxLength: 256
         project_id:
           type:
           - integer
           - 'null'
-        labels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Label'
-        segment_size:
-          type: integer
-        overlap:
-          type: integer
         owner_id:
           type:
           - integer
           - 'null'
+          writeOnly: true
         assignee_id:
           type:
           - integer
           - 'null'
-    PaginatedTaskList:
-      $ref: '#/components/schemas/PaginatedBase'
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
+          writeOnly: true
+        bug_tracker:
+          type: string
+          maxLength: 2000
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatchedLabelRequest'
+        subset:
+          type: string
+          maxLength: 64
+        target_storage:
+          $ref: '#/components/schemas/StorageRequest'
+        source_storage:
+          $ref: '#/components/schemas/StorageRequest'
+        organization_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+    Storage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        location:
+          $ref: '#/components/schemas/LocationEnum'
+        cloud_storage_id:
+          type:
+          - integer
+          - 'null'
+    InputTypeEnum:
+      enum:
+      - checkbox
+      - radio
+      - number
+      - text
+      - select
+      type: string
+      description: '* `checkbox` - CHECKBOX
+
+        * `radio` - RADIO
+
+        * `number` - NUMBER
+
+        * `text` - TEXT
+
+        * `select` - SELECT'
+    PatchedTaskValidationLayoutWriteRequest:
+      type: object
+      properties:
+        disabled_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of frame ids to be excluded from validation
+
+            '
+        frame_selection_method:
+          allOf:
+          - $ref: '#/components/schemas/FrameSelectionMethod'
+          description: 'The method to use for frame selection of new real frames for honeypots in the task
+
+
+
+            * `random_uniform` - RANDOM_UNIFORM
+
+            * `random_per_job` - RANDOM_PER_JOB
+
+            * `manual` - MANUAL'
+        honeypot_real_frames:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+          description: 'The list of frame ids. Applicable only to the "manual" frame selection method
+
+            '
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: integer
+        start:
+          type: integer
+        stop:
+          type: integer
+        metadata:
+          $ref: '#/components/schemas/ChapterMetadata'
+      required:
+      - id
+      - metadata
+      - start
+      - stop
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    TaskFileRequest:
+      type: object
+      properties:
+        task_file:
+          type: string
+          format: binary
+      required:
+      - task_file
+    LabeledImage:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeVal'
+          default: []
+      required:
+      - frame
+      - label_id
+    LabeledShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledShapeRequest'
+      required:
+      - frame
+      - label_id
+      - type
+    RqStatusStateEnum:
+      enum:
+      - Queued
+      - Started
+      - Finished
+      - Failed
+      type: string
+      description: '* `Queued` - Queued
+
+        * `Started` - Started
+
+        * `Finished` - Finished
+
+        * `Failed` - Failed'
+    ShapeType:
+      enum:
+      - rectangle
+      - polygon
+      - polyline
+      - points
+      - ellipse
+      - cuboid
+      - mask
+      - skeleton
+      type: string
+      description: '* `rectangle` - RECTANGLE
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `points` - POINTS
+
+        * `ellipse` - ELLIPSE
+
+        * `cuboid` - CUBOID
+
+        * `mask` - MASK
+
+        * `skeleton` - SKELETON'
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
     tokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication with CVAT username and password.
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

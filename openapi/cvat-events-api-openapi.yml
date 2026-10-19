@@ -1,0 +1,482 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Events API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Events
+paths:
+  /api/events:
+    get:
+      operationId: events_list
+      description: The log is returned in the CSV format.
+      summary: Get an event log
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+          enum:
+          - download
+        description: Used to start downloading process after annotation file had been created
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Desired output file name
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date-time
+        description: UTC start date for events filtration. Default is the minimal time.
+      - in: query
+        name: job_id
+        schema:
+          type: integer
+        description: Filter events by job ID
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: Filter events by organization ID
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: Filter events by project ID
+      - in: query
+        name: query_id
+        schema:
+          type: string
+        description: ID of query request that need to check or download
+      - in: query
+        name: task_id
+        schema:
+          type: integer
+        description: Filter events by task ID
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date-time
+        description: UTC end date for events filtration. Default is the current time.
+      - in: query
+        name: user_id
+        schema:
+          type: integer
+        description: Filter events by user ID
+      tags:
+      - Events
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      deprecated: true
+      responses:
+        '200':
+          description: Download of file started
+        '201':
+          description: CSV log file is ready for downloading
+        '202':
+          description: Creating a CSV log file has been started
+    post:
+      operationId: events_create
+      description: Sends logs to the Clickhouse if it is connected
+      summary: Log client events
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Events
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientEventsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/ClientEvents'
+          description: ''
+  /api/events/export:
+    post:
+      operationId: events_create_export
+      summary: Initiate a process to export events
+      parameters:
+      - in: query
+        name: cloud_storage_id
+        schema:
+          type: integer
+        description: Storage id
+      - in: query
+        name: filename
+        schema:
+          type: string
+        description: Desired output file name
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date-time
+        description: UTC start date for events filtration. Default is the minimal time.
+      - in: query
+        name: job_id
+        schema:
+          type: integer
+        description: Filter events by job ID
+      - in: query
+        name: location
+        schema:
+          type: string
+          enum:
+          - cloud_storage
+          - local
+        description: Where need to save events file
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: Filter events by organization ID
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: Filter events by project ID
+      - in: query
+        name: task_id
+        schema:
+          type: integer
+        description: Filter events by task ID
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date-time
+        description: UTC end date for events filtration. Default is the current time.
+      - in: query
+        name: user_id
+        schema:
+          type: integer
+        description: Filter events by user ID
+      tags:
+      - Events
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: ''
+components:
+  schemas:
+    ClientEvents:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+          default: []
+        timestamp:
+          type: string
+          format: date-time
+      required:
+      - timestamp
+    RqId:
+      type: object
+      properties:
+        rq_id:
+          type: string
+          description: Request id
+      required:
+      - rq_id
+    EventRequest:
+      type: object
+      properties:
+        scope:
+          type: string
+          minLength: 1
+        obj_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        obj_id:
+          type:
+          - integer
+          - 'null'
+        obj_val:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        source:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        timestamp:
+          type: string
+          format: date-time
+        count:
+          type:
+          - integer
+          - 'null'
+        duration:
+          type: integer
+          default: 0
+        project_id:
+          type:
+          - integer
+          - 'null'
+        task_id:
+          type:
+          - integer
+          - 'null'
+        job_id:
+          type:
+          - integer
+          - 'null'
+        user_id:
+          type:
+          - integer
+          - 'null'
+        user_name:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        user_email:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        org_id:
+          type:
+          - integer
+          - 'null'
+        org_slug:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+        payload:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+      required:
+      - scope
+      - timestamp
+    Event:
+      type: object
+      properties:
+        scope:
+          type: string
+        obj_name:
+          type:
+          - string
+          - 'null'
+        obj_id:
+          type:
+          - integer
+          - 'null'
+        obj_val:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type: string
+          format: date-time
+        count:
+          type:
+          - integer
+          - 'null'
+        duration:
+          type: integer
+          default: 0
+        project_id:
+          type:
+          - integer
+          - 'null'
+        task_id:
+          type:
+          - integer
+          - 'null'
+        job_id:
+          type:
+          - integer
+          - 'null'
+        user_id:
+          type:
+          - integer
+          - 'null'
+        user_name:
+          type:
+          - string
+          - 'null'
+        user_email:
+          type:
+          - string
+          - 'null'
+        org_id:
+          type:
+          - integer
+          - 'null'
+        org_slug:
+          type:
+          - string
+          - 'null'
+        payload:
+          type:
+          - string
+          - 'null'
+      required:
+      - scope
+      - timestamp
+    ClientEventsRequest:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventRequest'
+          default: []
+        previous_event:
+          allOf:
+          - $ref: '#/components/schemas/EventRequest'
+          writeOnly: true
+        timestamp:
+          type: string
+          format: date-time
+      required:
+      - timestamp
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

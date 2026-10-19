@@ -1,0 +1,254 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Growth API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: growth
+paths:
+  /api/growth:
+    get:
+      operationId: growth_list
+      summary: List growth data
+      parameters:
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['id', 'user_id']."
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'']'
+        schema:
+          type: string
+      tags:
+      - growth
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserGrowthDataList'
+          description: ''
+  /api/growth/{id}:
+    get:
+      operationId: growth_retrieve
+      summary: Get growth data
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - growth
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/UserGrowthData'
+          description: ''
+    patch:
+      operationId: growth_partial_update
+      summary: Update growth data
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - growth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserGrowthDataRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/UserGrowthData'
+          description: ''
+components:
+  schemas:
+    PatchedUserGrowthDataRequest:
+      type: object
+      properties:
+        github_prompt_shown:
+          type: boolean
+        github_prompt_support_clicked:
+          type: boolean
+        promotion_notifications_allowed:
+          type: boolean
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    UserGrowthData:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+        github_prompt_shown:
+          type: boolean
+        github_prompt_support_clicked:
+          type: boolean
+        github_prompt_enabled:
+          type: boolean
+          readOnly: true
+        promotion_notifications_allowed:
+          type: boolean
+    PaginatedUserGrowthDataList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGrowthData'
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

@@ -1,0 +1,578 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Users API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Users
+paths:
+  /api/users:
+    get:
+      operationId: users_list
+      summary: List users
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['first_name', 'id', 'is_active', 'last_name', 'username']."
+        schema:
+          type: string
+      - name: first_name
+        in: query
+        description: A simple equality filter for the first_name field
+        schema:
+          type: string
+      - name: is_active
+        in: query
+        description: A simple equality filter for the is_active field
+        schema:
+          type: boolean
+      - name: last_name
+        in: query
+        description: A simple equality filter for the last_name field
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''first_name'', ''last_name'', ''username'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''first_name'', ''id'', ''is_active'', ''last_name'', ''username'']'
+        schema:
+          type: string
+      - name: username
+        in: query
+        description: A simple equality filter for the username field
+        schema:
+          type: string
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMetaUserList'
+          description: ''
+  /api/users/{id}:
+    get:
+      operationId: users_retrieve
+      summary: Get user details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/MetaUser'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      summary: Update a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/MetaUser'
+          description: ''
+    delete:
+      operationId: users_destroy
+      summary: Delete a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The user has been deleted
+  /api/users/self:
+    get:
+      operationId: users_retrieve_self
+      description: Method returns an instance of a user who is currently authenticated
+      summary: Get details of the current user
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/MetaUser'
+          description: ''
+components:
+  schemas:
+    PatchedUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        groups:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly assigning them.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+        cvat_usage_reason:
+          description: 'The main reason the user uses CVAT.
+
+
+            * `work_project` - work_project
+
+            * `academic_research` - academic_research
+
+            * `teaching_or_coursework` - teaching_or_coursework
+
+            * `personal_project` - personal_project'
+          oneOf:
+          - $ref: '#/components/schemas/CvatUsageReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        primary_role:
+          type: string
+          description: A predefined role code or custom role text.
+          maxLength: 255
+        planned_activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedActivitiesEnum'
+          description: Predefined activity codes selected by the user.
+          maxItems: 6
+        data_types:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 255
+          description: Predefined data type codes and optionally one custom value.
+          maxItems: 6
+        discovery_source:
+          type: string
+          description: A predefined discovery source code or custom text.
+          maxLength: 255
+    PlannedActivitiesEnum:
+      enum:
+      - set_up_projects
+      - annotate_data
+      - review_quality
+      - manage_annotators
+      - connect_models
+      - evaluate_for_organization
+      type: string
+      description: '* `set_up_projects` - set_up_projects
+
+        * `annotate_data` - annotate_data
+
+        * `review_quality` - review_quality
+
+        * `manage_annotators` - manage_annotators
+
+        * `connect_models` - connect_models
+
+        * `evaluate_for_organization` - evaluate_for_organization'
+    CvatUsageReasonEnum:
+      enum:
+      - work_project
+      - academic_research
+      - teaching_or_coursework
+      - personal_project
+      type: string
+      description: '* `work_project` - work_project
+
+        * `academic_research` - academic_research
+
+        * `teaching_or_coursework` - teaching_or_coursework
+
+        * `personal_project` - personal_project'
+    CreatedViaEnum:
+      enum:
+      - registration
+      - social
+      - sso
+      - ldap
+      - invitation
+      type: string
+      description: '* `registration` - Registration
+
+        * `social` - Social
+
+        * `sso` - SSO
+
+        * `ldap` - LDAP
+
+        * `invitation` - Invitation'
+    BlankEnum:
+      enum:
+      - ''
+    MetaUser:
+      anyOf:
+      - $ref: '#/components/schemas/User'
+      - $ref: '#/components/schemas/BasicUser'
+    User:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        groups:
+          type: array
+          items:
+            type: string
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly assigning them.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        has_analytics_access:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+        cvat_usage_reason:
+          description: 'The main reason the user uses CVAT.
+
+
+            * `work_project` - work_project
+
+            * `academic_research` - academic_research
+
+            * `teaching_or_coursework` - teaching_or_coursework
+
+            * `personal_project` - personal_project'
+          oneOf:
+          - $ref: '#/components/schemas/CvatUsageReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        primary_role:
+          type: string
+          description: A predefined role code or custom role text.
+          maxLength: 255
+        planned_activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedActivitiesEnum'
+          description: Predefined activity codes selected by the user.
+          maxItems: 6
+        data_types:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+          description: Predefined data type codes and optionally one custom value.
+          maxItems: 6
+        discovery_source:
+          type: string
+          description: A predefined discovery source code or custom text.
+          maxLength: 255
+        email_verified:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+        created_via:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/CreatedViaEnum'
+          - $ref: '#/components/schemas/NullEnum'
+      required:
+      - groups
+      - username
+    PaginatedMetaUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaUser'
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    NullEnum:
+      enum:
+      - null
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

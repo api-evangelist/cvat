@@ -1,0 +1,146 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Usage API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Usage
+paths:
+  /api/usage/current:
+    get:
+      operationId: usage_retrieve_current
+      summary: Get usage for the current user or organization
+      tags:
+      - Usage
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Usage'
+          description: ''
+components:
+  schemas:
+    Usage:
+      type: object
+      properties:
+        user_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        org_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        usage:
+          allOf:
+          - $ref: '#/components/schemas/NumericUsage'
+          readOnly: true
+    NumericUsage:
+      type: object
+      properties:
+        tasks:
+          type: integer
+        projects:
+          type: integer
+        cloud_storages:
+          type: integer
+        webhooks:
+          type: integer
+        external_ai_agents:
+          type: integer
+        external_ai_agent_calls:
+          type: integer
+        internal_ai_agent_calls:
+          type: integer
+        internal_storage_bytes:
+          type: integer
+        memberships:
+          type: integer
+        organizations:
+          type: integer
+      required:
+      - cloud_storages
+      - external_ai_agent_calls
+      - external_ai_agents
+      - internal_ai_agent_calls
+      - internal_storage_bytes
+      - projects
+      - tasks
+      - webhooks
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

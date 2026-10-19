@@ -1,212 +1,853 @@
 openapi: 3.2.0
 info:
   title: CVAT REST Cloudstorages API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
-  termsOfService: https://www.cvat.ai/terms-of-use
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
   contact:
-    name: CVAT Support
-    url: https://www.cvat.ai
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
   license:
     name: MIT License
     url: https://en.wikipedia.org/wiki/MIT_License
-  version: '2.0'
-servers:
-- url: https://app.cvat.ai/api
-  description: CVAT Online (hosted)
-- url: http://localhost:8080/api
-  description: Self-hosted CVAT (default)
-security:
-- tokenAuth: []
-- basicAuth: []
 tags:
 - name: cloudstorages
-  description: External object-storage connections used as data sources.
 paths:
-  /cloudstorages:
+  /api/cloudstorages:
     get:
       operationId: cloudstorages_list
-      tags:
-      - cloudstorages
       summary: List cloud storages
       parameters:
-      - $ref: '#/components/parameters/Page'
-      - $ref: '#/components/parameters/PageSize'
-      responses:
-        '200':
-          description: A paginated list of cloud storages.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedCloudStorageList'
-    post:
-      operationId: cloudstorages_create
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: credentials_type
+        in: query
+        description: A simple equality filter for the credentials_type field
+        schema:
+          type: string
+          enum:
+          - KEY_SECRET_KEY_PAIR
+          - ACCOUNT_NAME_TOKEN_PAIR
+          - KEY_FILE_PATH
+          - ANONYMOUS_ACCESS
+          - CONNECTION_STRING
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['credentials_type', 'description', 'id', 'name', 'owner', 'provider_type', 'resource']."
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: A simple equality filter for the name field
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: owner
+        in: query
+        description: A simple equality filter for the owner field
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: provider_type
+        in: query
+        description: A simple equality filter for the provider_type field
+        schema:
+          type: string
+          enum:
+          - AWS_S3_BUCKET
+          - AZURE_CONTAINER
+          - GOOGLE_CLOUD_STORAGE
+      - name: resource
+        in: query
+        description: A simple equality filter for the resource field
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''description'', ''name'', ''owner'', ''resource'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''credentials_type'', ''description'', ''id'', ''name'', ''owner'', ''provider_type'', ''resource'']'
+        schema:
+          type: string
       tags:
       - cloudstorages
-      summary: Create a cloud storage connection
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCloudStorageReadList'
+          description: ''
+    post:
+      operationId: cloudstorages_create
+      summary: Create a cloud storage
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - cloudstorages
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CloudStorageWriteRequest'
+            examples:
+              CreateAmazonS3CloudStorageWithCredentials:
+                value:
+                  provider_type: AWS_S3_BUCKET
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: KEY_SECRET_KEY_PAIR
+                  key: XXX
+                  secret_key: XXX
+                  specific_attributes: region=eu-central-1
+                  description: Some description
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Amazon S3 cloud storage with credentials
+              CreateAmazonS3CloudStorageWithoutCredentials:
+                value:
+                  provider_type: AWS_S3_BUCKET
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: ANONYMOUS_ACCESS
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Amazon S3 cloud storage without credentials
+              CreateAzureCloudStorage:
+                value:
+                  provider_type: AZURE_CONTAINER
+                  resource: sonecontainer
+                  display_name: Container
+                  credentials_type: ACCOUNT_NAME_TOKEN_PAIR
+                  account_name: someaccount
+                  session_token: xxx
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Azure cloud storage
+              CreateGCS:
+                value:
+                  provider_type: GOOGLE_CLOUD_STORAGE
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: KEY_FILE_PATH
+                  key_file: file
+                  manifests:
+                  - manifest.jsonl
+                summary: Create GCS
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CloudStorageWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '201':
-          description: The created cloud storage.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/CloudStorage'
-  /cloudstorages/{id}:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
+                $ref: '#/components/schemas/CloudStorageRead'
+          description: ''
+  /api/cloudstorages/{id}:
     get:
       operationId: cloudstorages_retrieve
+      summary: Get cloud storage details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
       tags:
       - cloudstorages
-      summary: Retrieve a cloud storage
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '200':
-          description: The requested cloud storage.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/CloudStorage'
-    delete:
-      operationId: cloudstorages_destroy
+                $ref: '#/components/schemas/CloudStorageRead'
+          description: ''
+    patch:
+      operationId: cloudstorages_partial_update
+      summary: Update a cloud storage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
       tags:
       - cloudstorages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCloudStorageWriteRequest'
+            examples:
+              CreateAmazonS3CloudStorageWithCredentials:
+                value:
+                  provider_type: AWS_S3_BUCKET
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: KEY_SECRET_KEY_PAIR
+                  key: XXX
+                  secret_key: XXX
+                  specific_attributes: region=eu-central-1
+                  description: Some description
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Amazon S3 cloud storage with credentials
+              CreateAmazonS3CloudStorageWithoutCredentials:
+                value:
+                  provider_type: AWS_S3_BUCKET
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: ANONYMOUS_ACCESS
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Amazon S3 cloud storage without credentials
+              CreateAzureCloudStorage:
+                value:
+                  provider_type: AZURE_CONTAINER
+                  resource: sonecontainer
+                  display_name: Container
+                  credentials_type: ACCOUNT_NAME_TOKEN_PAIR
+                  account_name: someaccount
+                  session_token: xxx
+                  manifests:
+                  - manifest.jsonl
+                summary: Create Azure cloud storage
+              CreateGCS:
+                value:
+                  provider_type: GOOGLE_CLOUD_STORAGE
+                  resource: somebucket
+                  display_name: Bucket
+                  credentials_type: KEY_FILE_PATH
+                  key_file: file
+                  manifests:
+                  - manifest.jsonl
+                summary: Create GCS
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCloudStorageWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/CloudStorageRead'
+          description: ''
+    delete:
+      operationId: cloudstorages_destroy
       summary: Delete a cloud storage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
+      tags:
+      - cloudstorages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '204':
-          description: The cloud storage has been deleted.
+          description: The cloud storage has been removed
+  /api/cloudstorages/{id}/actions:
+    get:
+      operationId: cloudstorages_retrieve_actions
+      description: Method return allowed actions for cloud storage. It's required for reading/writing
+      summary: Get allowed actions for a cloud storage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
+      tags:
+      - cloudstorages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: string
+          description: Cloud Storage actions (GET | PUT | DELETE)
+  /api/cloudstorages/{id}/content-v2:
+    get:
+      operationId: cloudstorages_retrieve_content_v2
+      summary: Get cloud storage content
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
+      - in: query
+        name: manifest_path
+        schema:
+          type: string
+        description: Path to the manifest file in a cloud storage
+      - in: query
+        name: next_token
+        schema:
+          type: string
+        description: Used to continue listing files in the bucket
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+      - in: query
+        name: prefix
+        schema:
+          type: string
+        description: Prefix to filter data
+      tags:
+      - cloudstorages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/CloudStorageContent'
+          description: A manifest content
+  /api/cloudstorages/{id}/preview:
+    get:
+      operationId: cloudstorages_retrieve_preview
+      summary: Get a preview image for a cloud storage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
+      tags:
+      - cloudstorages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Cloud Storage preview
+        '400':
+          description: Failed to get cloud storage preview
+        '404':
+          description: Cloud Storage preview not found
+  /api/cloudstorages/{id}/status:
+    get:
+      operationId: cloudstorages_retrieve_status
+      summary: Get the status of a cloud storage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cloud storage.
+        required: true
+      tags:
+      - cloudstorages
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: string
+                enum:
+                - AVAILABLE
+                - NOT_FOUND
+                - FORBIDDEN
+          description: Cloud Storage Status
 components:
   schemas:
-    PaginatedBase:
+    PaginatedCloudStorageReadList:
       type: object
+      required:
+      - count
+      - results
       properties:
         count:
           type: integer
+          example: 123
         next:
           type:
           - string
           - 'null'
           format: uri
+          example: http://api.example.org/accounts/?page=4
         previous:
           type:
           - string
           - 'null'
           format: uri
+          example: http://api.example.org/accounts/?page=2
         results:
           type: array
           items:
-            type: object
-    CloudStorageWriteRequest:
-      type: object
-      required:
-      - provider_type
-      - resource
-      - credentials_type
-      properties:
-        provider_type:
-          type: string
-          enum:
-          - AWS_S3_BUCKET
-          - AZURE_CONTAINER
-          - GOOGLE_CLOUD_STORAGE
-        resource:
-          type: string
-        display_name:
-          type: string
-        credentials_type:
-          type: string
-          enum:
-          - KEY_SECRET_KEY_PAIR
-          - ACCOUNT_NAME_TOKEN_PAIR
-          - KEY_FILE_PATH
-          - ANONYMOUS_ACCESS
-        key:
-          type: string
-        secret_key:
-          type: string
-        specific_attributes:
-          type: string
-    PaginatedCloudStorageList:
-      $ref: '#/components/schemas/PaginatedBase'
-    CloudStorage:
+            $ref: '#/components/schemas/CloudStorageRead'
+    ProviderTypeEnum:
+      enum:
+      - AWS_S3_BUCKET
+      - AZURE_CONTAINER
+      - GOOGLE_CLOUD_STORAGE
+      type: string
+      description: '* `AWS_S3_BUCKET` - Amazon S3
+
+        * `AZURE_CONTAINER` - Azure Blob Storage
+
+        * `GOOGLE_CLOUD_STORAGE` - Google Cloud Storage'
+    CloudStorageRead:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        provider_type:
-          type: string
-          enum:
-          - AWS_S3_BUCKET
-          - AZURE_CONTAINER
-          - GOOGLE_CLOUD_STORAGE
-        resource:
-          type: string
-          description: Bucket or container name.
-        display_name:
-          type: string
-        credentials_type:
-          type: string
-          enum:
-          - KEY_SECRET_KEY_PAIR
-          - ACCOUNT_NAME_TOKEN_PAIR
-          - KEY_FILE_PATH
-          - ANONYMOUS_ACCESS
         owner:
-          $ref: '#/components/schemas/BasicUser'
-        organization:
-          type:
-          - integer
-          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+        manifests:
+          type: array
+          items:
+            type: string
+            maxLength: 1024
+          default: []
         created_date:
           type: string
           format: date-time
           readOnly: true
-    BasicUser:
-      type:
-      - object
-      - 'null'
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+        provider_type:
+          $ref: '#/components/schemas/ProviderTypeEnum'
+        resource:
+          type: string
+          maxLength: 222
+        display_name:
+          type: string
+          maxLength: 63
+        credentials_type:
+          $ref: '#/components/schemas/CredentialsTypeEnum'
+        specific_attributes:
+          type: string
+          maxLength: 1024
+        description:
+          type: string
+        organization:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+      required:
+      - credentials_type
+      - display_name
+      - provider_type
+      - resource
+    FileInfoTypeEnum:
+      enum:
+      - REG
+      - DIR
+      type: string
+      description: '* `REG` - REG
+
+        * `DIR` - DIR'
+    CloudStorageWriteRequest:
+      type: object
       properties:
+        provider_type:
+          $ref: '#/components/schemas/ProviderTypeEnum'
+        resource:
+          type: string
+          minLength: 1
+          maxLength: 222
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 63
+        owner:
+          $ref: '#/components/schemas/BasicUserRequest'
+        credentials_type:
+          $ref: '#/components/schemas/CredentialsTypeEnum'
+        session_token:
+          type: string
+          maxLength: 440
+        account_name:
+          type: string
+          maxLength: 24
+        key:
+          type: string
+          maxLength: 40
+        secret_key:
+          type: string
+          maxLength: 64
+        connection_string:
+          type: string
+          maxLength: 1024
+        key_file:
+          type: string
+          format: binary
+        specific_attributes:
+          type: string
+          maxLength: 1024
+        description:
+          type: string
+        manifests:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          default: []
+      required:
+      - credentials_type
+      - display_name
+      - provider_type
+      - resource
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
           readOnly: true
         username:
           type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
         first_name:
           type: string
+          maxLength: 150
         last_name:
           type: string
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
+          maxLength: 150
+      required:
+      - username
+    CloudStorageContent:
+      type: object
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: This token is used to continue listing files in the bucket.
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfo'
+      required:
+      - content
+    BasicUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    CredentialsTypeEnum:
+      enum:
+      - KEY_SECRET_KEY_PAIR
+      - ACCOUNT_NAME_TOKEN_PAIR
+      - KEY_FILE_PATH
+      - ANONYMOUS_ACCESS
+      - CONNECTION_STRING
+      type: string
+      description: '* `KEY_SECRET_KEY_PAIR` - KEY_SECRET_KEY_PAIR
+
+        * `ACCOUNT_NAME_TOKEN_PAIR` - ACCOUNT_NAME_TOKEN_PAIR
+
+        * `KEY_FILE_PATH` - KEY_FILE_PATH
+
+        * `ANONYMOUS_ACCESS` - ANONYMOUS_ACCESS
+
+        * `CONNECTION_STRING` - CONNECTION_STRING'
+    FileInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 1024
+        type:
+          $ref: '#/components/schemas/FileInfoTypeEnum'
+        mime_type:
+          type: string
+          maxLength: 255
+      required:
+      - mime_type
+      - name
+      - type
+    PatchedCloudStorageWriteRequest:
+      type: object
+      properties:
+        provider_type:
+          $ref: '#/components/schemas/ProviderTypeEnum'
+        resource:
+          type: string
+          minLength: 1
+          maxLength: 222
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 63
+        owner:
+          $ref: '#/components/schemas/BasicUserRequest'
+        credentials_type:
+          $ref: '#/components/schemas/CredentialsTypeEnum'
+        session_token:
+          type: string
+          maxLength: 440
+        account_name:
+          type: string
+          maxLength: 24
+        key:
+          type: string
+          maxLength: 40
+        secret_key:
+          type: string
+          maxLength: 64
+        connection_string:
+          type: string
+          maxLength: 1024
+        key_file:
+          type: string
+          format: binary
+        specific_attributes:
+          type: string
+          maxLength: 1024
+        description:
+          type: string
+        manifests:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          default: []
   securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
     tokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication with CVAT username and password.
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

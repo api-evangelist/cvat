@@ -1,177 +1,357 @@
 openapi: 3.2.0
 info:
   title: CVAT REST Organizations API
-  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
-  termsOfService: https://www.cvat.ai/terms-of-use
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
   contact:
-    name: CVAT Support
-    url: https://www.cvat.ai
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
   license:
     name: MIT License
     url: https://en.wikipedia.org/wiki/MIT_License
-  version: '2.0'
-servers:
-- url: https://app.cvat.ai/api
-  description: CVAT Online (hosted)
-- url: http://localhost:8080/api
-  description: Self-hosted CVAT (default)
-security:
-- tokenAuth: []
-- basicAuth: []
 tags:
 - name: Organizations
-  description: Organizations scoping resources for teams.
 paths:
-  /organizations:
+  /api/organizations:
     get:
       operationId: organizations_list
-      tags:
-      - Organizations
       summary: List organizations
       parameters:
-      - $ref: '#/components/parameters/Page'
-      - $ref: '#/components/parameters/PageSize'
-      responses:
-        '200':
-          description: A paginated list of organizations.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedOrganizationList'
-    post:
-      operationId: organizations_create
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['id', 'name', 'owner', 'slug']."
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: A simple equality filter for the name field
+        schema:
+          type: string
+      - name: owner
+        in: query
+        description: A simple equality filter for the owner field
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''name'', ''owner'', ''slug'']'
+        schema:
+          type: string
+      - name: slug
+        in: query
+        description: A simple equality filter for the slug field
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'', ''name'', ''owner'', ''slug'']'
+        schema:
+          type: string
       tags:
       - Organizations
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationReadList'
+          description: ''
+    post:
+      operationId: organizations_create
       summary: Create an organization
+      tags:
+      - Organizations
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/OrganizationWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '201':
-          description: The created organization.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/Organization'
-  /organizations/{id}:
-    parameters:
-    - $ref: '#/components/parameters/PathId'
+                $ref: '#/components/schemas/OrganizationRead'
+          description: ''
+  /api/organizations/{id}:
     get:
       operationId: organizations_retrieve
+      summary: Get organization details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organization.
+        required: true
       tags:
       - Organizations
-      summary: Retrieve an organization
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '200':
-          description: The requested organization.
           content:
-            application/json:
+            application/vnd.cvat+json:
               schema:
-                $ref: '#/components/schemas/Organization'
-    delete:
-      operationId: organizations_destroy
+                $ref: '#/components/schemas/OrganizationRead'
+          description: ''
+    patch:
+      operationId: organizations_partial_update
+      summary: Update an organization
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organization.
+        required: true
       tags:
       - Organizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganizationWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/OrganizationRead'
+          description: ''
+    delete:
+      operationId: organizations_destroy
       summary: Delete an organization
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organization.
+        required: true
+      tags:
+      - Organizations
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
       responses:
         '204':
-          description: The organization has been deleted.
+          description: The organization has been deleted
 components:
   schemas:
-    PaginatedBase:
+    OrganizationRead:
       type: object
       properties:
-        count:
+        id:
           type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-        results:
-          type: array
-          items:
-            type: object
-    PaginatedOrganizationList:
-      $ref: '#/components/schemas/PaginatedBase'
-    BasicUser:
-      type:
-      - object
-      - 'null'
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+        contact:
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+      required:
+      - owner
+    PatchedOrganizationWriteRequest:
+      type: object
       properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 16
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 64
+        description:
+          type: string
+        contact: {}
+    OrganizationWriteRequest:
+      type: object
+      properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 16
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 64
+        description:
+          type: string
+        contact: {}
+      required:
+      - slug
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
         id:
           type: integer
           readOnly: true
         username:
           type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
         first_name:
           type: string
+          maxLength: 150
         last_name:
           type: string
-    OrganizationWriteRequest:
+          maxLength: 150
+      required:
+      - username
+    PaginatedOrganizationReadList:
       type: object
       required:
-      - slug
+      - count
+      - results
       properties:
-        slug:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Organization:
-      type: object
-      properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        slug:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        owner:
-          $ref: '#/components/schemas/BasicUser'
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: A unique integer value identifying this resource.
-    PageSize:
-      name: page_size
-      in: query
-      schema:
-        type: integer
-      description: Number of results to return per page.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: A page number within the paginated result set.
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationRead'
   securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
     tokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication with CVAT username and password.
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

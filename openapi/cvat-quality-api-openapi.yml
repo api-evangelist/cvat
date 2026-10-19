@@ -1,0 +1,3717 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Quality API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: quality
+paths:
+  /api/quality/conflicts:
+    get:
+      operationId: quality_list_conflicts
+      summary: List annotation conflicts in a quality report
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['frame', 'id', 'job_id', 'project_id', 'severity', 'task_id', 'type']."
+        schema:
+          type: string
+      - name: frame
+        in: query
+        description: A simple equality filter for the frame field
+        schema:
+          type: integer
+      - name: job_id
+        in: query
+        description: A simple equality filter for the job_id field
+        schema:
+          type: integer
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: project_id
+        in: query
+        description: A simple equality filter for the project_id field
+        schema:
+          type: integer
+      - in: query
+        name: report_id
+        schema:
+          type: integer
+        description: A simple equality filter for report id
+      - name: severity
+        in: query
+        description: A simple equality filter for the severity field
+        schema:
+          type: string
+          enum:
+          - error
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''frame'', ''id'', ''job_id'', ''project_id'', ''severity'', ''task_id'', ''type'']'
+        schema:
+          type: string
+      - name: task_id
+        in: query
+        description: A simple equality filter for the task_id field
+        schema:
+          type: integer
+      - name: type
+        in: query
+        description: A simple equality filter for the type field
+        schema:
+          type: string
+          enum:
+          - missing_annotation
+          - extra_annotation
+          - mismatching_label
+          - mismatching_direction
+          - mismatching_attributes
+          - mismatching_groups
+          - covered_annotation
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAnnotationConflictList'
+          description: ''
+  /api/quality/job_validations:
+    get:
+      operationId: quality_list_job_validations
+      summary: List job validations
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: assignee
+        in: query
+        description: A simple equality filter for the assignee field
+        schema:
+          type: integer
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['assignee', 'id', 'job_id', 'project_id', 'report_id', 'status', 'task_id']."
+        schema:
+          type: string
+      - name: job_id
+        in: query
+        description: A simple equality filter for the job_id field
+        schema:
+          type: integer
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: project_id
+        in: query
+        description: A simple equality filter for the project_id field
+        schema:
+          type: integer
+      - name: report_id
+        in: query
+        description: A simple equality filter for the report_id field
+        schema:
+          type: integer
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'']'
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: A simple equality filter for the status field
+        schema:
+          type: string
+          enum:
+          - disabled
+          - accepted
+          - rejected
+      - name: task_id
+        in: query
+        description: A simple equality filter for the task_id field
+        schema:
+          type: integer
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedJobValidationList'
+          description: ''
+    post:
+      operationId: quality_create_validation
+      description: 'The endpoint can be used this way:
+
+
+        request_data = {"job_id": 42}
+
+        response = post(body=request_data)
+
+        if response.status == 200:
+
+        return response.data["status"] # likely, "disabled"
+
+
+        rq_id = response.data["rq_id"]
+
+        while True:
+
+        response = get(f"/api/requests/{rq_id}")
+
+        background_request = json.loads(response.data)
+
+        if background_request["status"] == "finished":
+
+        return background_request
+
+        elif background_request["status"] == "failed":
+
+        raise Exception(background_request["message"])
+
+
+        Only the last validation request to a job is considered valid. If a new request arrives
+
+        before the previous one is completed, the previous one is considered canceled.
+
+        The attempts counter will be increased regardless of the results being collected.'
+      summary: Create a job validation request
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobValidationCreateRequest'
+            examples:
+              RequestAJobValidation:
+                value:
+                  job_id: 42
+                summary: Request a job validation
+              RequestAJobValidationWithATimeout:
+                value:
+                  job_id: 42
+                  timeout: 30
+                summary: Request a job validation with a timeout
+                description: 'Here we allow no more than 30 seconds for processing.
+
+                  It''s useful if you want to provide a responsive UI,
+
+                  which doesn''t pollute server with unnecessary requests.
+
+                  The "timeout" parameter will automatically cancel the request,
+
+                  if it''s not processed in the specified time period.
+
+                  '
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/JobValidation'
+          description: 'A job validation request has been processed successfully
+
+            without creating an async task.
+
+            Typically this means that job validation is disabled for the job.
+
+            '
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: 'A job validation request has been enqueued, the request id is returned.
+
+            The request status can be checked by using common requests API: `GET /api/requests/<rq_id>`.
+
+            '
+        '400':
+          description: Invalid or failed request, check the response data for details
+  /api/quality/job_validations/{id}:
+    get:
+      operationId: quality_retrieve_job_validations
+      summary: Get job validation details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: An id of a job validation
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/JobValidation'
+          description: ''
+  /api/quality/reports:
+    get:
+      operationId: quality_list_reports
+      description: 'The "target" parameter is required when the "task_id" or "project_id"
+
+        filter is used.
+
+
+        The "parent_id" filter requires the "target" parameter. Valid parent
+
+        report target to requested target combinations are: task to job,
+
+        project to task, and project to job.
+
+
+        Please note that a report can be reused in several parent reports,
+
+        but the "parent_id" field in responses will include only the first parent report id.
+
+        Filtering project report children with target "job" still returns all the relevant
+
+        nested job reports, even though their response "parent_id" values refer to task reports.'
+      summary: Method returns a paginated list of quality reports
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['created_date', 'gt_last_updated', 'id', 'job_id', 'project_id', 'target_last_updated', 'task_id']."
+        schema:
+          type: string
+      - in: query
+        name: include_legacy
+        schema:
+          type: boolean
+          default: false
+        description: Include reports stored in the legacy data format
+      - name: job_id
+        in: query
+        description: A simple equality filter for the job_id field
+        schema:
+          type: integer
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: parent_id
+        schema:
+          type: integer
+        description: A parent report id filter. Requires a compatible target filter
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: A simple equality filter for project id
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''created_date'', ''gt_last_updated'', ''id'', ''job_id'', ''project_id'', ''target_last_updated'', ''task_id'']'
+        schema:
+          type: string
+      - in: query
+        name: target
+        schema:
+          type: string
+          enum:
+          - job
+          - project
+          - task
+        description: A simple equality filter for target
+      - in: query
+        name: task_id
+        schema:
+          type: integer
+        description: A simple equality filter for task id
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQualityReportList'
+          description: ''
+    post:
+      operationId: quality_create_report
+      description: 'Deprecation warning: Utilizing this endpoint to check the computation status is no longer possible.
+
+        Consider using common requests API: GET /api/requests/'
+      summary: Create a quality report
+      parameters:
+      - in: query
+        name: rq_id
+        schema:
+          type: string
+        description: 'The report creation request id. Can be specified to check the report
+
+          creation status.
+
+          '
+        deprecated: true
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QualityReportCreateRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityReport'
+          description: ''
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: 'A quality report request has been enqueued, the request id is returned.
+
+            The request status can be checked at this endpoint by passing the rq_id
+
+            as the query parameter. If the request id is specified, this response
+
+            means the quality report request is queued or is being processed.
+
+            '
+        '400':
+          description: Invalid or failed request, check the response data for details
+  /api/quality/reports/{id}:
+    get:
+      operationId: quality_retrieve_report
+      summary: Get quality report details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality report.
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityReport'
+          description: ''
+  /api/quality/reports/{id}/confusion:
+    get:
+      operationId: quality_retrieve_report_confusion
+      summary: Download quality report confusion matrices
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality report.
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: string
+                format: binary
+          description: ZIP archive with per-requirement confusion matrices
+  /api/quality/reports/{id}/confusion/matrix:
+    get:
+      operationId: quality_retrieve_report_requirement_confusion
+      summary: Get a quality report requirement confusion matrix
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+          default: json
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality report.
+        required: true
+      - in: query
+        name: requirement
+        schema:
+          type: integer
+        description: Quality requirement id in the report
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QualityReportConfusionMatrix'
+            text/csv:
+              schema:
+                type: string
+                format: binary
+          description: JSON confusion matrix for the requested quality requirement
+        '404':
+          description: Requirement confusion matrix was not found
+  /api/quality/reports/{id}/data:
+    get:
+      operationId: quality_retrieve_report_data
+      summary: Get quality report contents
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          default: json
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality report.
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/quality/settings:
+    get:
+      operationId: quality_list_settings
+      description: 'Please note that child task settings are included by default
+
+        if the "project_id" filter is used.
+
+        If you want to restrict results only to a specific parent type, use the "parent_type" parameter.'
+      summary: List quality settings instances
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['created_date', 'id', 'inherit', 'project_id', 'task_id', 'updated_date']."
+        schema:
+          type: string
+      - name: inherit
+        in: query
+        description: A simple equality filter for the inherit field
+        schema:
+          type: boolean
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: parent_type
+        schema:
+          type: string
+          enum:
+          - project
+          - task
+        description: A simple equality filter for parent instance type
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: A simple equality filter for project id
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''created_date'', ''id'', ''inherit'', ''project_id'', ''task_id'', ''updated_date'']'
+        schema:
+          type: string
+      - name: task_id
+        in: query
+        description: A simple equality filter for the task_id field
+        schema:
+          type: integer
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQualitySettingsList'
+          description: ''
+  /api/quality/settings/{id}:
+    get:
+      operationId: quality_retrieve_settings
+      summary: Get quality settings instance details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: An id of a quality settings instance
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualitySettings'
+          description: ''
+    put:
+      operationId: quality_update_settings
+      summary: Replace a quality settings instance
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: An id of a quality settings instance
+        required: true
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QualitySettingsRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualitySettings'
+          description: ''
+    patch:
+      operationId: quality_partial_update_settings
+      summary: Update a quality settings instance
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: An id of a quality settings instance
+        required: true
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQualitySettingsRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualitySettings'
+          description: ''
+  /api/quality/settings/requirements:
+    get:
+      operationId: quality_list_settings_requirements
+      summary: List quality requirements
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: annotation_type
+        in: query
+        description: A simple equality filter for the annotation_type field
+        schema:
+          type: string
+          enum:
+          - tag
+          - rectangle
+          - skeleton
+          - skeleton_keypoint
+          - points
+          - polyline
+          - mask
+          - polygon
+          - ellipse
+      - name: enabled
+        in: query
+        description: A simple equality filter for the enabled field
+        schema:
+          type: boolean
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['annotation_type', 'created_date', 'enabled', 'id', 'project_id', 'settings_id', 'task_id', 'updated_date']."
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: Project id filter
+      - in: query
+        name: settings_id
+        schema:
+          type: integer
+        description: Settings id filter
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''annotation_type'', ''created_date'', ''enabled'', ''id'', ''name'', ''project_id'', ''settings_id'', ''sort_order'', ''task_id'', ''updated_date'']'
+        schema:
+          type: string
+      - in: query
+        name: task_id
+        schema:
+          type: integer
+        description: Task id filter
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQualityRequirementListItemList'
+          description: ''
+    post:
+      operationId: quality_create_settings_requirements
+      summary: Create a quality requirement
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QualityRequirementRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityRequirement'
+          description: ''
+  /api/quality/settings/requirements/{id}:
+    get:
+      operationId: quality_retrieve_settings_requirements
+      summary: Get quality requirement details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality requirement.
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityRequirement'
+          description: ''
+    put:
+      operationId: quality_update_settings_requirements
+      summary: Replace a quality requirement
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality requirement.
+        required: true
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QualityRequirementRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityRequirement'
+          description: ''
+    patch:
+      operationId: quality_partial_update_settings_requirements
+      summary: Update a quality requirement
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality requirement.
+        required: true
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQualityRequirementRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QualityRequirement'
+          description: ''
+    delete:
+      operationId: quality_destroy_settings_requirements
+      summary: Delete a quality requirement
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this quality requirement.
+        required: true
+      tags:
+      - quality
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: Requirement deleted
+  /api/quality/settings/requirements/bulk:
+    post:
+      operationId: quality_create_settings_requirements_bulk
+      summary: Create a hierarchy of quality requirements
+      tags:
+      - quality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QualityRequirementBulkCreateRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QualityRequirement'
+          description: ''
+components:
+  schemas:
+    QualityReportRequirementSummaryItem:
+      type: object
+      properties:
+        requirement_id:
+          type:
+          - integer
+          - 'null'
+        name:
+          type: string
+        metric:
+          $ref: '#/components/schemas/QualityTargetMetric'
+        score:
+          type:
+          - number
+          - 'null'
+          format: double
+        score_components:
+          $ref: '#/components/schemas/QualityReportScoreComponents'
+        calculation:
+          $ref: '#/components/schemas/QualityReportRequirementCalculation'
+        threshold:
+          type: number
+          format: double
+      required:
+      - calculation
+      - metric
+      - name
+      - requirement_id
+      - score
+      - score_components
+      - threshold
+    QualityReportScoreComponents:
+      type: object
+      properties:
+        valid_count:
+          type: integer
+        missing_count:
+          type: integer
+        extra_count:
+          type: integer
+      required:
+      - extra_count
+      - missing_count
+      - valid_count
+    QualitySettingsRequest:
+      type: object
+      properties:
+        job_filter:
+          type: string
+          description: 'A JSON-based logic expression used to filter jobs for quality validation.
+
+            The filter supports various terms to specify conditions on job: [''assignee'', ''id'', ''stage'', ''state'', ''task_id'', ''task_name'', ''type'']
+
+            '
+          maxLength: 1024
+        inherit:
+          type: boolean
+          description: 'Allow using project settings when computing task quality.
+
+            Only applicable to task quality settings inside projects
+
+            '
+        max_validations_per_job:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: 'The maximum number of job validation attempts for the job assignee.
+
+            The job can be automatically accepted if the job quality is above the required
+
+            threshold, defined by the target threshold parameter.
+
+            '
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementListItemRequest'
+    QualityPointSizeBase:
+      enum:
+      - image_size
+      - group_bbox_size
+      type: string
+      description: '* `image_size` - IMAGE_SIZE
+
+        * `group_bbox_size` - GROUP_BBOX_SIZE'
+    ShapeType:
+      enum:
+      - rectangle
+      - polygon
+      - polyline
+      - points
+      - ellipse
+      - cuboid
+      - mask
+      - skeleton
+      type: string
+      description: '* `rectangle` - RECTANGLE
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `points` - POINTS
+
+        * `ellipse` - ELLIPSE
+
+        * `cuboid` - CUBOID
+
+        * `mask` - MASK
+
+        * `skeleton` - SKELETON'
+    JobValidationCreateRequest:
+      type: object
+      properties:
+        job_id:
+          type: integer
+          writeOnly: true
+        timeout:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+      required:
+      - job_id
+    AttributeComparison:
+      type: object
+      properties:
+        default:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonDefaultRule'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeComparisonRule'
+    PaginatedQualityReportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityReport'
+    QualityReportTargetMetricSummaryMetricEnum:
+      enum:
+      - accuracy
+      - precision
+      - recall
+      - jaccard_index
+      - dice
+      type: string
+      description: '* `accuracy` - accuracy
+
+        * `precision` - precision
+
+        * `recall` - recall
+
+        * `jaccard_index` - jaccard_index
+
+        * `dice` - dice'
+    QualitySettings:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        task_id:
+          type:
+          - integer
+          - 'null'
+        project_id:
+          type:
+          - integer
+          - 'null'
+        job_filter:
+          type: string
+          description: 'A JSON-based logic expression used to filter jobs for quality validation.
+
+            The filter supports various terms to specify conditions on job: [''assignee'', ''id'', ''stage'', ''state'', ''task_id'', ''task_name'', ''type'']
+
+            '
+          maxLength: 1024
+        inherit:
+          type: boolean
+          description: 'Allow using project settings when computing task quality.
+
+            Only applicable to task quality settings inside projects
+
+            '
+        max_validations_per_job:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: 'The maximum number of job validation attempts for the job assignee.
+
+            The job can be automatically accepted if the job quality is above the required
+
+            threshold, defined by the target threshold parameter.
+
+            '
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementListItem'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    QualityRequirementListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        settings_id:
+          type: integer
+        task_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        name:
+          type: string
+          maxLength: 250
+        is_base:
+          type: boolean
+          readOnly: true
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: The parent requirement. Child requirements inherit comparison settings from it.
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparison'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    AnnotationConflictSeverity:
+      enum:
+      - error
+      type: string
+      description: '* `error` - ERROR'
+    QualityReportTargetMetricValues:
+      type: object
+      properties:
+        micro:
+          type:
+          - number
+          - 'null'
+          format: double
+        mean:
+          type:
+          - number
+          - 'null'
+          format: double
+        label:
+          type:
+          - number
+          - 'null'
+          format: double
+      required:
+      - label
+      - mean
+      - micro
+    JobValidation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        job_id:
+          type: integer
+          readOnly: true
+        attempt_number:
+          type: integer
+          readOnly: true
+        attempts_remaining:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        assignee_id:
+          type:
+          - integer
+          - 'null'
+        assignee_last_updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_date:
+          type: string
+          format: date-time
+        actual_score:
+          type:
+          - number
+          - 'null'
+          format: double
+        required_score:
+          type: number
+          format: double
+          readOnly: true
+        target_metric:
+          allOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          readOnly: true
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobValidationRequirement'
+          readOnly: true
+        report_id:
+          type: integer
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/JobValidationStatusEnum'
+          readOnly: true
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    AnnotationConflictType:
+      enum:
+      - missing_annotation
+      - extra_annotation
+      - mismatching_label
+      - mismatching_direction
+      - mismatching_attributes
+      - mismatching_groups
+      - covered_annotation
+      type: string
+      description: '* `missing_annotation` - MISSING_ANNOTATION
+
+        * `extra_annotation` - EXTRA_ANNOTATION
+
+        * `mismatching_label` - MISMATCHING_LABEL
+
+        * `mismatching_direction` - MISMATCHING_DIRECTION
+
+        * `mismatching_attributes` - MISMATCHING_ATTRIBUTES
+
+        * `mismatching_groups` - MISMATCHING_GROUPS
+
+        * `covered_annotation` - COVERED_ANNOTATION'
+    QualityReportRequirementCalculation:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/QualityReportRequirementCalculationStatusEnum'
+        reason:
+          oneOf:
+          - $ref: '#/components/schemas/ReasonEnum'
+          - $ref: '#/components/schemas/NullEnum'
+      required:
+      - status
+    JobValidationStatusEnum:
+      enum:
+      - disabled
+      - accepted
+      - rejected
+      type: string
+      description: '* `disabled` - DISABLED
+
+        * `accepted` - ACCEPTED
+
+        * `rejected` - REJECTED'
+    QualityReportTasksSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total task count
+        custom:
+          type: integer
+          description: Tasks with individual settings
+        not_configured:
+          type: integer
+          description: Tasks with validation not configured
+        excluded:
+          type: integer
+          description: Tasks excluded by filters
+        included:
+          type: integer
+          description: Included task count = total - custom - non_configured - excluded
+        completed:
+          type: integer
+          description: Tasks with all enabled requirements met
+      required:
+      - completed
+      - custom
+      - excluded
+      - included
+      - not_configured
+      - total
+    PaginatedQualitySettingsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualitySettings'
+    AnnotationConflictAnnotationType:
+      enum:
+      - tag
+      - shape
+      - track
+      type: string
+      description: '* `tag` - TAG
+
+        * `shape` - SHAPE
+
+        * `track` - TRACK'
+    QualityReportRequirementCalculationStatusEnum:
+      enum:
+      - computed
+      - not_computed
+      type: string
+      description: '* `computed` - computed
+
+        * `not_computed` - not_computed'
+    ComparatorEnum:
+      enum:
+      - exact
+      - levenshtein
+      type: string
+      description: '* `exact` - exact
+
+        * `levenshtein` - levenshtein'
+    JobValidationRequirement:
+      type: object
+      properties:
+        name:
+          type: string
+        metric:
+          type: string
+        score:
+          type:
+          - number
+          - 'null'
+          format: double
+        threshold:
+          type: number
+          format: double
+        completed:
+          type: boolean
+      required:
+      - completed
+      - metric
+      - name
+      - score
+      - threshold
+    ReasonEnum:
+      enum:
+      - no_annotations
+      - filter_no_matches
+      - required_attributes_missing
+      type: string
+      description: '* `no_annotations` - no_annotations
+
+        * `filter_no_matches` - filter_no_matches
+
+        * `required_attributes_missing` - required_attributes_missing'
+    QualityRequirementListItemRequest:
+      type: object
+      properties:
+        settings_id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: The parent requirement. Child requirements inherit comparison settings from it.
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonRequest'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+    QualityReportCreateRequest:
+      type: object
+      properties:
+        task_id:
+          type: integer
+          writeOnly: true
+        project_id:
+          type: integer
+          writeOnly: true
+    QualityReportConfusionMatrix:
+      type: object
+      properties:
+        labels:
+          type: array
+          items:
+            type: string
+        rows:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        axes:
+          $ref: '#/components/schemas/QualityReportConfusionMatrixAxes'
+        precision:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        recall:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        accuracy:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        jaccard_index:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        dice:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        target_metric_summary:
+          $ref: '#/components/schemas/QualityReportTargetMetricSummary'
+      required:
+      - accuracy
+      - axes
+      - dice
+      - jaccard_index
+      - labels
+      - precision
+      - recall
+      - rows
+      - target_metric_summary
+    RqId:
+      type: object
+      properties:
+        rq_id:
+          type: string
+          description: Request id
+      required:
+      - rq_id
+    AttributeComparisonRequest:
+      type: object
+      properties:
+        default:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonDefaultRuleRequest'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeComparisonRuleRequest'
+    QualityRequirement:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        settings_id:
+          type: integer
+        task_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        name:
+          type: string
+          maxLength: 250
+        is_base:
+          type: boolean
+          readOnly: true
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: The parent requirement. Child requirements inherit comparison settings from it.
+        effective:
+          type: object
+          readOnly: true
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparison'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    AttributeComparisonDefaultRule:
+      type: object
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+        comparator:
+          oneOf:
+          - $ref: '#/components/schemas/ComparatorEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+    QualityReportTargetMetricSummary:
+      type: object
+      properties:
+        metric:
+          $ref: '#/components/schemas/QualityReportTargetMetricSummaryMetricEnum'
+        aggregation:
+          $ref: '#/components/schemas/AggregationEnum'
+        values:
+          $ref: '#/components/schemas/QualityReportTargetMetricValues'
+        worst_labels:
+          type: array
+          items:
+            type: string
+      required:
+      - aggregation
+      - metric
+      - values
+      - worst_labels
+    AnnotationId:
+      type: object
+      properties:
+        obj_id:
+          type: integer
+          readOnly: true
+        job_id:
+          type: integer
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AnnotationConflictAnnotationType'
+          readOnly: true
+        shape_type:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ShapeType'
+          - $ref: '#/components/schemas/NullEnum'
+    PaginatedQualityRequirementListItemList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementListItem'
+    PaginatedJobValidationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobValidation'
+    BlankEnum:
+      enum:
+      - ''
+    QualityReportConfusionMatrixAxes:
+      type: object
+      properties:
+        cols:
+          type: string
+        rows:
+          type: string
+      required:
+      - cols
+      - rows
+    QualityReport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        job_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        task_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        parent_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        target:
+          $ref: '#/components/schemas/QualityReportTarget'
+        summary:
+          $ref: '#/components/schemas/QualityReportSummary'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        target_last_updated:
+          type: string
+          format: date-time
+          readOnly: true
+        gt_last_updated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+      required:
+      - summary
+      - target
+    AggregationEnum:
+      enum:
+      - micro
+      - mean
+      - label
+      type: string
+      description: '* `micro` - micro
+
+        * `mean` - mean
+
+        * `label` - label'
+    QualityRequirementRequest:
+      type: object
+      properties:
+        settings_id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: The parent requirement. Child requirements inherit comparison settings from it.
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonRequest'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+    QualityReportRequirementsSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+        enabled:
+          type: integer
+        completed:
+          type: integer
+        not_computed:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityReportRequirementSummaryItem'
+      required:
+      - completed
+      - enabled
+      - items
+      - not_computed
+      - total
+    PatchedQualitySettingsRequest:
+      type: object
+      properties:
+        job_filter:
+          type: string
+          description: 'A JSON-based logic expression used to filter jobs for quality validation.
+
+            The filter supports various terms to specify conditions on job: [''assignee'', ''id'', ''stage'', ''state'', ''task_id'', ''task_name'', ''type'']
+
+            '
+          maxLength: 1024
+        inherit:
+          type: boolean
+          description: 'Allow using project settings when computing task quality.
+
+            Only applicable to task quality settings inside projects
+
+            '
+        max_validations_per_job:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: 'The maximum number of job validation attempts for the job assignee.
+
+            The job can be automatically accepted if the job quality is above the required
+
+            threshold, defined by the target threshold parameter.
+
+            '
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementListItemRequest'
+    PaginatedAnnotationConflictList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationConflict'
+    QualityReportTarget:
+      enum:
+      - job
+      - task
+      - project
+      type: string
+      description: '* `job` - JOB
+
+        * `task` - TASK
+
+        * `project` - PROJECT'
+    PatchedQualityRequirementRequest:
+      type: object
+      properties:
+        settings_id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: The parent requirement. Child requirements inherit comparison settings from it.
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonRequest'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+    AnnotationConflict:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        frame:
+          type: integer
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AnnotationConflictType'
+          readOnly: true
+        annotation_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationId'
+        report_id:
+          type: integer
+          readOnly: true
+        severity:
+          allOf:
+          - $ref: '#/components/schemas/AnnotationConflictSeverity'
+          readOnly: true
+        attribute_names:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - annotation_ids
+    AnnotationTypeEnum:
+      enum:
+      - tag
+      - rectangle
+      - skeleton
+      - skeleton_keypoint
+      - points
+      - polyline
+      - mask
+      - polygon
+      - ellipse
+      type: string
+      description: '* `tag` - Tag
+
+        * `rectangle` - Rectangle
+
+        * `skeleton` - Skeleton
+
+        * `skeleton_keypoint` - Skeleton Keypoint
+
+        * `points` - Points
+
+        * `polyline` - Polyline
+
+        * `mask` - Mask
+
+        * `polygon` - Polygon
+
+        * `ellipse` - Ellipse'
+    QualityTargetMetric:
+      enum:
+      - accuracy
+      - precision
+      - recall
+      - jaccard_index
+      - dice
+      - mean_accuracy
+      - mean_precision
+      - mean_recall
+      - mean_jaccard_index
+      - mean_dice
+      - label_accuracy
+      - label_precision
+      - label_recall
+      - label_jaccard_index
+      - label_dice
+      type: string
+      description: '* `accuracy` - ACCURACY
+
+        * `precision` - PRECISION
+
+        * `recall` - RECALL
+
+        * `jaccard_index` - JACCARD_INDEX
+
+        * `dice` - DICE
+
+        * `mean_accuracy` - MEAN_ACCURACY
+
+        * `mean_precision` - MEAN_PRECISION
+
+        * `mean_recall` - MEAN_RECALL
+
+        * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+        * `mean_dice` - MEAN_DICE
+
+        * `label_accuracy` - LABEL_ACCURACY
+
+        * `label_precision` - LABEL_PRECISION
+
+        * `label_recall` - LABEL_RECALL
+
+        * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+        * `label_dice` - LABEL_DICE'
+    QualityRequirementBulkCreateNodeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        filter:
+          type: string
+        enabled:
+          type: boolean
+        annotation_type:
+          oneOf:
+          - $ref: '#/components/schemas/AnnotationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        metric:
+          description: 'The primary metric used for quality estimation
+
+
+            * `accuracy` - ACCURACY
+
+            * `precision` - PRECISION
+
+            * `recall` - RECALL
+
+            * `jaccard_index` - JACCARD_INDEX
+
+            * `dice` - DICE
+
+            * `mean_accuracy` - MEAN_ACCURACY
+
+            * `mean_precision` - MEAN_PRECISION
+
+            * `mean_recall` - MEAN_RECALL
+
+            * `mean_jaccard_index` - MEAN_JACCARD_INDEX
+
+            * `mean_dice` - MEAN_DICE
+
+            * `label_accuracy` - LABEL_ACCURACY
+
+            * `label_precision` - LABEL_PRECISION
+
+            * `label_recall` - LABEL_RECALL
+
+            * `label_jaccard_index` - LABEL_JACCARD_INDEX
+
+            * `label_dice` - LABEL_DICE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityTargetMetric'
+          - $ref: '#/components/schemas/NullEnum'
+        required_score:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: Defines the minimal quality requirements in terms of the selected target metric.
+        parent_requirement:
+          type:
+          - integer
+          - 'null'
+          description: Required for root requirements and forbidden for nested requirements. Must identify an existing requirement from the selected quality settings.
+        iou_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The overlap threshold used for distinction between matched / unmatched objects.
+
+            The specific meaning can vary depending on the shape type:
+
+            for rectangles, polygons, ellipses, lines and masks it''s the IoU threshold;
+
+            for points and skeletons, it''s the OKS threshold.
+
+            '
+        point_size:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The point "size" (the OKS sigma), as a fraction of the object size, defined by
+
+            the point size base. Corresponds to the standard deviation of the keypoint position.
+
+            Larger values give larger areas around the GT points, where the checked points
+
+            are accepted.
+
+            Read more about the point matching in the documentation.'
+        point_size_base:
+          description: 'When comparing point annotations (including both separate points and point groups),
+
+            the point size parameter defines matching area for each GT point based to the
+
+            object size. The point size base parameter allows to configure how to determine
+
+            the object size.
+
+            If image_size, the image size is used. Useful if each point
+
+            annotation represents a separate object or boxes grouped with points do not
+
+            represent object boundaries.
+
+            If group_bbox_size, the object size is based on
+
+            the point group bbox size. Useful if each point group represents an object
+
+            or there is a bbox grouped with points, representing the object size.
+
+
+
+            * `image_size` - IMAGE_SIZE
+
+            * `group_bbox_size` - GROUP_BBOX_SIZE'
+          oneOf:
+          - $ref: '#/components/schemas/QualityPointSizeBase'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Thickness of polylines, relatively to the (image area) ^ 0.5.
+
+            The distance to the boundary around the GT line,
+
+            inside of which the checked line points should be
+
+            '
+        match_orientation:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables polyline orientation comparison
+        line_orientation_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'The minimal gain in the GT IoU between the given and reversed line directions
+
+            to consider the line inverted.
+
+            Only used when the ''match_orientation'' parameter is true
+
+            '
+        match_groups:
+          type:
+          - boolean
+          - 'null'
+          description: Enables or disables annotation group checks. Only annotations of the same shape type can form matching groups.
+        group_match_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal IoU for groups to be considered matching.
+
+            Only used when the ''match_groups'' parameter is true
+
+            '
+        check_covered_annotations:
+          type:
+          - boolean
+          - 'null'
+          description: 'Check for partially-covered annotations, useful in segmentation tasks
+
+            '
+        object_visibility_threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+          description: 'Minimal visible area percent of the spatial annotations (polygons, masks)
+
+            for reporting covered annotations.
+
+            Only used when the ''object_visibility_threshold'' parameter is true
+
+            '
+        panoptic_comparison:
+          type:
+          - boolean
+          - 'null'
+          description: 'Use only the visible part of the masks and polygons in comparisons
+
+            '
+        attribute_comparison:
+          allOf:
+          - $ref: '#/components/schemas/AttributeComparisonRequest'
+          description: Incremental attribute comparison settings. The default rule applies to attributes without an override; rules override behavior for individual AttributeSpec ids.
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementBulkCreateNodeRequest'
+          description: Nested requirements to create. Their parent is determined by their position in the hierarchy.
+      required:
+      - name
+    AttributeComparisonRule:
+      type: object
+      properties:
+        spec_id:
+          type: integer
+          description: AttributeSpec id to override.
+        enabled:
+          type: boolean
+        comparator:
+          oneOf:
+          - $ref: '#/components/schemas/ComparatorEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+      required:
+      - enabled
+      - spec_id
+    QualityReportJobsSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Non-GT jobs in included tasks
+        excluded:
+          type: integer
+          description: Jobs excluded by filters
+        not_checkable:
+          type: integer
+          description: Included jobs without validation frames
+        included:
+          type: integer
+          description: Included job count = total - excluded
+        completed:
+          type: integer
+          description: Jobs with all enabled requirements met
+      required:
+      - completed
+      - excluded
+      - included
+      - not_checkable
+      - total
+    QualityReportSummary:
+      type: object
+      properties:
+        total_frames:
+          type: integer
+        validation_frames:
+          type: integer
+        validation_frame_share:
+          type: number
+          format: double
+        conflict_count:
+          type: integer
+        error_count:
+          type: integer
+        conflicts_by_type:
+          type: object
+          additionalProperties:
+            type: integer
+        tasks:
+          allOf:
+          - $ref: '#/components/schemas/QualityReportTasksSummary'
+          description: Included only in project reports
+        jobs:
+          allOf:
+          - $ref: '#/components/schemas/QualityReportJobsSummary'
+          description: Included only in task and project reports
+        requirements:
+          $ref: '#/components/schemas/QualityReportRequirementsSummary'
+      required:
+      - conflict_count
+      - conflicts_by_type
+      - error_count
+      - total_frames
+      - validation_frame_share
+      - validation_frames
+    AttributeComparisonDefaultRuleRequest:
+      type: object
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+        comparator:
+          oneOf:
+          - $ref: '#/components/schemas/ComparatorEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    QualityRequirementBulkCreateRequest:
+      type: object
+      properties:
+        settings_id:
+          type: integer
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityRequirementBulkCreateNodeRequest'
+      required:
+      - requirements
+      - settings_id
+    AttributeComparisonRuleRequest:
+      type: object
+      properties:
+        spec_id:
+          type: integer
+          description: AttributeSpec id to override.
+        enabled:
+          type: boolean
+        comparator:
+          oneOf:
+          - $ref: '#/components/schemas/ComparatorEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+      required:
+      - enabled
+      - spec_id
+    NullEnum:
+      enum:
+      - null
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

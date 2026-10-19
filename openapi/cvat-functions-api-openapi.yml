@@ -1,0 +1,1826 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Functions API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Functions
+paths:
+  /api/functions:
+    get:
+      operationId: functions_list
+      summary: List functions
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['id', 'labels', 'name', 'owner', 'provider', 'type', 'updated_date']."
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''labels'', ''name'', ''owner'', ''provider'', ''type'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'', ''labels'', ''name'', ''owner'', ''provider'', ''type'', ''updated_date'']'
+        schema:
+          type: string
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFunctionList'
+          description: ''
+    post:
+      operationId: functions_create
+      summary: Create a function
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunctionRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Function'
+          description: ''
+  /api/functions/{id}:
+    get:
+      operationId: functions_retrieve
+      summary: Get function details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this function.
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Function'
+          description: ''
+    delete:
+      operationId: functions_destroy
+      summary: Delete a function
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this function.
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The function has been deleted
+  /api/functions/{id}/preview:
+    get:
+      operationId: functions_retrieve_preview
+      summary: Get a preview image for a function
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this function.
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Function image preview
+        '404':
+          description: Function image preview not found
+  /api/functions/{id}/run:
+    post:
+      operationId: functions_create_run
+      summary: Run an interactive annotation request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this function.
+        required: true
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArParamsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Function'
+          description: ''
+  /api/functions/info:
+    get:
+      operationId: functions_info
+      summary: Get function provider metainformation
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Function'
+          description: ''
+  /api/functions/queues/{id}/requests/{request_id}/complete:
+    post:
+      operationId: functions_queues_complete_annotation_request
+      summary: Complete an annotation request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^function:\d+$
+        required: true
+      - in: path
+        name: request_id
+        schema:
+          type: string
+          pattern: ^[a-z0-9-]+$
+        required: true
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueRequestCompleteInputRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/functions/queues/{id}/requests/{request_id}/fail:
+    post:
+      operationId: functions_queues_fail_annotation_request
+      summary: Fail an annotation request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^function:\d+$
+        required: true
+      - in: path
+        name: request_id
+        schema:
+          type: string
+          pattern: ^[a-z0-9-]+$
+        required: true
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueRequestFailInputRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/functions/queues/{id}/requests/{request_id}/update:
+    post:
+      operationId: functions_queues_update_annotation_request
+      summary: Update an annotation request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^function:\d+$
+        required: true
+      - in: path
+        name: request_id
+        schema:
+          type: string
+          pattern: ^[a-z0-9-]+$
+        required: true
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueRequestUpdateInputRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/functions/queues/{id}/requests/acquire:
+    post:
+      operationId: functions_queues_acquire_annotation_request
+      summary: Acquire an annotation request from a queue
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^function:\d+$
+        required: true
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueRequestAcquireInputRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/QueueRequestAcquireOutput'
+          description: ''
+  /api/functions/queues/{id}/watch:
+    get:
+      operationId: functions_queues_watch
+      summary: Watch a queue
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          pattern: ^function:\d+$
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                type: string
+          description: ''
+  /api/functions/requests/:
+    get:
+      operationId: functions_list_requests
+      summary: List annotation requests
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationRequest'
+          description: ''
+    post:
+      operationId: functions_create_requests
+      summary: Submit a batch annotation request
+      tags:
+      - Functions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunctionIdAndArParamsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/AnnotationRequest'
+          description: ''
+  /api/functions/requests/{request_id}:
+    get:
+      operationId: functions_retrieve_requests
+      summary: Get annotation request details
+      parameters:
+      - in: path
+        name: request_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/AnnotationRequest'
+          description: ''
+    delete:
+      operationId: functions_destroy_requests
+      summary: Cancel an annotation request
+      parameters:
+      - in: path
+        name: request_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Functions
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    QueueRequestUpdateInputRequest:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: \w+
+        progress:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+      required:
+      - agent_id
+      - progress
+    ArParamsRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ArType'
+        task:
+          type: integer
+        job:
+          type: integer
+        frame:
+          type: integer
+          minimum: 0
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+        cleanup:
+          type: boolean
+        conv_mask_to_poly:
+          type: boolean
+        mapping:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LabelMappingEntryRequest'
+        pos_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        neg_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        obj_bbox:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+          maxItems: 2
+        roi:
+          type: array
+          items:
+            type: integer
+          maxItems: 4
+          minItems: 4
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShapeRequest'
+        states:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4194304
+          maxItems: 32
+      required:
+      - task
+    AttributedShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+      required:
+      - type
+    Shape:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+      required:
+      - type
+    SubLabeledTrackRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShapeRequest'
+      required:
+      - frame
+      - label_id
+      - shapes
+    FunctionSublabelRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          default: any
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionAttributeRequest'
+          maxItems: 16
+      required:
+      - name
+    ArType:
+      enum:
+      - annotate_frame
+      - annotate_task
+      - init_tracking
+      - interact
+      - track
+      type: string
+      description: '* `annotate_frame` - annotate_frame
+
+        * `annotate_task` - annotate_task
+
+        * `init_tracking` - init_tracking
+
+        * `interact` - interact
+
+        * `track` - track'
+    VisibilityEnum:
+      enum:
+      - public
+      - private
+      type: string
+      description: '* `public` - Public
+
+        * `private` - Private'
+    RequestCategoryEnum:
+      enum:
+      - interactive
+      - batch
+      type: string
+      description: '* `interactive` - Interactive
+
+        * `batch` - Batch'
+    FunctionAttribute:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 64
+          minLength: 1
+        values:
+          type: array
+          items:
+            type: string
+            maxLength: 64
+          maxItems: 64
+        input_type:
+          $ref: '#/components/schemas/InputTypeEnum'
+      required:
+      - input_type
+      - name
+      - values
+    SublabelMappingEntryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            minLength: 1
+            maxLength: 64
+      required:
+      - name
+    LabeledTrackRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackedShapeRequest'
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledTrackRequest'
+      required:
+      - frame
+      - label_id
+      - shapes
+    FunctionIdAndArParamsRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ArType'
+        task:
+          type: integer
+        job:
+          type: integer
+        frame:
+          type: integer
+          minimum: 0
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+        cleanup:
+          type: boolean
+        conv_mask_to_poly:
+          type: boolean
+        mapping:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LabelMappingEntryRequest'
+        pos_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        neg_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        obj_bbox:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+          maxItems: 2
+        roi:
+          type: array
+          items:
+            type: integer
+          maxItems: 4
+          minItems: 4
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShapeRequest'
+        states:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4194304
+          maxItems: 32
+        function:
+          type: integer
+      required:
+      - function
+      - task
+    LabeledImageRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+      required:
+      - frame
+      - label_id
+    KindEnum:
+      enum:
+      - detector
+      - interactor
+      - reid
+      - tracker
+      type: string
+      description: '* `detector` - Detector
+
+        * `interactor` - Interactor
+
+        * `reid` - Reid
+
+        * `tracker` - Tracker'
+    LabelMappingEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+        sublabels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SublabelMappingEntry'
+          description: Label mapping for from the model to the task sublabels within a parent label
+      required:
+      - name
+    FunctionAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+        values:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 64
+          maxItems: 64
+        input_type:
+          $ref: '#/components/schemas/InputTypeEnum'
+      required:
+      - input_type
+      - name
+      - values
+    QueueRequestCompleteInputRequest:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: \w+
+        annotations:
+          $ref: '#/components/schemas/LabeledDataRequest'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributedShapeRequest'
+        states:
+          type: array
+          items:
+            type: string
+            minLength: 1
+      required:
+      - agent_id
+    ArAssignment:
+      type: object
+      properties:
+        function_id:
+          type: integer
+        ar_id:
+          type: string
+        ar_params:
+          $ref: '#/components/schemas/ArParams'
+      required:
+      - ar_id
+      - ar_params
+      - function_id
+    FunctionLabelRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          default: any
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionAttributeRequest'
+          maxItems: 16
+        sublabels:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionSublabelRequest'
+          maxItems: 32
+      required:
+      - name
+    AttributeValRequest:
+      type: object
+      properties:
+        spec_id:
+          type: integer
+        value:
+          type: string
+          maxLength: 4096
+      required:
+      - spec_id
+      - value
+    AnnotationRequestFunction:
+      type: object
+      properties:
+        id:
+          type: integer
+        task:
+          type: integer
+      required:
+      - id
+      - task
+    Function:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider:
+          type: string
+          maxLength: 32
+        url:
+          type: string
+          maxLength: 256
+        name:
+          type: string
+          maxLength: 128
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        labels_v2:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionLabel'
+        min_pos_points:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        min_neg_points:
+          type: integer
+          maximum: 2147483647
+          minimum: -1
+        startswith_box:
+          type: boolean
+        startswith_box_optional:
+          type: boolean
+        supported_shape_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShapeType'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+        organization:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/VisibilityEnum'
+          default: private
+      required:
+      - provider
+    LabeledIntervalRequest:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        start:
+          type: integer
+          minimum: 0
+          description: Must be within the task frame bounds.
+        stop:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: Exclusive interval end. May be one greater than the task stop frame.
+      required:
+      - label_id
+      - start
+      - stop
+    LabeledDataRequest:
+      type: object
+      properties:
+        version:
+          type: integer
+          default: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImageRequest'
+          default: []
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShapeRequest'
+          default: []
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledTrackRequest'
+          default: []
+        intervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledIntervalRequest'
+          default: []
+    PaginatedFunctionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Function'
+    QueueRequestAcquireOutput:
+      type: object
+      properties:
+        ar_assignment:
+          allOf:
+          - $ref: '#/components/schemas/ArAssignment'
+      required:
+      - ar_assignment
+    FunctionLabel:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          default: any
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionAttribute'
+          maxItems: 16
+        sublabels:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionSublabel'
+          maxItems: 32
+      required:
+      - name
+    SubLabeledShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+      required:
+      - frame
+      - label_id
+      - type
+    FunctionRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+          minLength: 1
+          maxLength: 32
+        url:
+          type: string
+          minLength: 1
+          maxLength: 256
+        api_key:
+          type: string
+          writeOnly: true
+          maxLength: 64
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        labels_v2:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionLabelRequest'
+        min_pos_points:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        min_neg_points:
+          type: integer
+          maximum: 2147483647
+          minimum: -1
+        startswith_box:
+          type: boolean
+        startswith_box_optional:
+          type: boolean
+        supported_shape_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShapeType'
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/VisibilityEnum'
+          default: private
+      required:
+      - provider
+    TrackedShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        id:
+          type:
+          - integer
+          - 'null'
+        frame:
+          type: integer
+          minimum: 0
+      required:
+      - frame
+      - type
+    LabelMappingEntryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            minLength: 1
+        sublabels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SublabelMappingEntryRequest'
+          description: Label mapping for from the model to the task sublabels within a parent label
+      required:
+      - name
+    ShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+      required:
+      - type
+    SublabelMappingEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            maxLength: 64
+      required:
+      - name
+    InputTypeEnum:
+      enum:
+      - checkbox
+      - radio
+      - number
+      - text
+      - select
+      type: string
+      description: '* `checkbox` - CHECKBOX
+
+        * `radio` - RADIO
+
+        * `number` - NUMBER
+
+        * `text` - TEXT
+
+        * `select` - SELECT'
+    QueueRequestFailInputRequest:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: \w+
+        exc_info:
+          type: string
+          minLength: 1
+          default: ''
+          maxLength: 4096
+      required:
+      - agent_id
+    ArParams:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ArType'
+        task:
+          type: integer
+        job:
+          type: integer
+        frame:
+          type: integer
+          minimum: 0
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1
+          minimum: 0
+        cleanup:
+          type: boolean
+        conv_mask_to_poly:
+          type: boolean
+        mapping:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LabelMappingEntry'
+        pos_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        neg_points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+        obj_bbox:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: double
+            maxItems: 2
+            minItems: 2
+          maxItems: 2
+        roi:
+          type: array
+          items:
+            type: integer
+          maxItems: 4
+          minItems: 4
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shape'
+        states:
+          type: array
+          items:
+            type: string
+            maxLength: 4194304
+          maxItems: 32
+      required:
+      - task
+    QueueRequestAcquireInputRequest:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: \w+
+        request_category:
+          $ref: '#/components/schemas/RequestCategoryEnum'
+      required:
+      - agent_id
+      - request_category
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    FunctionSublabel:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/LabelType'
+          default: any
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionAttribute'
+          maxItems: 16
+      required:
+      - name
+    LabeledShapeRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ShapeType'
+        occluded:
+          type: boolean
+          default: false
+        outside:
+          type: boolean
+          default: false
+        z_order:
+          type: integer
+          default: 0
+        rotation:
+          type: number
+          format: double
+          maximum: 360
+          minimum: 0
+          default: 0.0
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        id:
+          type:
+          - integer
+          - 'null'
+        label_id:
+          type: integer
+          minimum: 0
+        group:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          default: 0
+        source:
+          type: string
+          minLength: 1
+          default: manual
+        frame:
+          type: integer
+          minimum: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValRequest'
+          default: []
+        score:
+          type: number
+          format: double
+          maximum: 1
+          minimum: 0
+          default: 1.0
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubLabeledShapeRequest'
+      required:
+      - frame
+      - label_id
+      - type
+    LabelType:
+      enum:
+      - any
+      - cuboid
+      - ellipse
+      - mask
+      - points
+      - polygon
+      - polyline
+      - rectangle
+      - skeleton
+      - interval
+      - tag
+      type: string
+      description: '* `any` - ANY
+
+        * `cuboid` - CUBOID
+
+        * `ellipse` - ELLIPSE
+
+        * `mask` - MASK
+
+        * `points` - POINTS
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `rectangle` - RECTANGLE
+
+        * `skeleton` - SKELETON
+
+        * `interval` - INTERVAL
+
+        * `tag` - TAG'
+    ShapeType:
+      enum:
+      - rectangle
+      - polygon
+      - polyline
+      - points
+      - ellipse
+      - cuboid
+      - mask
+      - skeleton
+      type: string
+      description: '* `rectangle` - RECTANGLE
+
+        * `polygon` - POLYGON
+
+        * `polyline` - POLYLINE
+
+        * `points` - POINTS
+
+        * `ellipse` - ELLIPSE
+
+        * `cuboid` - CUBOID
+
+        * `mask` - MASK
+
+        * `skeleton` - SKELETON'
+    AnnotationRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        function:
+          $ref: '#/components/schemas/AnnotationRequestFunction'
+        status:
+          type: string
+        progress:
+          type: integer
+        enqueued:
+          type: string
+          format: date-time
+        started:
+          type: string
+          format: date-time
+        ended:
+          type: string
+          format: date-time
+        exc_info:
+          type: string
+      required:
+      - ended
+      - enqueued
+      - exc_info
+      - function
+      - id
+      - progress
+      - started
+      - status
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

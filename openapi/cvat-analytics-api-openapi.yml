@@ -1,0 +1,380 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Analytics API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Analytics
+paths:
+  /api/analytics/reports:
+    get:
+      operationId: analytics_get_reports
+      description: Receive analytics report
+      summary: Get an analytics report
+      parameters:
+      - in: query
+        name: end_date
+        schema:
+          type: string
+          format: date-time
+        description: UTC end date for events filtration. Default is the current time.
+      - in: query
+        name: job_id
+        schema:
+          type: integer
+        description: Specify job ID
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+        description: Specify project ID
+      - in: query
+        name: start_date
+        schema:
+          type: string
+          format: date-time
+        description: UTC start date for events filtration. Default is the minimal time.
+      - in: query
+        name: task_id
+        schema:
+          type: integer
+        description: Specify task ID
+      tags:
+      - Analytics
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsReport'
+          description: ''
+        '204':
+          description: Report not found
+        '404':
+          description: Resource not found
+    post:
+      operationId: analytics_create_report
+      summary: Create an analytics report
+      parameters:
+      - in: query
+        name: rq_id
+        schema:
+          type: string
+        description: 'The report creation request id. Can be specified to check the report
+
+          creation status.
+
+          '
+      tags:
+      - Analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnalyticsReportBodyRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '202':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/RqId'
+          description: 'A analytics report request has been enqueued, the request id is returned.
+
+            The request status can be checked by using common requests API: `GET /api/requests/<rq_id>`
+
+            '
+        '400':
+          description: Invalid or failed request, check the response data for details
+components:
+  schemas:
+    JobType:
+      enum:
+      - annotation
+      - ground_truth
+      - consensus_replica
+      type: string
+      description: '* `annotation` - ANNOTATION
+
+        * `ground_truth` - GROUND_TRUTH
+
+        * `consensus_replica` - CONSENSUS_REPLICA'
+    CreateAnalyticsReportBodyRequest:
+      type: object
+      properties:
+        job_id:
+          type: integer
+        task_id:
+          type: integer
+        project_id:
+          type: integer
+    JobStage:
+      enum:
+      - annotation
+      - validation
+      - acceptance
+      type: string
+      description: '* `annotation` - ANNOTATION
+
+        * `validation` - VALIDATION
+
+        * `acceptance` - ACCEPTANCE'
+    RqId:
+      type: object
+      properties:
+        rq_id:
+          type: string
+          description: Request id
+      required:
+      - rq_id
+    Count:
+      type: object
+      properties:
+        shapes:
+          type: integer
+        tracks:
+          type: integer
+        manual:
+          type: integer
+        interpolated:
+          type: integer
+      required:
+      - interpolated
+      - manual
+      - shapes
+      - tracks
+    AnalyticsReport:
+      type: object
+      properties:
+        created_date:
+          type: string
+          format: date-time
+        updated_date:
+          type: string
+          format: date-time
+        target:
+          $ref: '#/components/schemas/QualityReportTarget'
+        job_id:
+          type: integer
+        task_id:
+          type: integer
+        project_id:
+          type: integer
+        statistics:
+          type: array
+          items: {}
+          default: []
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportEvent'
+        annotations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationsStatistics'
+      required:
+      - annotations
+      - created_date
+      - events
+      - target
+      - updated_date
+    ReportEvent:
+      type: object
+      properties:
+        task_id:
+          type: integer
+        task_name:
+          type: string
+        job_id:
+          type: integer
+        type:
+          $ref: '#/components/schemas/JobType'
+        frame_count:
+          type: integer
+        exists:
+          type: boolean
+        objects:
+          type: integer
+        assignee:
+          type: string
+        stage:
+          $ref: '#/components/schemas/JobStage'
+        state:
+          $ref: '#/components/schemas/OperationStatus'
+        user:
+          type: string
+        working_time:
+          type: number
+          format: double
+        created_date:
+          type: string
+          format: date-time
+        updated_date:
+          type: string
+          format: date-time
+        created_objects:
+          type: integer
+        updated_objects:
+          type: integer
+        deleted_objects:
+          type: integer
+      required:
+      - assignee
+      - created_date
+      - created_objects
+      - deleted_objects
+      - exists
+      - frame_count
+      - job_id
+      - objects
+      - stage
+      - state
+      - task_id
+      - task_name
+      - type
+      - updated_date
+      - updated_objects
+      - user
+      - working_time
+    AnnotationsStatistics:
+      type: object
+      properties:
+        label_id:
+          type: integer
+        label_name:
+          type: string
+        rectangle:
+          $ref: '#/components/schemas/Count'
+        ellipse:
+          $ref: '#/components/schemas/Count'
+        polygon:
+          $ref: '#/components/schemas/Count'
+        polyline:
+          $ref: '#/components/schemas/Count'
+        points:
+          $ref: '#/components/schemas/Count'
+        mask:
+          $ref: '#/components/schemas/Count'
+        cuboid:
+          $ref: '#/components/schemas/Count'
+        skeleton:
+          $ref: '#/components/schemas/Count'
+        tag:
+          $ref: '#/components/schemas/Count'
+      required:
+      - cuboid
+      - ellipse
+      - label_id
+      - label_name
+      - mask
+      - points
+      - polygon
+      - polyline
+      - rectangle
+      - skeleton
+      - tag
+    QualityReportTarget:
+      enum:
+      - job
+      - task
+      - project
+      type: string
+      description: '* `job` - JOB
+
+        * `task` - TASK
+
+        * `project` - PROJECT'
+    OperationStatus:
+      enum:
+      - new
+      - in progress
+      - completed
+      - rejected
+      type: string
+      description: '* `new` - NEW
+
+        * `in progress` - IN_PROGRESS
+
+        * `completed` - COMPLETED
+
+        * `rejected` - REJECTED'
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

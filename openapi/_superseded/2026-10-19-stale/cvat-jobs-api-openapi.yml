@@ -1,0 +1,205 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Jobs API
+  description: REST API for CVAT (Computer Vision Annotation Tool), an open-source platform for annotating images, video, and 3D point clouds.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+- url: https://app.cvat.ai/api
+  description: CVAT Online (hosted)
+- url: http://localhost:8080/api
+  description: Self-hosted CVAT (default)
+security:
+- tokenAuth: []
+- basicAuth: []
+tags:
+- name: Jobs
+  description: Assignable annotation units that subdivide a task.
+paths:
+  /jobs:
+    get:
+      operationId: jobs_list
+      tags:
+      - Jobs
+      summary: List jobs
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: task_id
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A paginated list of jobs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedJobList'
+  /jobs/{id}:
+    parameters:
+    - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: jobs_retrieve
+      tags:
+      - Jobs
+      summary: Retrieve a job
+      responses:
+        '200':
+          description: The requested job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+    patch:
+      operationId: jobs_partial_update
+      tags:
+      - Jobs
+      summary: Update a job
+      description: Update job stage, state, or assignee.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobWriteRequest'
+      responses:
+        '200':
+          description: The updated job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+components:
+  schemas:
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: array
+          items:
+            type: object
+    PaginatedJobList:
+      $ref: '#/components/schemas/PaginatedBase'
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        task_id:
+          type: integer
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        stage:
+          type: string
+          enum:
+          - annotation
+          - validation
+          - acceptance
+        state:
+          type: string
+          enum:
+          - new
+          - in progress
+          - completed
+          - rejected
+        start_frame:
+          type: integer
+          readOnly: true
+        stop_frame:
+          type: integer
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - annotation
+          - ground_truth
+    BasicUser:
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    JobWriteRequest:
+      type: object
+      properties:
+        assignee:
+          type:
+          - integer
+          - 'null'
+        stage:
+          type: string
+          enum:
+          - annotation
+          - validation
+          - acceptance
+        state:
+          type: string
+          enum:
+          - new
+          - in progress
+          - completed
+          - rejected
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Send the header `Authorization: Token <key>` where the key is obtained from POST /auth/login.'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.

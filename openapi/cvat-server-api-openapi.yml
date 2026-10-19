@@ -1,0 +1,263 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Server API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Server
+paths:
+  /api/server/about:
+    get:
+      operationId: server_retrieve_about
+      summary: Get basic CVAT information
+      tags:
+      - Server
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/About'
+          description: ''
+  /api/server/annotation/formats:
+    get:
+      operationId: server_retrieve_annotation_formats
+      summary: Get supported annotation formats
+      tags:
+      - Server
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/DatasetFormats'
+          description: ''
+  /api/server/plugins:
+    get:
+      operationId: server_retrieve_plugins
+      summary: Get enabled plugins
+      tags:
+      - Server
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Plugins'
+          description: ''
+  /api/server/share:
+    get:
+      operationId: server_list_share
+      summary: List files/directories in the mounted share
+      parameters:
+      - in: query
+        name: directory
+        schema:
+          type: string
+        description: Directory to browse
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search for specific files
+      tags:
+      - Server
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FileInfo'
+          description: ''
+components:
+  schemas:
+    Plugins:
+      type: object
+      properties:
+        ANALYTICS:
+          type: boolean
+        MODELS:
+          type: boolean
+      required:
+      - ANALYTICS
+      - MODELS
+    FileInfoTypeEnum:
+      enum:
+      - REG
+      - DIR
+      type: string
+      description: '* `REG` - REG
+
+        * `DIR` - DIR'
+    About:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 128
+        description:
+          type: string
+          maxLength: 2048
+        version:
+          type: string
+          maxLength: 64
+        logo_url:
+          type: string
+        subtitle:
+          type: string
+          maxLength: 1024
+      required:
+      - description
+      - logo_url
+      - name
+      - subtitle
+      - version
+    DatasetFormats:
+      type: object
+      properties:
+        importers:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetFormat'
+        exporters:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetFormat'
+      required:
+      - exporters
+      - importers
+    FileInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 1024
+        type:
+          $ref: '#/components/schemas/FileInfoTypeEnum'
+        mime_type:
+          type: string
+          maxLength: 255
+      required:
+      - mime_type
+      - name
+      - type
+    DatasetFormat:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 64
+        ext:
+          type: string
+          maxLength: 64
+        version:
+          type: string
+          maxLength: 64
+        enabled:
+          type: boolean
+        dimension:
+          type: string
+          maxLength: 2
+      required:
+      - dimension
+      - enabled
+      - ext
+      - name
+      - version
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

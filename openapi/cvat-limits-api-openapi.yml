@@ -1,0 +1,618 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Limits API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Limits
+paths:
+  /api/limits:
+    get:
+      operationId: limits_list
+      summary: Method returns a paginated list of limits according to query parameters
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['id', 'user', 'user_id']."
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''id'', ''user'', ''user_id'']'
+        schema:
+          type: string
+      - name: user
+        in: query
+        description: A simple equality filter for the user field
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: A simple equality filter for the user_id field
+        schema:
+          type: integer
+      tags:
+      - Limits
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLimitList'
+          description: ''
+    post:
+      operationId: limits_create
+      summary: Method creates a limit
+      tags:
+      - Limits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LimitRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Limit'
+          description: ''
+  /api/limits/{id}:
+    get:
+      operationId: limits_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this limit.
+        required: true
+      tags:
+      - Limits
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Limit'
+          description: ''
+      summary: Limits retrieve
+      x-summary-source: derived
+    patch:
+      operationId: limits_partial_update
+      summary: Method updates a limit
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this limit.
+        required: true
+      tags:
+      - Limits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLimitRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Limit'
+          description: ''
+    delete:
+      operationId: limits_destroy
+      summary: Method deletes a limit
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this limit.
+        required: true
+      tags:
+      - Limits
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The limit has been deleted
+  /api/limits/current:
+    get:
+      operationId: limits_retrieve_current
+      description: Returns stored limit metadata with effective limits. Expired records use Free defaults.
+      summary: Get limits for the current user or organization
+      tags:
+      - Limits
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/CurrentLimit'
+          description: ''
+  /api/limits/default:
+    get:
+      operationId: limits_retrieve_default
+      tags:
+      - Limits
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Limit'
+          description: ''
+      summary: Limits retrieve default
+      x-summary-source: derived
+components:
+  schemas:
+    PatchedLimitRequest:
+      type: object
+      properties:
+        user:
+          type:
+          - integer
+          - 'null'
+        org:
+          type:
+          - integer
+          - 'null'
+        type:
+          $ref: '#/components/schemas/Type2c0Enum'
+        limits:
+          $ref: '#/components/schemas/LimitsFieldRequest'
+        access_until_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    CurrentLimit:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+        org:
+          type:
+          - integer
+          - 'null'
+        type:
+          $ref: '#/components/schemas/Type2c0Enum'
+        limits:
+          $ref: '#/components/schemas/LimitsField'
+        access_until_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        expired:
+          type: boolean
+          readOnly: true
+      required:
+      - limits
+      - type
+    PaginatedLimitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Limit'
+    LimitsFieldRequest:
+      type: object
+      description: 'The serializer validates limits field names and their value types.
+
+        Null allowed in order to indicate unlimited value.'
+      properties:
+        tasks:
+          type:
+          - integer
+          - 'null'
+        projects:
+          type:
+          - integer
+          - 'null'
+        cloud_storages:
+          type:
+          - integer
+          - 'null'
+        automatic_annotation:
+          type:
+          - boolean
+          - 'null'
+        job_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        task_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        project_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        analytics_reports_calculation:
+          type:
+          - boolean
+          - 'null'
+        external_ai_agents:
+          type:
+          - integer
+          - 'null'
+        external_ai_agent_calls:
+          type:
+          - integer
+          - 'null'
+        internal_ai_agent_calls:
+          type:
+          - integer
+          - 'null'
+        internal_storage_bytes:
+          type:
+          - integer
+          - 'null'
+        webhooks:
+          type:
+          - integer
+          - 'null'
+        memberships:
+          type:
+          - integer
+          - 'null'
+        organizations:
+          type:
+          - integer
+          - 'null'
+      required:
+      - analytics_reports_calculation
+      - automatic_annotation
+      - cloud_storages
+      - external_ai_agent_calls
+      - external_ai_agents
+      - internal_ai_agent_calls
+      - internal_storage_bytes
+      - job_export_dataset
+      - project_export_dataset
+      - projects
+      - task_export_dataset
+      - tasks
+      - webhooks
+    Limit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+        org:
+          type:
+          - integer
+          - 'null'
+        type:
+          $ref: '#/components/schemas/Type2c0Enum'
+        limits:
+          $ref: '#/components/schemas/LimitsField'
+        access_until_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        expired:
+          type: boolean
+          readOnly: true
+      required:
+      - limits
+      - type
+    LimitsField:
+      type: object
+      description: 'The serializer validates limits field names and their value types.
+
+        Null allowed in order to indicate unlimited value.'
+      properties:
+        tasks:
+          type:
+          - integer
+          - 'null'
+        projects:
+          type:
+          - integer
+          - 'null'
+        cloud_storages:
+          type:
+          - integer
+          - 'null'
+        automatic_annotation:
+          type:
+          - boolean
+          - 'null'
+        job_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        task_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        project_export_dataset:
+          type:
+          - boolean
+          - 'null'
+        analytics_reports_calculation:
+          type:
+          - boolean
+          - 'null'
+        external_ai_agents:
+          type:
+          - integer
+          - 'null'
+        external_ai_agent_calls:
+          type:
+          - integer
+          - 'null'
+        internal_ai_agent_calls:
+          type:
+          - integer
+          - 'null'
+        internal_storage_bytes:
+          type:
+          - integer
+          - 'null'
+        webhooks:
+          type:
+          - integer
+          - 'null'
+        memberships:
+          type:
+          - integer
+          - 'null'
+        organizations:
+          type:
+          - integer
+          - 'null'
+      required:
+      - analytics_reports_calculation
+      - automatic_annotation
+      - cloud_storages
+      - external_ai_agent_calls
+      - external_ai_agents
+      - internal_ai_agent_calls
+      - internal_storage_bytes
+      - job_export_dataset
+      - project_export_dataset
+      - projects
+      - task_export_dataset
+      - tasks
+      - webhooks
+    Type2c0Enum:
+      enum:
+      - paid
+      - custom
+      type: string
+      description: '* `paid` - PAID
+
+        * `custom` - CUSTOM'
+    LimitRequest:
+      type: object
+      properties:
+        user:
+          type:
+          - integer
+          - 'null'
+        org:
+          type:
+          - integer
+          - 'null'
+        type:
+          $ref: '#/components/schemas/Type2c0Enum'
+        limits:
+          $ref: '#/components/schemas/LimitsFieldRequest'
+        access_until_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - limits
+      - type
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

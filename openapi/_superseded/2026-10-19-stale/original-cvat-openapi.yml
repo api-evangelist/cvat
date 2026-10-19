@@ -1,0 +1,1022 @@
+openapi: 3.0.1
+info:
+  title: CVAT REST API
+  description: >-
+    REST API for CVAT (Computer Vision Annotation Tool), an open-source platform
+    for annotating images, video, and 3D point clouds. The same API is served by
+    self-hosted CVAT (MIT-licensed) and by the hosted CVAT Online service at
+    app.cvat.ai. Endpoints cover projects, tasks, jobs, annotations, labels,
+    organizations, memberships, and cloud storage. The full machine-readable
+    schema is published by each server at /api/schema/ and the interactive docs
+    at /api/docs/. This document captures a representative subset of the
+    documented surface.
+  termsOfService: https://www.cvat.ai/terms-of-use
+  contact:
+    name: CVAT Support
+    url: https://www.cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+  version: '2.0'
+servers:
+  - url: https://app.cvat.ai/api
+    description: CVAT Online (hosted)
+  - url: http://localhost:8080/api
+    description: Self-hosted CVAT (default)
+security:
+  - tokenAuth: []
+  - basicAuth: []
+tags:
+  - name: projects
+    description: Annotation projects that group tasks and share a label set.
+  - name: tasks
+    description: Annotation tasks holding media data and annotations.
+  - name: jobs
+    description: Assignable annotation units that subdivide a task.
+  - name: annotations
+    description: Shapes, tracks, and tags attached to tasks and jobs.
+  - name: labels
+    description: Label taxonomy shared across projects, tasks, and jobs.
+  - name: organizations
+    description: Organizations scoping resources for teams.
+  - name: memberships
+    description: Membership of users within organizations.
+  - name: cloudstorages
+    description: External object-storage connections used as data sources.
+paths:
+  /projects:
+    get:
+      operationId: projects_list
+      tags: [projects]
+      summary: List projects
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: org
+          in: query
+          description: Organization slug used to filter the request.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of projects.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectList'
+    post:
+      operationId: projects_create
+      tags: [projects]
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectWriteRequest'
+      responses:
+        '201':
+          description: The created project.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /projects/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: projects_retrieve
+      tags: [projects]
+      summary: Retrieve a project
+      responses:
+        '200':
+          description: The requested project.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    patch:
+      operationId: projects_partial_update
+      tags: [projects]
+      summary: Update a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectWriteRequest'
+      responses:
+        '200':
+          description: The updated project.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      operationId: projects_destroy
+      tags: [projects]
+      summary: Delete a project
+      responses:
+        '204':
+          description: The project has been deleted.
+  /tasks:
+    get:
+      operationId: tasks_list
+      tags: [tasks]
+      summary: List tasks
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: project_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A paginated list of tasks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTaskList'
+    post:
+      operationId: tasks_create
+      tags: [tasks]
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWriteRequest'
+      responses:
+        '201':
+          description: The created task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+  /tasks/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: tasks_retrieve
+      tags: [tasks]
+      summary: Retrieve a task
+      responses:
+        '200':
+          description: The requested task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    patch:
+      operationId: tasks_partial_update
+      tags: [tasks]
+      summary: Update a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWriteRequest'
+      responses:
+        '200':
+          description: The updated task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    delete:
+      operationId: tasks_destroy
+      tags: [tasks]
+      summary: Delete a task
+      responses:
+        '204':
+          description: The task has been deleted.
+  /tasks/{id}/data:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    post:
+      operationId: tasks_create_data
+      tags: [tasks]
+      summary: Attach data to a task
+      description: >-
+        Upload images, video, or references to cloud-storage objects and start
+        the background process that prepares the task data.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DataRequest'
+      responses:
+        '202':
+          description: Data upload accepted and queued for processing.
+  /tasks/{id}/annotations:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: tasks_retrieve_annotations
+      tags: [annotations]
+      summary: Get task annotations
+      responses:
+        '200':
+          description: The task annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    put:
+      operationId: tasks_update_annotations
+      tags: [annotations]
+      summary: Replace task annotations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabeledData'
+      responses:
+        '200':
+          description: The updated annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    post:
+      operationId: tasks_create_annotations
+      tags: [annotations]
+      summary: Import task annotations
+      description: >-
+        Initiates a background process to import annotations into a task. Poll
+        GET /requests/{rq_id} to check status; rq_id is returned in the response.
+      parameters:
+        - name: format
+          in: query
+          description: Dataset format name to import (e.g. COCO 1.0, CVAT 1.1).
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Import accepted and queued.
+    delete:
+      operationId: tasks_destroy_annotations
+      tags: [annotations]
+      summary: Delete task annotations
+      responses:
+        '204':
+          description: The annotations have been deleted.
+  /tasks/{id}/dataset/export:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    post:
+      operationId: tasks_create_dataset_export
+      tags: [tasks]
+      summary: Export a task dataset
+      parameters:
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: save_images
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '202':
+          description: Export accepted; poll the returned request for the result link.
+  /jobs:
+    get:
+      operationId: jobs_list
+      tags: [jobs]
+      summary: List jobs
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: task_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A paginated list of jobs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedJobList'
+  /jobs/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: jobs_retrieve
+      tags: [jobs]
+      summary: Retrieve a job
+      responses:
+        '200':
+          description: The requested job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+    patch:
+      operationId: jobs_partial_update
+      tags: [jobs]
+      summary: Update a job
+      description: Update job stage, state, or assignee.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobWriteRequest'
+      responses:
+        '200':
+          description: The updated job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  /jobs/{id}/annotations:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: jobs_retrieve_annotations
+      tags: [annotations]
+      summary: Get job annotations
+      responses:
+        '200':
+          description: The job annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+    put:
+      operationId: jobs_update_annotations
+      tags: [annotations]
+      summary: Replace job annotations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabeledData'
+      responses:
+        '200':
+          description: The updated annotations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabeledData'
+  /labels:
+    get:
+      operationId: labels_list
+      tags: [labels]
+      summary: List labels
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: task_id
+          in: query
+          schema:
+            type: integer
+        - name: project_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A paginated list of labels.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLabelList'
+  /labels/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: labels_retrieve
+      tags: [labels]
+      summary: Retrieve a label
+      responses:
+        '200':
+          description: The requested label.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+    patch:
+      operationId: labels_partial_update
+      tags: [labels]
+      summary: Update a label
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Label'
+      responses:
+        '200':
+          description: The updated label.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+    delete:
+      operationId: labels_destroy
+      tags: [labels]
+      summary: Delete a label
+      responses:
+        '204':
+          description: The label has been deleted.
+  /organizations:
+    get:
+      operationId: organizations_list
+      tags: [organizations]
+      summary: List organizations
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of organizations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationList'
+    post:
+      operationId: organizations_create
+      tags: [organizations]
+      summary: Create an organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationWriteRequest'
+      responses:
+        '201':
+          description: The created organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+  /organizations/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: organizations_retrieve
+      tags: [organizations]
+      summary: Retrieve an organization
+      responses:
+        '200':
+          description: The requested organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    delete:
+      operationId: organizations_destroy
+      tags: [organizations]
+      summary: Delete an organization
+      responses:
+        '204':
+          description: The organization has been deleted.
+  /memberships:
+    get:
+      operationId: memberships_list
+      tags: [memberships]
+      summary: List memberships
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: org
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of memberships.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipList'
+  /memberships/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: memberships_retrieve
+      tags: [memberships]
+      summary: Retrieve a membership
+      responses:
+        '200':
+          description: The requested membership.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+    delete:
+      operationId: memberships_destroy
+      tags: [memberships]
+      summary: Delete a membership
+      responses:
+        '204':
+          description: The membership has been deleted.
+  /cloudstorages:
+    get:
+      operationId: cloudstorages_list
+      tags: [cloudstorages]
+      summary: List cloud storages
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of cloud storages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCloudStorageList'
+    post:
+      operationId: cloudstorages_create
+      tags: [cloudstorages]
+      summary: Create a cloud storage connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudStorageWriteRequest'
+      responses:
+        '201':
+          description: The created cloud storage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudStorage'
+  /cloudstorages/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PathId'
+    get:
+      operationId: cloudstorages_retrieve
+      tags: [cloudstorages]
+      summary: Retrieve a cloud storage
+      responses:
+        '200':
+          description: The requested cloud storage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudStorage'
+    delete:
+      operationId: cloudstorages_destroy
+      tags: [cloudstorages]
+      summary: Delete a cloud storage
+      responses:
+        '204':
+          description: The cloud storage has been deleted.
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >-
+        Token authentication. Send the header `Authorization: Token <key>`
+        where the key is obtained from POST /auth/login.
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with CVAT username and password.
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: A unique integer value identifying this resource.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: A page number within the paginated result set.
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+      description: Number of results to return per page.
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        status:
+          type: string
+          enum: [annotation, validation, completed]
+        tasks_count:
+          type: integer
+          readOnly: true
+        organization:
+          type: integer
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    ProjectWriteRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        owner_id:
+          type: integer
+          nullable: true
+        assignee_id:
+          type: integer
+          nullable: true
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        project_id:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          description: annotation or interpolation
+        status:
+          type: string
+          enum: [annotation, validation, completed]
+        size:
+          type: integer
+          readOnly: true
+          description: Number of frames in the task.
+        segment_size:
+          type: integer
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        organization:
+          type: integer
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+    TaskWriteRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        project_id:
+          type: integer
+          nullable: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+        segment_size:
+          type: integer
+        overlap:
+          type: integer
+        owner_id:
+          type: integer
+          nullable: true
+        assignee_id:
+          type: integer
+          nullable: true
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        task_id:
+          type: integer
+          readOnly: true
+        project_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        assignee:
+          $ref: '#/components/schemas/BasicUser'
+        stage:
+          type: string
+          enum: [annotation, validation, acceptance]
+        state:
+          type: string
+          enum: [new, in progress, completed, rejected]
+        start_frame:
+          type: integer
+          readOnly: true
+        stop_frame:
+          type: integer
+          readOnly: true
+        type:
+          type: string
+          enum: [annotation, ground_truth]
+    JobWriteRequest:
+      type: object
+      properties:
+        assignee:
+          type: integer
+          nullable: true
+        stage:
+          type: string
+          enum: [annotation, validation, acceptance]
+        state:
+          type: string
+          enum: [new, in progress, completed, rejected]
+    Label:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        color:
+          type: string
+          description: Hex color used to render the label.
+        type:
+          type: string
+          enum: [any, rectangle, polygon, polyline, points, ellipse, cuboid, mask, tag, skeleton]
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+        parent_id:
+          type: integer
+          nullable: true
+    Attribute:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        mutable:
+          type: boolean
+        input_type:
+          type: string
+          enum: [checkbox, radio, number, text, select]
+        default_value:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+    LabeledData:
+      type: object
+      description: Container of annotations for a task or job.
+      properties:
+        version:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledImage'
+        shapes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledShape'
+        tracks:
+          type: array
+          items:
+            type: object
+    LabeledImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        frame:
+          type: integer
+        label_id:
+          type: integer
+        source:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: object
+    LabeledShape:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [rectangle, polygon, polyline, points, ellipse, cuboid, mask, skeleton]
+        frame:
+          type: integer
+        label_id:
+          type: integer
+        occluded:
+          type: boolean
+        outside:
+          type: boolean
+        points:
+          type: array
+          items:
+            type: number
+            format: double
+        rotation:
+          type: number
+          format: double
+        z_order:
+          type: integer
+        source:
+          type: string
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+    OrganizationWriteRequest:
+      type: object
+      required: [slug]
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Membership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+        role:
+          type: string
+          enum: [worker, supervisor, maintainer, owner]
+        is_active:
+          type: boolean
+    CloudStorage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider_type:
+          type: string
+          enum: [AWS_S3_BUCKET, AZURE_CONTAINER, GOOGLE_CLOUD_STORAGE]
+        resource:
+          type: string
+          description: Bucket or container name.
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum: [KEY_SECRET_KEY_PAIR, ACCOUNT_NAME_TOKEN_PAIR, KEY_FILE_PATH, ANONYMOUS_ACCESS]
+        owner:
+          $ref: '#/components/schemas/BasicUser'
+        organization:
+          type: integer
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+    CloudStorageWriteRequest:
+      type: object
+      required: [provider_type, resource, credentials_type]
+      properties:
+        provider_type:
+          type: string
+          enum: [AWS_S3_BUCKET, AZURE_CONTAINER, GOOGLE_CLOUD_STORAGE]
+        resource:
+          type: string
+        display_name:
+          type: string
+        credentials_type:
+          type: string
+          enum: [KEY_SECRET_KEY_PAIR, ACCOUNT_NAME_TOKEN_PAIR, KEY_FILE_PATH, ANONYMOUS_ACCESS]
+        key:
+          type: string
+        secret_key:
+          type: string
+        specific_attributes:
+          type: string
+    DataRequest:
+      type: object
+      properties:
+        client_files:
+          type: array
+          items:
+            type: string
+            format: binary
+        server_files:
+          type: array
+          items:
+            type: string
+        remote_files:
+          type: array
+          items:
+            type: string
+        image_quality:
+          type: integer
+        use_cache:
+          type: boolean
+        cloud_storage_id:
+          type: integer
+    BasicUser:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    PaginatedProjectList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedTaskList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedJobList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedLabelList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedOrganizationList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedMembershipList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedCloudStorageList:
+      $ref: '#/components/schemas/PaginatedBase'
+    PaginatedBase:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          format: uri
+          nullable: true
+        previous:
+          type: string
+          format: uri
+          nullable: true
+        results:
+          type: array
+          items:
+            type: object

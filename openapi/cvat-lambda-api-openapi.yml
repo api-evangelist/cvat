@@ -1,0 +1,446 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Lambda API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: lambda
+paths:
+  /api/lambda/functions:
+    get:
+      operationId: lambda_list_functions
+      summary: Method returns a list of functions
+      tags:
+      - lambda
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/lambda/functions/{func_id}:
+    get:
+      operationId: lambda_retrieve_functions
+      summary: Method returns the information about the function
+      parameters:
+      - in: path
+        name: func_id
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$
+        required: true
+      tags:
+      - lambda
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: object
+          description: Information about the function
+    post:
+      operationId: lambda_create_functions
+      description: 'Allows to execute a function for immediate computation.
+
+
+        Intended for short-lived executions, useful for interactive calls.
+
+
+        When executed for interactive annotation, the job id must be specified
+
+        in the ''job'' input field. The task id is not required in this case,
+
+        but if it is specified, it must match the job task id.'
+      parameters:
+      - in: path
+        name: func_id
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$
+        required: true
+      tags:
+      - lambda
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnlineFunctionCallRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Returns function invocation results
+      summary: Lambda create functions
+      x-summary-source: derived
+  /api/lambda/requests:
+    get:
+      operationId: lambda_list_requests
+      summary: Method returns a list of requests
+      tags:
+      - lambda
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FunctionCall'
+          description: ''
+    post:
+      operationId: lambda_create_requests
+      summary: Method calls the function
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - lambda
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunctionCallRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/FunctionCall'
+          description: ''
+  /api/lambda/requests/{id}:
+    get:
+      operationId: lambda_retrieve_requests
+      summary: Method returns the status of the request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        description: Request id
+        required: true
+      tags:
+      - lambda
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/FunctionCall'
+          description: ''
+    delete:
+      operationId: lambda_delete_requests
+      summary: Method cancels the request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        description: Request id
+        required: true
+      tags:
+      - lambda
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    FunctionCall:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Request id
+        function:
+          $ref: '#/components/schemas/FunctionCallParams'
+        status:
+          type:
+          - string
+          - 'null'
+        progress:
+          type:
+          - integer
+          - 'null'
+          default: 0
+        enqueued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        started:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        ended:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        exc_info:
+          type:
+          - string
+          - 'null'
+      required:
+      - ended
+      - enqueued
+      - function
+      - id
+      - started
+      - status
+    FunctionCallParams:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The name of the function
+        task:
+          type:
+          - integer
+          - 'null'
+          description: The id of the task
+        job:
+          type: integer
+          description: The id of the job
+        threshold:
+          type:
+          - number
+          - 'null'
+          format: double
+      required:
+      - id
+      - task
+      - threshold
+    OnlineFunctionCallRequest:
+      type: object
+      properties:
+        job:
+          type: integer
+        task:
+          type: integer
+    SublabelMappingEntryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            minLength: 1
+            maxLength: 64
+      required:
+      - name
+    FunctionCallRequest:
+      type: object
+      properties:
+        function:
+          type: string
+          minLength: 1
+          description: The name of the function to execute
+        task:
+          type: integer
+          description: The id of the task to be annotated
+        job:
+          type: integer
+          description: The id of the job to be annotated
+        max_distance:
+          type: integer
+        threshold:
+          type: number
+          format: double
+        cleanup:
+          type: boolean
+          default: false
+          description: Whether existing annotations should be removed
+        convMaskToPoly:
+          type: boolean
+          writeOnly: true
+          description: Deprecated; use conv_mask_to_poly instead
+        conv_mask_to_poly:
+          type: boolean
+          description: Convert mask shapes to polygons
+        mapping:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LabelMappingEntryRequest'
+          description: Label mapping from the model to the task labels
+        roi:
+          type: array
+          items:
+            type: integer
+          description: Region of interest as [xtl, ytl, xbr, ybr]
+          maxItems: 4
+          minItems: 4
+      required:
+      - function
+      - task
+    LabelMappingEntryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            minLength: 1
+        sublabels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SublabelMappingEntryRequest'
+          description: Label mapping for from the model to the task sublabels within a parent label
+      required:
+      - name
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/

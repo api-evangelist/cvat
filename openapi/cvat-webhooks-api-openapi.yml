@@ -1,0 +1,933 @@
+openapi: 3.2.0
+info:
+  title: CVAT REST Webhooks API
+  version: 2.79.0 (2.0)
+  description: REST API for Computer Vision Annotation Tool (CVAT)
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    name: CVAT.ai team
+    url: https://github.com/cvat-ai/cvat
+    email: support@cvat.ai
+  license:
+    name: MIT License
+    url: https://en.wikipedia.org/wiki/MIT_License
+tags:
+- name: Webhooks
+paths:
+  /api/webhooks:
+    get:
+      operationId: webhooks_list
+      summary: List webhooks
+      parameters:
+      - name: X-Organization
+        in: header
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: filter
+        required: false
+        in: query
+        description: "\nJSON Logic filter. This filter can be used to perform complex filtering by grouping rules.\n\nFor example, using such a filter you can get all resources created by you:\n\n    - {\"and\":[{\"==\":[{\"var\":\"owner\"},\"<user>\"]}]}\n\nDetails about the syntax used can be found at the link: https://jsonlogic.com/\n\n Available filter_fields: ['description', 'id', 'owner', 'project_id', 'target_url', 'type', 'updated_date']."
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+        schema:
+          type: string
+        allowEmptyValue: true
+      - name: org_id
+        in: query
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+        schema:
+          type: integer
+        allowEmptyValue: true
+      - name: owner
+        in: query
+        description: A simple equality filter for the owner field
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: project_id
+        in: query
+        description: A simple equality filter for the project_id field
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: 'A search term. Available search_fields: [''description'', ''owner'', ''target_url'']'
+        schema:
+          type: string
+      - name: sort
+        required: false
+        in: query
+        description: 'Which field to use when ordering the results. Available ordering_fields: [''description'', ''id'', ''owner'', ''project_id'', ''target_url'', ''type'', ''updated_date'']'
+        schema:
+          type: string
+      - name: target_url
+        in: query
+        description: A simple equality filter for the target_url field
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: A simple equality filter for the type field
+        schema:
+          type: string
+          enum:
+          - organization
+          - project
+          - server
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWebhookReadList'
+          description: ''
+    post:
+      operationId: webhooks_create
+      summary: Create a webhook
+      parameters:
+      - in: header
+        name: X-Organization
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org
+        schema:
+          type: string
+        description: 'Organization unique slug.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A non-empty value selects that organization.
+
+          '
+      - in: query
+        name: org_id
+        schema:
+          type: integer
+        description: 'Organization unique id.
+
+          If omitted, results from all organizations available to the user are returned
+
+          (unfiltered). An empty value ("") selects the personal sandbox workspace only.
+
+          A positive integer selects that organization.
+
+          '
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookRead'
+          description: ''
+  /api/webhooks/{id}:
+    get:
+      operationId: webhooks_retrieve
+      summary: Get webhook details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookRead'
+          description: ''
+    put:
+      operationId: webhooks_update
+      summary: Replace a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookWriteRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookRead'
+          description: ''
+    patch:
+      operationId: webhooks_partial_update
+      summary: Update a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhookWriteRequest'
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookRead'
+          description: ''
+    delete:
+      operationId: webhooks_destroy
+      summary: Delete a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: The webhook has been deleted
+  /api/webhooks/{id}/deliveries:
+    get:
+      operationId: webhooks_list_deliveries
+      summary: List deliveries for a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWebhookDeliveryReadList'
+          description: ''
+  /api/webhooks/{id}/deliveries/{delivery_id}:
+    get:
+      operationId: webhooks_retrieve_deliveries
+      summary: Get details of a webhook delivery
+      parameters:
+      - in: path
+        name: delivery_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookDeliveryRead'
+          description: ''
+  /api/webhooks/{id}/deliveries/{delivery_id}/redelivery:
+    post:
+      operationId: webhooks_create_deliveries_redelivery
+      summary: Redeliver a webhook delivery
+      parameters:
+      - in: path
+        name: delivery_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/webhooks/{id}/ping:
+    post:
+      operationId: webhooks_create_ping
+      summary: Send a ping webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/WebhookDeliveryRead'
+          description: ''
+  /api/webhooks/events:
+    get:
+      operationId: webhooks_retrieve_events
+      summary: List available webhook events
+      parameters:
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum:
+          - all
+          - organization
+          - project
+          - server
+          default: all
+        description: Type of webhook
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - accessTokenAuth: []
+      - sessionAuth: []
+        csrfAuth: []
+        csrfHeaderAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/vnd.cvat+json:
+              schema:
+                $ref: '#/components/schemas/Events'
+          description: ''
+components:
+  schemas:
+    WebhooksEvent:
+      type: object
+      properties:
+        key:
+          type: string
+          readOnly: true
+        group:
+          allOf:
+          - $ref: '#/components/schemas/EventGroup'
+          readOnly: true
+    AllWebhookType:
+      enum:
+      - organization
+      - project
+      - server
+      - all
+      type: string
+      description: '* `organization` - ORGANIZATION
+
+        * `project` - PROJECT
+
+        * `server` - SERVER
+
+        * `all` - ALL'
+    WebhookDeliveryRead:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        webhook_id:
+          type: integer
+          readOnly: true
+        event:
+          type: string
+          readOnly: true
+        status_code:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        redelivery:
+          type: boolean
+          readOnly: true
+        attempt:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        request_duration:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+        changed_fields:
+          type: string
+          readOnly: true
+          deprecated: true
+        request:
+          readOnly: true
+        response:
+          readOnly: true
+    EventsEnum:
+      enum:
+      - completed:request[calculate:quality]
+      - completed:request[create:task]
+      - completed:request[export:annotations]
+      - completed:request[export:backup]
+      - completed:request[export:dataset]
+      - completed:request[merge:job]
+      - completed:request[merge:task]
+      - create:comment
+      - create:invitation
+      - create:issue
+      - create:job
+      - create:membership
+      - create:organization
+      - create:project
+      - create:task
+      - create:user
+      - delete:comment
+      - delete:invitation
+      - delete:issue
+      - delete:job
+      - delete:membership
+      - delete:organization
+      - delete:project
+      - delete:task
+      - delete:user
+      - update:comment
+      - update:issue
+      - update:job
+      - update:membership
+      - update:organization
+      - update:project
+      - update:task
+      - update:user
+      type: string
+      description: '* `completed:request[calculate:quality]` - COMPLETED:REQUEST[CALCULATE:QUALITY]
+
+        * `completed:request[create:task]` - COMPLETED:REQUEST[CREATE:TASK]
+
+        * `completed:request[export:annotations]` - COMPLETED:REQUEST[EXPORT:ANNOTATIONS]
+
+        * `completed:request[export:backup]` - COMPLETED:REQUEST[EXPORT:BACKUP]
+
+        * `completed:request[export:dataset]` - COMPLETED:REQUEST[EXPORT:DATASET]
+
+        * `completed:request[merge:job]` - COMPLETED:REQUEST[MERGE:JOB]
+
+        * `completed:request[merge:task]` - COMPLETED:REQUEST[MERGE:TASK]
+
+        * `create:comment` - CREATE:COMMENT
+
+        * `create:invitation` - CREATE:INVITATION
+
+        * `create:issue` - CREATE:ISSUE
+
+        * `create:job` - CREATE:JOB
+
+        * `create:membership` - CREATE:MEMBERSHIP
+
+        * `create:organization` - CREATE:ORGANIZATION
+
+        * `create:project` - CREATE:PROJECT
+
+        * `create:task` - CREATE:TASK
+
+        * `create:user` - CREATE:USER
+
+        * `delete:comment` - DELETE:COMMENT
+
+        * `delete:invitation` - DELETE:INVITATION
+
+        * `delete:issue` - DELETE:ISSUE
+
+        * `delete:job` - DELETE:JOB
+
+        * `delete:membership` - DELETE:MEMBERSHIP
+
+        * `delete:organization` - DELETE:ORGANIZATION
+
+        * `delete:project` - DELETE:PROJECT
+
+        * `delete:task` - DELETE:TASK
+
+        * `delete:user` - DELETE:USER
+
+        * `update:comment` - UPDATE:COMMENT
+
+        * `update:issue` - UPDATE:ISSUE
+
+        * `update:job` - UPDATE:JOB
+
+        * `update:membership` - UPDATE:MEMBERSHIP
+
+        * `update:organization` - UPDATE:ORGANIZATION
+
+        * `update:project` - UPDATE:PROJECT
+
+        * `update:task` - UPDATE:TASK
+
+        * `update:user` - UPDATE:USER'
+    Events:
+      type: object
+      properties:
+        webhook_type:
+          $ref: '#/components/schemas/AllWebhookType'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhooksEvent'
+          readOnly: true
+      required:
+      - webhook_type
+    BasicUser:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    PaginatedWebhookReadList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookRead'
+    PatchedWebhookWriteRequest:
+      type: object
+      properties:
+        target_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 8192
+        description:
+          type: string
+          maxLength: 128
+        content_type:
+          $ref: '#/components/schemas/WebhookContentType'
+        secret:
+          type: string
+          maxLength: 64
+        is_active:
+          type: boolean
+        enable_ssl:
+          type: boolean
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventsEnum'
+          writeOnly: true
+    WebhookType:
+      enum:
+      - organization
+      - project
+      - server
+      type: string
+      description: '* `organization` - ORGANIZATION
+
+        * `project` - PROJECT
+
+        * `server` - SERVER'
+    PaginatedWebhookDeliveryReadList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookDeliveryRead'
+    WebhookRead:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        target_url:
+          type: string
+          format: uri
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/WebhookType'
+        content_type:
+          $ref: '#/components/schemas/WebhookContentType'
+        is_active:
+          type: boolean
+          readOnly: true
+        enable_ssl:
+          type: boolean
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_date:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          allOf:
+          - $ref: '#/components/schemas/BasicUser'
+          readOnly: true
+        project_id:
+          type:
+          - integer
+          - 'null'
+        organization:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventsEnum'
+          readOnly: true
+        last_status:
+          type: integer
+          readOnly: true
+        last_delivery_date:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - content_type
+      - type
+    WebhookWriteRequest:
+      type: object
+      properties:
+        target_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 8192
+        description:
+          type: string
+          maxLength: 128
+        type:
+          $ref: '#/components/schemas/WebhookType'
+        content_type:
+          $ref: '#/components/schemas/WebhookContentType'
+        secret:
+          type: string
+          maxLength: 64
+        is_active:
+          type: boolean
+        enable_ssl:
+          type: boolean
+        project_id:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventsEnum'
+          writeOnly: true
+      required:
+      - events
+      - target_url
+      - type
+    EventGroup:
+      type: object
+      properties:
+        display_name:
+          type: string
+          readOnly: true
+    WebhookContentType:
+      enum:
+      - application/json
+      type: string
+      description: '* `application/json` - JSON'
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      description: 'To authenticate using an API Access token, you need to include
+
+        the ''Authentication'' header with the ''Bearer '' prefix
+
+
+        An API Access token has to be issued in the user profile section of the UI or
+
+        via the /auth/access_tokens API before this authentication method can be used.
+
+        '
+    basicAuth:
+      type: http
+      scheme: basic
+    csrfAuth:
+      type: apiKey
+      in: cookie
+      name: csrftoken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    csrfHeaderAuth:
+      type: apiKey
+      in: header
+      name: X-CSRFToken
+      description: 'A CSRF protection token. Can be received in the ''csrftoken'' cookie in the
+
+        server response on the /api/auth/login endpoint. The ''Origin'' header
+
+        must also be specified in the request.
+
+        '
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Deprecated.
+
+
+        You can obtain an API key (the token) from the server response on
+
+        the /api/auth/login/ endpoint.
+
+        '
+      x-token-prefix: Token
+externalDocs:
+  description: CVAT documentation
+  url: https://docs.cvat.ai/docs/
