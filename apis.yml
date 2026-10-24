@@ -244,6 +244,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -268,6 +270,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Assets
+  tags_raw:
   - assets
   properties:
   - type: OpenAPI
@@ -292,6 +296,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -316,6 +322,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Comments
+  tags_raw:
   - comments
   properties:
   - type: OpenAPI
@@ -340,6 +348,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Consensus
+  tags_raw:
   - consensus
   properties:
   - type: OpenAPI
@@ -364,6 +374,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Event
+  tags_raw:
   - events
   properties:
   - type: OpenAPI
@@ -388,6 +400,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Functions
+  tags_raw:
   - functions
   properties:
   - type: OpenAPI
@@ -412,6 +426,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Growth
+  tags_raw:
   - growth
   properties:
   - type: OpenAPI
@@ -436,6 +452,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Guides
+  tags_raw:
   - guides
   properties:
   - type: OpenAPI
@@ -460,6 +478,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Invitations
+  tags_raw:
   - invitations
   properties:
   - type: OpenAPI
@@ -484,6 +504,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Issues
+  tags_raw:
   - issues
   properties:
   - type: OpenAPI
@@ -508,6 +530,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Lambda
+  tags_raw:
   - lambda
   properties:
   - type: OpenAPI
@@ -532,6 +556,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Limits
+  tags_raw:
   - limits
   properties:
   - type: OpenAPI
@@ -556,6 +582,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Quality
+  tags_raw:
   - quality
   properties:
   - type: OpenAPI
@@ -580,6 +608,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Requests
+  tags_raw:
   - requests
   properties:
   - type: OpenAPI
@@ -604,6 +634,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Schema
+  tags_raw:
   - schema
   properties:
   - type: OpenAPI
@@ -628,6 +660,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Servers
+  tags_raw:
   - server
   properties:
   - type: OpenAPI
@@ -652,6 +686,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Subscription
+  tags_raw:
   - subscriptions
   properties:
   - type: OpenAPI
@@ -676,6 +712,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Usage
+  tags_raw:
   - usage
   properties:
   - type: OpenAPI
@@ -700,6 +738,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
@@ -724,6 +764,8 @@ apis:
   humanURL: https://app.cvat.ai/api/docs/
   baseURL: https://app.cvat.ai/api
   tags:
+  - Webhook
+  tags_raw:
   - webhooks
   properties:
   - type: OpenAPI
