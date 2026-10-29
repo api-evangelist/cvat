@@ -1,4 +1,4 @@
-# CVAT (cvat)
+# CVAT
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,181 +66,130 @@
 
 CVAT (Computer Vision Annotation Tool) is an open-source platform for annotating images, video, and 3D point clouds for vision AI. The CVAT REST API exposes projects, tasks, jobs, annotations, labels, organizations, memberships, and cloud storage integrations, available both self-hosted (MIT-licensed) and as the hosted CVAT Online service at app.cvat.ai.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/cvat/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/cvat/refs/heads/main/apis.yml)
+**Areas:** Computer Vision · Data Annotation · Labeling · Datasets · Open Source
 
-## Tags
+## CVAT on APIs.io
 
-- Computer Vision
-- Data Annotation
-- Labeling
-- Datasets
-- Open Source
+Everything profiled for CVAT is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cvat/](https://apis.io/providers/cvat/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (8)
 
-- **Created:** 2026-06-21
-- **Modified:** 2026-06-21
+- [CVAT Annotations API](https://apis.io/apis/cvat/cvat-annotations-api/) — Shapes, tracks, and tags attached to tasks and jobs.
+- [CVAT Cloudstorages API](https://apis.io/apis/cvat/cvat-cloudstorages-api/) — External object-storage connections used as data sources.
+- [CVAT Jobs API](https://apis.io/apis/cvat/cvat-jobs-api/) — Assignable annotation units that subdivide a task.
+- [CVAT Labels API](https://apis.io/apis/cvat/cvat-labels-api/) — Label taxonomy shared across projects, tasks, and jobs.
+- [CVAT Memberships API](https://apis.io/apis/cvat/cvat-memberships-api/) — Membership of users within organizations.
+- [CVAT Organizations API](https://apis.io/apis/cvat/cvat-organizations-api/) — Organizations scoping resources for teams.
+- [CVAT Projects API](https://apis.io/apis/cvat/cvat-projects-api/) — Annotation projects that group tasks and share a label set.
+- [CVAT Tasks API](https://apis.io/apis/cvat/cvat-tasks-api/) — Annotation tasks holding media data and annotations.
 
-## APIs
+### Published properties
 
-### CVAT Projects API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Create, list, retrieve, update, and delete annotation projects, the top-level container that groups tasks and shares a label set, plus dataset import and export operations.
+#### Agentic access (1)
 
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Cvat Agentic Access](https://apis.io/agentic-access/cvat/cvat-agentic-access/)
 
-- Projects
-- Datasets
+#### Collections (9)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
+- [CVAT REST API](https://apis.io/collections/cvat/open-cvat/)
+- [CVAT REST annotations API](https://apis.io/collections/cvat/open-cvat-annotations-api/)
+- [CVAT REST annotations cloudstorages API](https://apis.io/collections/cvat/open-cvat-cloudstorages-api/)
+- [CVAT REST annotations jobs API](https://apis.io/collections/cvat/open-cvat-jobs-api/)
+- [CVAT REST annotations labels API](https://apis.io/collections/cvat/open-cvat-labels-api/)
+- [CVAT REST annotations memberships API](https://apis.io/collections/cvat/open-cvat-memberships-api/)
+- [CVAT REST annotations organizations API](https://apis.io/collections/cvat/open-cvat-organizations-api/)
+- [CVAT REST annotations projects API](https://apis.io/collections/cvat/open-cvat-projects-api/)
+- [CVAT REST annotations tasks API](https://apis.io/collections/cvat/open-cvat-tasks-api/)
 
-### CVAT Tasks API
+#### Security (2)
 
-Manage annotation tasks - create tasks, upload media data, retrieve metadata, import and export annotations and datasets, and run background data processing within a project.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
+- [Cvat Authentication](https://apis.io/security/cvat/cvat-authentication/)
+- [Cvat Domain Security](https://apis.io/security/cvat/cvat-domain-security/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Tasks
-- Data
+Published plans, tiers and prices.
 
-#### Properties
+- [Cvat Plans Pricing](https://apis.io/plans/cvat/cvat-plans-pricing/)
 
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/tasks-api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
+#### Rate limits (1)
 
-### CVAT Jobs API
+Published request limits.
 
-Work with jobs, the assignable annotation units that subdivide a task - list, retrieve, update stage and state, manage assignees, and import or export job-level annotations.
+- [Cvat Rate Limits](https://apis.io/rate-limits/cvat/cvat-rate-limits/)
 
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Jobs
-- Annotation Units
+- [Cvat Finops](https://apis.io/finops/cvat/cvat-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/sdk/reference/apis/jobs-api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-### CVAT Annotations API
-
-Read, replace, and remove annotation data (shapes, tracks, and tags) on tasks and jobs, and trigger background import and export of annotations in supported dataset formats.
-
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
-
-#### Tags
-
-- Annotations
-- Labeling
-
-#### Properties
-
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
-
-### CVAT Labels API
-
-List, retrieve, update, and delete labels and their attributes and sublabels, defining the annotation taxonomy shared by projects, tasks, and jobs.
-
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
-
-#### Tags
-
-- Labels
-- Taxonomy
-
-#### Properties
-
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
-
-### CVAT Organizations and Memberships API
-
-Manage organizations and their memberships - create and configure organizations, invite and manage members, assign roles, and scope projects, tasks, and storage to an organization context.
-
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
-
-#### Tags
-
-- Organizations
-- Memberships
-
-#### Properties
-
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
-
-### CVAT Cloud Storages API
-
-Register and manage connections to external object storage (AWS S3, Azure Blob, Google Cloud Storage) used as data sources for tasks, including listing bucket content and previews.
-
-- **Human URL:** [https://app.cvat.ai/api/docs/](https://app.cvat.ai/api/docs/)
-- **Base URL:** `https://app.cvat.ai/api`
-
-#### Tags
-
-- Cloud Storage
-- Integrations
-
-#### Properties
-
-- [Documentation](https://docs.cvat.ai/docs/api_sdk/api/)
-- [API Reference](https://app.cvat.ai/api/docs/)
-- [OpenAPI](openapi/cvat-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cvat.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cvat.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [GitHub](https://github.com/cvat-ai/cvat)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/cvat-ai)
-- [LinkedIn](https://www.linkedin.com/company/cvat-ai)
 - [Website](https://www.cvat.ai)
 - [Documentation](https://docs.cvat.ai)
-- [Plans](plans/cvat-plans-pricing.yml)
-- [Rate Limits](rate-limits/cvat-rate-limits.yml)
-- [Fin Ops](finops/cvat-finops.yml)
+- [Blog](https://www.cvat.ai/resources/blog)
+- [GitHub](https://github.com/cvat-ai)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 26.3** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 46.8 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 7.9 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 10.9** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cvat/](https://apis.io/providers/cvat/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CVAT: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cvat/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
